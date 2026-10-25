@@ -4,7 +4,7 @@
 |---|---|---|---|---|
 | T0-build | 1 | DONE (owner verified install, Home, Smart Launcher kept) | claude/T0-build | Brief at `tasks/T0-build/brief.md`. Fork lacks signing secrets; add a new push-triggered workflow |
 | T1-home | 1 | DONE (owner verified install and taps 2026-10-25) | claude/T1-home | Home screen from C5, app name Deliverance |
-| T1b-polish | 1 | FINISHED, awaiting owner phone test (testlist.md) | claude/T1b-polish | Status line, picker grid, Treasury overlap; Actions run 40240997944 green |
+| T1b-polish | 1 | FINISHED, awaiting owner phone test (testlist.md) | claude/T1b-polish | Status line, picker grid, Treasury overlap, ring text, ribbon border, Quest size; Actions run 40242634891 green. Owner is setting up local build (local-build-setup.md) |
 | T2-treasury | 1 | ready (T1 done; start after T1b to avoid same files) | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner
