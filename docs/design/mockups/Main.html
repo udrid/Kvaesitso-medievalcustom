@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Keep home screen</title>
+
+</head>
+<body>
+<div>
+<div>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer}
+.slot{width:76px;height:76px;box-sizing:border-box;border:2px solid #4a4e55;border-radius:10px;background:linear-gradient(160deg,#2c2e33,#17181b);box-shadow:inset 0 0 0 1px #0b0b0d,0 3px 0 #0b0b0d;color:#e8dcc0;display:flex;align-items:center;justify-content:center;padding:0}
+.riv{background:radial-gradient(circle at 9px 9px,#6b6f77 0 2.5px,transparent 3px),radial-gradient(circle at calc(100% - 9px) 9px,#6b6f77 0 2.5px,transparent 3px),radial-gradient(circle at 9px calc(100% - 9px),#6b6f77 0 2.5px,transparent 3px),radial-gradient(circle at calc(100% - 9px) calc(100% - 9px),#6b6f77 0 2.5px,transparent 3px),linear-gradient(170deg,#dccba2,#c9b585)}
+</style>
+</div>
+<div style="position:relative;width:390px;height:844px;overflow:hidden;box-sizing:border-box;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 46px),radial-gradient(120% 70% at 50% 0%,#2d2f34 0%,#17181b 72%);font-family:'IM Fell English',Georgia,serif;color:#e8dcc0">
+
+  <!-- camera island -->
+  <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:214px;height:36px;box-sizing:border-box;border-radius:18px;background:#050506;border:1.5px solid #5a5f67;display:grid;grid-template-columns:1fr 18px 1fr;align-items:center;column-gap:8px;padding:0 14px;font-size:12px">
+    <span style="display:flex;align-items:center;gap:5px;color:#e8dcc0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e58a3c" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg>Ready</span>
+    <span style="width:14px;height:14px;border-radius:50%;background:#101114;border:2px solid #2a2c31"></span>
+    <span style="text-align:right;color:#e8dcc0">77%</span>
+  </div>
+
+  <!-- date and time -->
+  <div style="position:absolute;top:70px;left:24px;right:24px">
+    <div style="font-family:Cinzel,serif;font-size:12px;letter-spacing:.22em;color:#b8ab8c">SUNDAY · 25 OCTOBER</div>
+    <div style="font-family:Cinzel,serif;font-size:52px;font-weight:700;line-height:1.1;color:#e8dcc0">2:04</div>
+  </div>
+
+  <!-- oracle card -->
+  <div class="riv" style="position:absolute;top:170px;left:20px;right:20px;height:176px;box-sizing:border-box;border:2px solid #4a4e55;border-radius:6px;padding:20px 26px;color:#20170f;box-shadow:0 4px 0 #0b0b0d">
+    <div style="display:flex;align-items:center;gap:8px;font-family:Cinzel,serif;font-size:12px;font-weight:700;letter-spacing:.2em"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a3f0c" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg>THE ORACLE</div>
+    <div style="font-size:26px;font-style:italic;line-height:1.15;margin-top:8px">Ask Claude anything.</div>
+    <div style="display:flex;gap:10px;margin-top:16px;align-items:center">
+      <div style="flex:1;height:40px;box-sizing:border-box;border:1.5px solid #5b4a30;border-radius:4px;background:rgba(32,23,15,.08);display:flex;align-items:center;padding:0 12px;font-size:15px;font-style:italic;color:#4a3a24">Speak your question…</div>
+      <button type="button" style="height:40px;padding:0 16px;border:2px solid #0b0b0d;border-radius:4px;background:#1c1d20;color:#e8dcc0;font-family:Cinzel,serif;font-size:12px;font-weight:700;letter-spacing:.14em">SUMMON</button>
+    </div>
+  </div>
+
+  <!-- great hall -->
+  <div style="position:absolute;top:372px;left:20px;right:20px">
+    <div style="font-family:Cinzel,serif;font-size:11px;letter-spacing:.24em;color:#b8ab8c;margin-bottom:12px">THE GREAT HALL</div>
+    <div style="display:flex;justify-content:space-between">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:76px"><button type="button" class="slot" aria-label="Twitter"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/><circle cx="15" cy="10.5" r=".6" fill="currentColor"/></svg></button><span style="font-size:14px">Twitter</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:76px"><button type="button" class="slot" aria-label="Discord"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M6 7h9v10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7z"/><path d="M15 9h2a2 2 0 0 1 0 5h-2"/><path d="M8.5 3.5c0 1 1 1 1 2M12 3.5c0 1 1 1 1 2"/></svg></button><span style="font-size:14px">Discord</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:76px"><button type="button" class="slot" aria-label="Videos"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg></button><span style="font-size:14px">Videos</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:76px"><button type="button" class="slot" aria-label="Messages"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg></button><span style="font-size:14px">Messages</span></div>
+    </div>
+  </div>
+
+  <!-- quest log -->
+  <div class="riv" style="position:absolute;top:520px;left:20px;right:20px;height:172px;box-sizing:border-box;border:2px solid #4a4e55;border-radius:6px;padding:18px 26px;color:#20170f;box-shadow:0 4px 0 #0b0b0d">
+    <div style="font-family:Cinzel,serif;font-size:12px;font-weight:700;letter-spacing:.2em">QUEST LOG</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;font-size:16px">
+      <div style="display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;box-sizing:border-box;border:1.5px solid #20170f;border-radius:3px"></span>[Quest one]</div>
+      <div style="display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;box-sizing:border-box;border:1.5px solid #20170f;border-radius:3px"></span>[Quest two]</div>
+      <div style="display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;box-sizing:border-box;border:1.5px solid #20170f;border-radius:3px;background:#20170f"></span><span style="text-decoration:line-through;color:#4a3a24">[Quest done]</span></div>
+    </div>
+  </div>
+
+  <!-- dock -->
+  <div style="position:absolute;left:20px;right:20px;bottom:22px;height:84px;box-sizing:border-box;border:2px solid #4a4e55;border-radius:14px;background:linear-gradient(180deg,#26282c,#131416);box-shadow:inset 0 0 0 1px #0b0b0d;display:flex;align-items:center;justify-content:space-around;color:#e8dcc0">
+    <button type="button" aria-label="Phone" style="background:none;border:0;color:inherit;padding:10px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 4 5a1 1 0 0 1 1-1z"/></svg></button>
+    <button type="button" aria-label="Camera" style="background:none;border:0;color:inherit;padding:10px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
+    <button type="button" aria-label="Web" style="background:none;border:0;color:inherit;padding:10px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></button>
+    <button type="button" aria-label="Settings" style="background:none;border:0;color:inherit;padding:10px"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></button>
+  </div>
+</div>
+</div>
+
+</body>
+</html>

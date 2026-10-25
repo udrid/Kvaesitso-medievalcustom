@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The War Room, Deliverance edition 3</title>
+
+</head>
+<body>
+<div>
+<div>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&family=UnifrakturCook:wght@700&display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer}
+.abs{position:absolute}
+.panel{position:absolute;left:18px;right:18px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);box-shadow:inset 0 0 26px rgba(0,0,0,.6),0 2px 0 #050403}
+.panel::before{content:"";position:absolute;inset:4px;border:1px solid rgba(140,109,58,.26);pointer-events:none}
+.ribbon{position:absolute;top:-8px;left:12px;height:17px;padding:0 17px 0 11px;background:linear-gradient(#6a1d16,#481510);border-top:1px solid #c9a55a;color:#f0e2bd;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;display:flex;align-items:center;clip-path:polygon(0 0,100% 0,calc(100% - 7px) 50%,100% 100%,0 100%);z-index:2}
+.corner{position:absolute;width:7px;height:7px;transform:rotate(45deg);background:#8c6d3a}
+.cap{font-family:Cinzel,serif;font-size:9.5px;font-weight:700;letter-spacing:.24em;color:#a8884c;text-transform:uppercase}
+.node{position:absolute;width:62px;height:72px;background:none;border:0;padding:0;color:#e6d9b8}
+.node svg.shield{position:absolute;inset:0}
+.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.badge{position:absolute;top:-5px;right:-3px;min-width:18px;height:18px;box-sizing:border-box;border-radius:9px;background:#6e1a14;border:1.5px solid #c9a55a;color:#f2e6c8;font-family:Cinzel,serif;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;z-index:2}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bfae86}
+.row{display:flex;align-items:center;gap:9px;font-size:13px;color:#d9ccaa;line-height:1}
+.time{width:42px;font-family:Cinzel,serif;font-size:10px;font-weight:700;color:#c9a55a;flex:none}
+.rub{color:#a8352b;font-size:12px;line-height:1;flex:none}
+.pen{position:absolute;top:204px;width:58px;height:62px}
+.pen svg{position:absolute;inset:0}
+.pen .l{position:absolute;left:0;right:0;top:9px;text-align:center;font-family:Cinzel,serif;font-size:7px;font-weight:700;letter-spacing:.16em;color:#d9c48c;text-shadow:0 1px 2px #000}
+.pen .v{position:absolute;left:0;right:0;top:22px;text-align:center;font-family:Cinzel,serif;font-size:13px;font-weight:700;color:#f2e6c6;text-shadow:0 1px 3px #000}
+.seal{position:relative;width:54px;height:54px;background:none;border:0;padding:0}
+.seal svg.wax{position:absolute;inset:0}
+.seal .ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.dockcol{display:flex;flex-direction:column;align-items:center;gap:7px;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.2em;color:#a8884c}
+</style>
+</div>
+
+<div style="position:relative;width:390px;height:844px;overflow:hidden;box-sizing:border-box;background:radial-gradient(90% 55% at 50% 42%,#26211a 0%,#0d0c09 82%),#0a0907;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8">
+
+  <!-- grain + vignette -->
+  <svg class="abs" width="390" height="844" style="inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.45" aria-hidden="true"><filter id="g3"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 .6  0 0 0 0 .5  0 0 0 0 .35  0 0 0 .55 0"/></filter><rect width="390" height="844" filter="url(#g3)"/></svg>
+  <div class="abs" style="inset:0;background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(0,0,0,.72) 100%);pointer-events:none"></div>
+
+  <!-- camera pill -->
+  <div class="abs" style="top:10px;left:50%;transform:translateX(-50%);width:214px;height:36px;box-sizing:border-box;border-radius:18px;background:#050505;border:1.5px solid #6b5430;box-shadow:0 0 0 2px #0a0907;display:grid;grid-template-columns:1fr 18px 1fr;align-items:center;column-gap:8px;padding:0 14px;font-size:12px;z-index:3">
+    <span style="display:flex;align-items:center;gap:5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e58a3c" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg>Ready</span>
+    <span style="width:14px;height:14px;border-radius:50%;background:#0c0d10;border:2px solid #2a2418"></span>
+    <span style="text-align:right">84%</span>
+  </div>
+
+  <!-- header -->
+  <div class="abs" style="top:54px;left:22px;right:22px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end">
+      <div style="display:flex;align-items:flex-start;gap:7px">
+        <div style="font-family:UnifrakturCook,serif;font-size:46px;line-height:.82;color:#a8352b;text-shadow:0 0 1px #000,0 1px 0 #3a0e0a">S</div>
+        <div style="padding-top:1px">
+          <div style="font-family:UnifrakturCook,serif;font-size:21px;line-height:1;color:#ecdfbf">unday</div>
+          <div class="cap" style="margin-top:5px">25th of October</div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:40px;line-height:.9;color:#f2e6c6;text-shadow:0 0 14px rgba(201,165,90,.22)">2:17</div>
+        <div style="margin-top:4px;font-size:12px;font-style:italic;color:#a8987a">62° · Mostly clear</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- status strip -->
+  <div class="abs" style="top:112px;left:22px;right:22px;display:flex;justify-content:space-between;align-items:center;white-space:nowrap;border-top:1px solid #4a3a20;padding-top:6px">
+    <div class="cap" style="display:flex;gap:9px;align-items:center;color:#8c7a52;font-size:8px;letter-spacing:.14em">
+      <span style="display:flex;gap:4px;align-items:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c9a55a" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 9a14 14 0 0 1 18 0M6 13a9 9 0 0 1 12 0M9.5 17a4 4 0 0 1 5 0"/></svg>Wi-Fi call</span>
+      <span style="display:flex;gap:4px;align-items:center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#c9a55a" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M7 7l10 10-5 5V2l5 5L7 17"/></svg>Bluetooth</span>
+      <span style="display:flex;gap:4px;align-items:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c9a55a" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9zM17 9l4 6M21 9l-4 6"/></svg>Hushed</span>
+    </div>
+    <div class="cap" style="display:flex;gap:4px;align-items:center;color:#c0534a;font-size:8px;letter-spacing:.14em"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c0534a" stroke-width="2" aria-hidden="true"><circle cx="7" cy="12" r="4"/><circle cx="17" cy="12" r="4"/><path d="M7 16h10"/></svg>1 Voicemail</div>
+  </div>
+
+  <!-- treasury -->
+  <div class="panel" style="top:140px;height:56px">
+    <div class="ribbon">Treasury</div>
+    <div class="abs" style="left:14px;top:9px;width:38px;height:38px;border-radius:50%;box-sizing:border-box;border:2px solid #5a4620;background:radial-gradient(circle at 35% 30%,#e0c070,#8a6a22);box-shadow:inset 0 0 6px rgba(0,0,0,.5)"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="#3a2a0a" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="17" cy="17" r="10" stroke-dasharray="1.5 3"/><path d="M17 10v14M12 13h10M12 20h10"/></svg></div>
+    <div class="abs" style="left:64px;top:16px;font-family:Cinzel,serif;font-size:21px;font-weight:700;color:#f2e6c6;line-height:1.15;letter-spacing:.04em">[YOUR TOTAL]</div>
+    <div class="abs" style="right:16px;top:13px;width:104px">
+      <div class="cap" style="font-size:9px">Quest: [GOAL]</div>
+      <div style="margin-top:6px;height:10px;box-sizing:border-box;border:1px solid #6b5430;background:#050505;padding:1.5px"><div style="width:40%;height:100%;background:linear-gradient(90deg,#5a2209,#c9772c)"></div></div>
+      <div style="margin-top:3px;font-size:10px;font-style:italic;color:#8c7a52;text-align:right">[0%] of the way</div>
+    </div>
+  </div>
+
+  <!-- pennants (phone vitals) -->
+  <div class="pen" style="left:22px"><svg viewBox="0 0 58 62" fill="none" aria-hidden="true"><defs><linearGradient id="pa" x1="0" y1="0" x2="0" y2="1"><stop offset=".16" stop-color="#1a1610"/><stop offset=".16" stop-color="#7a5e2c"/></linearGradient></defs><path d="M2 1H56V52L29 42L2 52Z" fill="url(#pa)" stroke="#8c6d3a" stroke-width="1.5"/></svg><div class="l">VIGOR</div><div class="v">84</div></div>
+  <div class="pen" style="left:111px"><svg viewBox="0 0 58 62" fill="none" aria-hidden="true"><defs><linearGradient id="pb" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" stop-color="#1a1610"/><stop offset=".5" stop-color="#5e4a24"/></linearGradient></defs><path d="M2 1H56V52L29 42L2 52Z" fill="url(#pb)" stroke="#8c6d3a" stroke-width="1.5"/></svg><div class="l">STORES</div><div class="v">[ ]</div></div>
+  <div class="pen" style="left:200px"><svg viewBox="0 0 58 62" fill="none" aria-hidden="true"><defs><linearGradient id="pc" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" stop-color="#1a1610"/><stop offset=".6" stop-color="#5e4a24"/></linearGradient></defs><path d="M2 1H56V52L29 42L2 52Z" fill="url(#pc)" stroke="#8c6d3a" stroke-width="1.5"/></svg><div class="l">WITS</div><div class="v">[ ]</div></div>
+  <div class="pen" style="left:290px"><svg viewBox="0 0 58 62" fill="none" aria-hidden="true"><defs><linearGradient id="pd" x1="0" y1="0" x2="0" y2="1"><stop offset=".7" stop-color="#1a1610"/><stop offset=".7" stop-color="#6e2a1e"/></linearGradient></defs><path d="M2 1H56V52L29 42L2 52Z" fill="url(#pd)" stroke="#8c6d3a" stroke-width="1.5"/></svg><div class="l">HEAT</div><div class="v">[ ]°</div></div>
+
+  <!-- orb ring with inscription -->
+  <svg class="abs" width="176" height="176" viewBox="0 0 176 176" style="top:258px;left:107px" fill="none" aria-hidden="true">
+    <defs><path id="ringtxt" d="M88 88m-71 0a71 71 0 1 1 142 0a71 71 0 1 1-142 0"/></defs>
+    <circle cx="88" cy="88" r="86" stroke="#6b5430" stroke-width="1.5"/>
+    <circle cx="88" cy="88" r="57" stroke="#3a2e18"/>
+    <text font-family="Cinzel,serif" font-size="8.5" font-weight="700" letter-spacing="3.4" fill="#8c6d3a"><textPath href="#ringtxt" startOffset="0">✠ VERITAS ET CONSILIUM ✠ ANNO DOMINI ✠ ORACULUM ✠</textPath></text>
+  </svg>
+  <button type="button" aria-label="Claude" class="abs" style="top:284px;left:133px;width:124px;height:124px;border-radius:50%;border:2px solid #8c6d3a;background:radial-gradient(circle at 50% 38%,#4a2d14,#0f0904 72%);box-shadow:0 0 0 3px #0a0907,0 0 34px rgba(229,138,60,.26),inset 0 0 30px rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:0">
+    <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#f0a050" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true" style="filter:drop-shadow(0 0 6px rgba(229,138,60,.65))"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg>
+  </button>
+  <div class="abs" style="top:436px;left:95px;width:200px;text-align:center;font-family:UnifrakturCook,serif;font-size:19px;color:#e6d9b8">The Oracle</div>
+
+  <!-- heater shields -->
+  <button type="button" class="node" style="top:276px;left:24px" aria-label="Twitter"><svg class="shield" viewBox="0 0 62 72" aria-hidden="true"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/></svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/></svg></span></button>
+  <div class="lbl" style="top:352px;left:13px">Twitter</div>
+  <button type="button" class="node" style="top:276px;left:304px" aria-label="Discord"><span class="badge">3</span><svg class="shield" viewBox="0 0 62 72" aria-hidden="true"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/></svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M6 7h9v10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7z"/><path d="M15 9h2a2 2 0 0 1 0 5h-2"/></svg></span></button>
+  <div class="lbl" style="top:352px;left:293px">Discord</div>
+  <button type="button" class="node" style="top:372px;left:24px" aria-label="Videos"><svg class="shield" viewBox="0 0 62 72" aria-hidden="true"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/></svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg></span></button>
+  <div class="lbl" style="top:448px;left:13px">Videos</div>
+  <button type="button" class="node" style="top:372px;left:304px" aria-label="Messages"><span class="badge">2</span><svg class="shield" viewBox="0 0 62 72" aria-hidden="true"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/></svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg></span></button>
+  <div class="lbl" style="top:448px;left:293px">Messages</div>
+
+  <!-- ledger -->
+  <div class="panel" style="top:476px;height:68px">
+    <div class="ribbon">Today's Ledger</div>
+    <div class="abs" style="left:16px;right:16px;top:25px;display:flex;flex-direction:column;gap:9px">
+      <div class="row"><span class="rub">✠</span><span class="time">[TIME]</span><span>[Next event]</span></div>
+      <div class="row"><span class="rub" style="color:#6b5430">✠</span><span class="time" style="color:#8c7a52">[TIME]</span><span style="color:#a89a76">[Then this]</span></div>
+    </div>
+  </div>
+
+  <!-- command bar -->
+  <div class="panel" style="top:554px;height:44px">
+    <svg class="abs" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a55a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true" style="left:16px;top:12px"><path d="M20 4c-9 0-14 5-14 12l-2 4 4-2c7 0 12-5 12-14z"/><path d="M8 16c3-4 6-7 9-9"/></svg>
+    <span class="abs" style="left:46px;top:11px;font-size:16px;font-style:italic;color:#8c7a52">Command the Oracle…</span>
+    <button type="button" class="abs" style="right:8px;top:7px;height:30px;padding:0 13px;border:1px solid #6b5430;background:linear-gradient(#3a1612,#1c0a08);color:#e6d9b8;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em">SUMMON</button>
+  </div>
+
+  <!-- dispatches -->
+  <div class="panel" style="top:612px;height:90px">
+    <div class="ribbon">Dispatches</div>
+    <div class="abs cap" style="right:16px;top:8px;color:#b0524a;font-size:8.5px">3 unheeded</div>
+    <div class="abs" style="left:16px;right:16px;top:27px;display:flex;flex-direction:column;gap:9px">
+      <div class="row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c0534a" stroke-width="2" aria-hidden="true"><circle cx="7" cy="12" r="4"/><circle cx="17" cy="12" r="4"/><path d="M7 16h10"/></svg><span style="flex:1">New voicemail</span><span style="font-size:11px;color:#8c7a52;font-style:italic">2:13 AM</span></div>
+      <div class="row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a55a" stroke-width="2" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg><span style="flex:1;color:#a89a76">[Sender] · [message preview]</span><span style="font-size:11px;color:#8c7a52;font-style:italic">[time]</span></div>
+      <div class="row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a55a" stroke-width="2" aria-hidden="true"><path d="M6 7h9v10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7z"/></svg><span style="flex:1;color:#a89a76">[Discord] · [mention]</span><span style="font-size:11px;color:#8c7a52;font-style:italic">[time]</span></div>
+    </div>
+  </div>
+
+  <!-- dock: wax seals -->
+  <svg class="abs" width="354" height="10" viewBox="0 0 354 10" style="left:18px;top:710px" fill="none" aria-hidden="true"><path d="M0 5H158M196 5H354" stroke="#4a3a20"/><path d="M177 0v10M172 4h10" stroke="#8c6d3a" stroke-width="1.6"/></svg>
+  <div class="abs" style="left:18px;right:18px;top:730px;display:flex;justify-content:space-around">
+    <div class="dockcol"><button type="button" class="seal" aria-label="Phone"><svg class="wax" viewBox="0 0 54 54" aria-hidden="true"><path d="M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z" fill="#4e1511"/><circle cx="27" cy="27" r="19" fill="none" stroke="#2a0a08" stroke-width="2"/><circle cx="27" cy="27" r="19" fill="none" stroke="rgba(255,190,150,.18)" stroke-width="1" transform="translate(-.6 -.6)"/></svg><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e3cf9c" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 4 5a1 1 0 0 1 1-1z"/></svg></span></button>HERALD</div>
+    <div class="dockcol"><button type="button" class="seal" aria-label="Camera"><svg class="wax" viewBox="0 0 54 54" aria-hidden="true"><path d="M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z" fill="#4e1511"/><circle cx="27" cy="27" r="19" fill="none" stroke="#2a0a08" stroke-width="2"/><circle cx="27" cy="27" r="19" fill="none" stroke="rgba(255,190,150,.18)" stroke-width="1" transform="translate(-.6 -.6)"/></svg><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e3cf9c" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.5"/></svg></span></button>PORTRAIT</div>
+    <div class="dockcol"><button type="button" class="seal" aria-label="Web"><svg class="wax" viewBox="0 0 54 54" aria-hidden="true"><path d="M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z" fill="#4e1511"/><circle cx="27" cy="27" r="19" fill="none" stroke="#2a0a08" stroke-width="2"/><circle cx="27" cy="27" r="19" fill="none" stroke="rgba(255,190,150,.18)" stroke-width="1" transform="translate(-.6 -.6)"/></svg><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e3cf9c" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></span></button>ROAD</div>
+    <div class="dockcol"><button type="button" class="seal" aria-label="Settings"><svg class="wax" viewBox="0 0 54 54" aria-hidden="true"><path d="M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z" fill="#4e1511"/><circle cx="27" cy="27" r="19" fill="none" stroke="#2a0a08" stroke-width="2"/><circle cx="27" cy="27" r="19" fill="none" stroke="rgba(255,190,150,.18)" stroke-width="1" transform="translate(-.6 -.6)"/></svg><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e3cf9c" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M7 8h10M9 21h6"/></svg></span></button>SMITHY</div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>
