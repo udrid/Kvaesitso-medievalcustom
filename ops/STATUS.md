@@ -2,11 +2,12 @@
 
 | Task id | Stage | State | Thread/branch | Notes |
 |---|---|---|---|---|
-| T0-build | 1 | pending | - | Read `.github/workflows/build-nightly.yml`; get an unmodified fork APK building and installed |
-| T1-home | 1 | blocked on T0 | - | Home screen layout from C5: theme, fonts, orb, shields |
+| T0-build | 1 | active (waiting: owner must add 4 GitHub secrets, then push) | claude/T0-build | Brief at `tasks/T0-build/brief.md`. Fork lacks signing secrets; add a new push-triggered workflow |
+| T1-home | 1 | blocked on T0 | - | Home screen layout from C5: theme, fonts, orb, shields. App name Deliverance |
+| T2-treasury | 1 | blocked on T1 | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner
-1. App name? (ideas: Oracle, The War Room, Deliverance)
-2. Treasury: start with numbers typed in by hand?
-3. Is the owner OK granting notification access once on the phone (for badges and Dispatches)?
-4. Confirm dock names, the Latin ring text, and what the command bar does.
+None.
+
+## Answered 2026-10-25 (see `ops/decisions.md`)
+App name Deliverance; notification access yes; dock, motto and command bar delegated to Claude.
