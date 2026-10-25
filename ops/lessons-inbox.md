@@ -1,3 +1,4 @@
 - T1-home: a Nightly CI build takes 5-12 min and a missing import only shows there; re-read every new file's imports before pushing.
 - T1-home: no Python in the workspace shell; use Write for files with quotes/heredocs (a bash heredoc batch aborted once).
 - T1-home: propose AF entries: Settings.Global "bluetooth_on" readable without permission; Claude app package `com.anthropic.claude` UNVERIFIED.
+- T1b-polish: no Python in the workspace shell, so edit with Edit/sed; run git from the repo root (a cd into a subfolder made a pathspec commit fail).
