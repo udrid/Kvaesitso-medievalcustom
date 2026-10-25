@@ -178,8 +178,14 @@ internal fun Panel(
 
 private fun Modifier.panelLook(): Modifier = this
     .background(Brush.verticalGradient(listOf(Medieval.PanelTop, Medieval.PanelBottom)))
-    .border(1.dp, Medieval.GoldDark)
     .drawBehind {
+        val edge = 1.dp.toPx()
+        drawRect(
+            Medieval.GoldDark,
+            topLeft = Offset(edge / 2f, edge / 2f),
+            size = Size(size.width - edge, size.height - edge),
+            style = Stroke(edge),
+        )
         val inset = 4.dp.toPx()
         drawRect(
             Color(0x428C6D3A),

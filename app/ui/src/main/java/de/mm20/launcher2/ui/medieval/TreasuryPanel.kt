@@ -60,16 +60,16 @@ internal fun TreasuryPanel() {
             }
         }
         MText(
-            "[YOUR TOTAL]", 17f, Medieval.TextBright, Modifier.at(64f, 17f).width(160.dp),
+            "[YOUR TOTAL]", 17f, Medieval.TextBright, Modifier.at(64f, 17f).width(144.dp),
             font = Medieval.Cinzel, bold = true, spacingEm = 0.04f,
         )
-        Box(Modifier.at(234f, 13f).width(104.dp)) {
-            Cap("Quest: [GOAL]", size = 9f, spacingEm = 0.24f)
+        Box(Modifier.at(212f, 9f).width(128.dp)) {
+            Cap("Quest: [GOAL]", size = 11f, spacingEm = 0.14f)
             Box(
                 Modifier
-                    .padding(top = 17.dp)
+                    .padding(top = 19.dp)
                     .fillMaxWidth()
-                    .height(10.dp)
+                    .height(12.dp)
                     .border(1.dp, Medieval.GoldDark)
                     .background(Color(0xFF050505))
                     .padding(1.5.dp)
@@ -85,7 +85,7 @@ internal fun TreasuryPanel() {
             }
             MText(
                 "[0%] of the way", 10f, Medieval.TextFaint,
-                Modifier.padding(top = 32.dp).fillMaxWidth(), italic = true, align = TextAlign.End,
+                Modifier.padding(top = 31.dp).fillMaxWidth(), italic = true, align = TextAlign.End,
             )
         }
     }
