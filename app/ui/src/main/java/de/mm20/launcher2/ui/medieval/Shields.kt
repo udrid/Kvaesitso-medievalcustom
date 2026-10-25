@@ -59,7 +59,7 @@ private val Slots = listOf(
     ShieldSlot(3, 304f, 372f, 293f, 448f, "com.samsung.android.messaging", MedievalIcons.Letter),
 )
 
-private class AppEntry(val packageName: String, val label: String)
+internal class AppEntry(val packageName: String, val label: String)
 
 private fun isInstalled(context: Context, packageName: String): Boolean =
     context.packageManager.getLaunchIntentForPackage(packageName) != null
@@ -89,7 +89,7 @@ private fun launchableApps(context: Context): List<AppEntry> {
         .sortedBy { it.label.lowercase() }
 }
 
-private fun drawableToBitmap(drawable: Drawable, size: Int): Bitmap {
+internal fun drawableToBitmap(drawable: Drawable, size: Int): Bitmap {
     val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
     val canvas = android.graphics.Canvas(bitmap)
     drawable.setBounds(0, 0, size, size)
@@ -178,9 +178,11 @@ internal fun Shields() {
         Shield(slot, refresh) { picking = slot }
     }
 
+    val apps = remember { launchableApps(context) }
     val slot = picking
     if (slot != null) {
         AppPickerDialog(
+            apps = apps,
             onDismiss = { picking = null },
             onPick = { entry ->
                 context.getSharedPreferences(PrefsName, Context.MODE_PRIVATE).edit()
@@ -189,35 +191,5 @@ internal fun Shields() {
                 picking = null
             },
         )
-    }
-}
-
-@Composable
-private fun AppPickerDialog(onDismiss: () -> Unit, onPick: (AppEntry) -> Unit) {
-    val context = LocalContext.current
-    val apps = remember { launchableApps(context) }
-    Dialog(onDismissRequest = onDismiss) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .height(480.dp)
-                .background(Medieval.PanelBottom)
-                .border(1.dp, Medieval.GoldDark)
-                .padding(14.dp)
-        ) {
-            Cap("Choose the app for this shield", Modifier.padding(bottom = 10.dp), size = 11f)
-            LazyColumn {
-                items(apps, key = { it.packageName }) { app ->
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable { onPick(app) }
-                            .padding(vertical = 10.dp),
-                    ) {
-                        MText(app.label, 16f, Medieval.Text)
-                    }
-                }
-            }
-        }
     }
 }
