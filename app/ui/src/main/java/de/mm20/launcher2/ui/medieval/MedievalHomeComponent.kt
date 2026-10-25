@@ -88,5 +88,6 @@ private fun MedievalStage(state: LauncherScaffoldState) {
         Shields()
         Ledger(vm)
         CommandBar(state)
+        Dock()
     }
 }
