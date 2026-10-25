@@ -55,6 +55,7 @@ import de.mm20.launcher2.ui.launcher.scaffold.ScaffoldGesture
 import de.mm20.launcher2.ui.launcher.scaffold.SearchBarPosition
 import de.mm20.launcher2.ui.launcher.scaffold.components.ClockAndWidgetsHomeComponent
 import de.mm20.launcher2.ui.launcher.scaffold.components.ClockHomeComponent
+import de.mm20.launcher2.ui.medieval.MedievalHomeComponent
 import de.mm20.launcher2.ui.launcher.scaffold.components.DismissComponent
 import de.mm20.launcher2.ui.launcher.scaffold.components.FeedComponent
 import de.mm20.launcher2.ui.launcher.scaffold.components.LaunchComponent
@@ -352,11 +353,7 @@ abstract class SharedLauncherActivity(
                                     val gestures = gestures!!
 
                                     val config = ScaffoldConfiguration(
-                                        homeComponent = if (widgetsOnHomeScreen == true) {
-                                            ClockAndWidgetsHomeComponent
-                                        } else {
-                                            ClockHomeComponent
-                                        },
+                                        homeComponent = MedievalHomeComponent,
                                         searchComponent = searchComponent,
                                         swipeUp = getScaffoldGesture(
                                             gestures.swipeUpAction,
@@ -394,10 +391,10 @@ abstract class SharedLauncherActivity(
                                             Gesture.HomeButton,
                                         ),
                                         fixedSearchBar = fixedSearchBar,
-                                        searchBarStyle = searchBarStyle,
+                                        searchBarStyle = SearchBarStyle.Hidden, // Deliverance: command bar lives on Home
                                         searchBarPosition = if (bottomSearchBar) SearchBarPosition.Bottom else SearchBarPosition.Top,
-                                        darkStatusBarIcons = lightStatus,
-                                        darkNavBarIcons = lightNav,
+                                        darkStatusBarIcons = false, // Deliverance: dark theme only
+                                        darkNavBarIcons = false,
                                         backgroundColor = backgroundColor,
                                         showStatusBar = !hideStatus,
                                         showNavBar = !hideNav,
