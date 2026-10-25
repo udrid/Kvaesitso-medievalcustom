@@ -2,8 +2,8 @@
 
 | Task id | Stage | State | Thread/branch | Notes |
 |---|---|---|---|---|
-| T0-build | 1 | FINISHED (build green; waiting for owner phone test) | claude/T0-build | Brief at `tasks/T0-build/brief.md`. Fork lacks signing secrets; add a new push-triggered workflow |
-| T1-home | 1 | blocked on T0 | - | Home screen layout from C5: theme, fonts, orb, shields. App name Deliverance |
+| T0-build | 1 | DONE (owner verified install, Home, Smart Launcher kept) | claude/T0-build | Brief at `tasks/T0-build/brief.md`. Fork lacks signing secrets; add a new push-triggered workflow |
+| T1-home | 1 | ready | - | Home screen layout from C5: theme, fonts, orb, shields. App name Deliverance |
 | T2-treasury | 1 | blocked on T1 | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner
