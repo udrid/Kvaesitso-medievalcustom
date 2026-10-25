@@ -81,5 +81,6 @@ private fun MedievalStage(state: LauncherScaffoldState) {
     val density = LocalDensity.current
     CompositionLocalProvider(LocalDensity provides Density(density.density, 1f)) {
         HeaderSection(vm.forecast)
+        StatusLine()
     }
 }
