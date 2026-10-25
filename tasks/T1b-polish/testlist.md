@@ -27,3 +27,8 @@ Install the new APK from the GitHub Actions run for branch `claude/T1b-polish` (
 8. Restart check.
    - Swipe up from the recent-apps button (or open Recents) and close Deliverance. Press the Home button.
    - Your picked app should still be on the shield.
+9. Look at the ring around the glowing orb.
+   - You should see three phrases, evenly spread around the circle: NOSCE TE IPSUM at the top, SAPERE AUDE lower right, LUX ET VERITAS lower left, with a small cross between each pair.
+   - The letters should be evenly spaced, sit in the middle of the band between the two thin gold rings, and touch neither ring.
+   - Every phrase should read the right way up (no phrase upside-down). At the bottom the letters face up, at the top they also face up.
+   - Report: any phrase that is cut off, overlaps a cross, or touches a ring line.

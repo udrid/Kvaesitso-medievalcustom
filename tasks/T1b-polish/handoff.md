@@ -17,3 +17,5 @@ NOT verified (workspace cannot run the app):
 Clutter ideas beyond the brief (not done): none found beyond the owner's list.
 
 Next stage needs: T2 Treasury can edit `TreasuryPanel.kt` freely now.
+
+Owner add-on (ring text, own commit, `Orb.kt` only): the ring now reads NOSCE TE IPSUM, SAPERE AUDE, LUX ET VERITAS (replaces VERITAS ET CONSILIUM / ANNO DOMINI / ORACULUM). The phrases sit 120 degrees apart from the top with a cross in each gap, text size 8, letter spacing 0.25, middle of the capitals on the middle of the band between the two ring lines (r 57 and 86). Phrases in the lower half run counter-clockwise so every phrase is upright. NOT verified on the phone: fit/overlap of the text with the rings and crosses, the cap-height estimate (0.7 x text size) for centering, and fake-bold look.
