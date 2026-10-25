@@ -34,7 +34,6 @@ import de.mm20.launcher2.ui.R
 /** Package name of the Claude Android app. UNVERIFIED until the owner tests the orb on the phone. */
 internal const val ClaudePackage = "com.anthropic.claude"
 
-private const val RingText = "✠ VERITAS ET CONSILIUM ✠ ANNO DOMINI ✠ ORACULUM ✠"
 
 /** The Oracle: ring with inscription, glowing orb, label. Tap opens the Claude app. */
 @Composable
@@ -57,16 +56,20 @@ internal fun OracleOrb() {
         drawIntoCanvas { canvas ->
             val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = Medieval.GoldDeep.toArgb()
-                textSize = 8.5f * k
-                letterSpacing = 0.4f
+                textSize = 8f * k
+                letterSpacing = 0.25f
                 isFakeBoldText = true
                 if (ringFace != null) this.typeface = ringFace
             }
-            val path = android.graphics.Path().apply {
-                moveTo(17f * k, 88f * k)
-                arcTo(RectF(17f * k, 17f * k, 159f * k, 159f * k), 180f, 359.9f)
+            // Phrases at 120 degree steps starting at the top; a cross sits in each gap.
+            val bandMiddle = (86f + 57f) / 2f * k
+            val capHeight = 0.7f * paint.textSize
+            val c = size.width / 2f
+            RingPhrases.forEachIndexed { i, phrase ->
+                val phraseDeg = -90f + 120f * i
+                drawArcText(canvas.nativeCanvas, paint, phrase, c, c, bandMiddle, phraseDeg, capHeight)
+                drawArcText(canvas.nativeCanvas, paint, RingCross, c, c, bandMiddle, phraseDeg + 60f, capHeight)
             }
-            canvas.nativeCanvas.drawTextOnPath(RingText, path, 0f, 0f, paint)
         }
     }
 
