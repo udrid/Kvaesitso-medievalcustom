@@ -17,7 +17,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.mm20.launcher2.ui.launcher.scaffold.LauncherScaffoldState
 import de.mm20.launcher2.ui.launcher.scaffold.components.ScaffoldComponent
 
@@ -73,4 +77,9 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
 
 @Composable
 private fun MedievalStage(state: LauncherScaffoldState) {
+    val vm: MedievalHomeVM = viewModel()
+    val density = LocalDensity.current
+    CompositionLocalProvider(LocalDensity provides Density(density.density, 1f)) {
+        HeaderSection(vm.forecast)
+    }
 }

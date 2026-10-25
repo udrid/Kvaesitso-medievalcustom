@@ -31,6 +31,8 @@ internal object Medieval {
     val ShieldTop = Color(0xFF3A1612)
     val Wax = Color(0xFF4E1511)
     val Ember = Color(0xFFF0A050)
+    val Parchment = Color(0xFFECDFBF)
+    val WeatherGrey = Color(0xFFA8987A)
 
     val Blackletter = FontFamily(
         Font(R.font.unifrakturcook_bold, FontWeight.Bold),
