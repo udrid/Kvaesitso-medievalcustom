@@ -82,5 +82,6 @@ private fun MedievalStage(state: LauncherScaffoldState) {
     CompositionLocalProvider(LocalDensity provides Density(density.density, 1f)) {
         HeaderSection(vm.forecast)
         StatusLine()
+        TreasuryPanel()
     }
 }
