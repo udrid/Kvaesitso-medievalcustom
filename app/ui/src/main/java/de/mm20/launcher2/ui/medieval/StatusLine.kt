@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import de.mm20.launcher2.weather.Forecast
 import kotlinx.coroutines.delay
 
 private class StatusFlags(val bluetoothOn: Boolean, val hushed: Boolean)
@@ -52,13 +53,9 @@ private fun StatusItem(label: String, icon: List<String>, iconSize: Float, color
     }
 }
 
-/**
- * Wi-Fi call, Bluetooth, Hushed, voicemail.
- * Bluetooth and Hushed are real. Wi-Fi call and voicemail have no simple permission-free API,
- * so they stay dim placeholders until a later task.
- */
+/** Bluetooth and Hushed on the left, the weather line (under the clock) on the right. */
 @Composable
-internal fun StatusLine() {
+internal fun StatusLine(forecast: Forecast?) {
     val context = LocalContext.current
     val flags by produceState(readFlags(context)) {
         while (true) {
@@ -78,10 +75,9 @@ internal fun StatusLine() {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(9.dp), verticalAlignment = Alignment.CenterVertically) {
-            StatusItem("Wi-Fi call", MedievalIcons.Wifi, 12f, Medieval.Gold, lit = false)
             StatusItem("Bluetooth", MedievalIcons.Bluetooth, 11f, Medieval.Gold, lit = flags.bluetoothOn)
             StatusItem("Hushed", MedievalIcons.Hushed, 12f, Medieval.Gold, lit = flags.hushed)
         }
-        StatusItem("Voicemail", MedievalIcons.Voicemail, 12f, Medieval.RubricSoft, lit = false)
+        MText(weatherLine(forecast), 12f, Medieval.WeatherGrey, italic = true)
     }
 }

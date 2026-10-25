@@ -31,7 +31,7 @@ private fun ordinal(day: Int): String {
     return "$day$suffix"
 }
 
-private fun weatherLine(f: Forecast?): String {
+internal fun weatherLine(f: Forecast?): String {
     if (f == null) return "[weather]"
     val kelvin = f.temperature
     val useFahrenheit = Locale.getDefault().country == "US"
@@ -39,9 +39,9 @@ private fun weatherLine(f: Forecast?): String {
     return "${Math.round(deg)}° · ${f.condition}"
 }
 
-/** Drop cap, date, big clock and weather line (C5 header). */
+/** Drop cap, date and big clock (C5 header). The weather line sits in the status row. */
 @Composable
-internal fun HeaderSection(forecast: Forecast?) {
+internal fun HeaderSection() {
     val context = LocalContext.current
     val now: ZonedDateTime by rememberNow()
     val dayName = now.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
@@ -72,10 +72,6 @@ internal fun HeaderSection(forecast: Forecast?) {
         }
         Column(horizontalAlignment = Alignment.End) {
             MText(clock, 40f, Medieval.TextBright)
-            MText(
-                weatherLine(forecast), 12f, Medieval.WeatherGrey,
-                Modifier.padding(top = 4.dp), italic = true,
-            )
         }
     }
 }

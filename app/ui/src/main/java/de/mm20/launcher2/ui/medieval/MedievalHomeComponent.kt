@@ -80,8 +80,8 @@ private fun MedievalStage(state: LauncherScaffoldState) {
     val vm: MedievalHomeVM = viewModel()
     val density = LocalDensity.current
     CompositionLocalProvider(LocalDensity provides Density(density.density, 1f)) {
-        HeaderSection(vm.forecast)
-        StatusLine()
+        HeaderSection()
+        StatusLine(vm.forecast)
         TreasuryPanel()
         Pennants()
         OracleOrb()
