@@ -83,5 +83,6 @@ private fun MedievalStage(state: LauncherScaffoldState) {
         HeaderSection(vm.forecast)
         StatusLine()
         TreasuryPanel()
+        Pennants()
     }
 }
