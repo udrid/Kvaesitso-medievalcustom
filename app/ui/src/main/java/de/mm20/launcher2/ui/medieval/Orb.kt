@@ -34,6 +34,32 @@ import de.mm20.launcher2.ui.R
 /** Package name of the Claude Android app. UNVERIFIED until the owner tests the orb on the phone. */
 internal const val ClaudePackage = "com.anthropic.claude"
 
+private val RingPhrases = listOf("NOSCE TE IPSUM", "SAPERE AUDE", "LUX ET VERITAS")
+private const val RingCross = "✠"
+
+/**
+ * Draws [text] on the circle of [radius] around [cx], [cy], centered on [centerDeg] (screen angle,
+ * 0 = right, clockwise). Phrases in the lower half run counter-clockwise so they stay upright.
+ * [capHeight] puts the middle of the capitals on [radius] for both directions.
+ */
+private fun drawArcText(
+    canvas: android.graphics.Canvas, paint: Paint, text: String,
+    cx: Float, cy: Float, radius: Float, centerDeg: Float, capHeight: Float,
+) {
+    val lower = Math.sin(Math.toRadians(centerDeg.toDouble())) > 0.0
+    // Clockwise paths put the glyph tops outward, counter-clockwise inward.
+    val r = if (lower) radius + capHeight / 2f else radius - capHeight / 2f
+    val spanDeg = Math.toDegrees((paint.measureText(text) / r).toDouble()).toFloat()
+    val oval = RectF(cx - r, cy - r, cx + r, cy + r)
+    val path = android.graphics.Path()
+    if (lower) {
+        path.addArc(oval, centerDeg + spanDeg / 2f, -spanDeg)
+    } else {
+        path.addArc(oval, centerDeg - spanDeg / 2f, spanDeg)
+    }
+    canvas.drawTextOnPath(text, path, 0f, 0f, paint)
+}
+
 
 /** The Oracle: ring with inscription, glowing orb, label. Tap opens the Claude app. */
 @Composable
