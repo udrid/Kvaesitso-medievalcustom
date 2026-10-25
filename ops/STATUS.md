@@ -7,7 +7,7 @@
 | T2-treasury | 1 | blocked on T1 | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner
-T1-home: which apps the four shields open (asked in the brief, before step 7).
+None.
 
 ## Answered 2026-10-25 (see `ops/decisions.md`)
 App name Deliverance; notification access yes; dock, motto and command bar delegated to Claude.
