@@ -60,7 +60,7 @@ internal fun TreasuryPanel() {
             }
         }
         MText(
-            "[YOUR TOTAL]", 21f, Medieval.TextBright, Modifier.at(64f, 14f),
+            "[YOUR TOTAL]", 17f, Medieval.TextBright, Modifier.at(64f, 17f).width(160.dp),
             font = Medieval.Cinzel, bold = true, spacingEm = 0.04f,
         )
         Box(Modifier.at(234f, 13f).width(104.dp)) {
