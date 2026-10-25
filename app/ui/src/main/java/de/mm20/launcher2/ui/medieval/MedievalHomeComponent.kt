@@ -86,5 +86,6 @@ private fun MedievalStage(state: LauncherScaffoldState) {
         Pennants()
         OracleOrb()
         Shields()
+        Ledger(vm)
     }
 }
