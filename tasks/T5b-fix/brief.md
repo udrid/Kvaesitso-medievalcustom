@@ -1,0 +1,4 @@
+# Task brief: T5b-fix
+
+Goal: Fix bug 1 in `tasks/T5b-fix/bugs.md` (the pill sits too high; centre the camera hole in the pill). Bug 2 only if the owner reports the moon stays on Sound. Bug 3: nothing. Branch `claude/T5b-fix` from `claude/T5-pill`. Read `tasks/T5-pill/handoff.md` first.
+Rules: commit locally; NEVER push or start a build without the owner's approval (CLAUDE.md); compile with `./gradlew :app:ui:compileDebugKotlin --offline` (JAVA_HOME = Android Studio jbr). Commit trailer `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`. Smallest possible change, no design changes. Done when: gate items 2-4, testlist (visible result first: hole centred in the pill; should-NOT-happen: header or other sections moving; restart step), handoff, lessons (0-3), STATUS row, then report READY TO PUSH with plain words. Two failed fixes of one bug: stop and write the root cause in bugs.md.
