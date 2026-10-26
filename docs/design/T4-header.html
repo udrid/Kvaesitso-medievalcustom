@@ -143,7 +143,7 @@ function header(d,time,weather,datestr){
   '<div class="dt" style="left:'+(dcw+6)+'px">'+datestr+'</div>'+
   '<div class="abs" style="left:'+(dcw+3)+'px;right:96px;top:0;height:72px">'+'</div>'+
   '<div class="med" style="left:auto;position:absolute;left:'+204+'px">'+medallion(k)+'</div>'+
-  '<div class="tm"><div class="t">'+time+'</div><div class="w">'+weather[0]+'</div><div style="margin-top:3px;margin-right:-1px">'+WX.svg(weather[1],64,26)+'</div></div>'+
+  '<div class="tm"><div class="t">'+time+'</div><div class="w">'+weather[0]+'</div><div style="margin-top:3px;margin-right:-1px">'+WX.svg(weather[1],64,26,'accentSoft')+'</div></div>'+
  '</div>'+rule(k);
 }
 var out='';

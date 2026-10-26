@@ -1,0 +1,37 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T4 weather option A variants</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf");font-style:italic}
+body{margin:0;width:390px;background:#0d0c09;color:#a8884c;font-family:Cinzel,serif}
+table{border-collapse:separate;border-spacing:4px 3px;margin:6px 4px}
+th{font-size:9px;font-weight:700;letter-spacing:.18em;color:#c9a55a;padding:8px 0 2px;text-align:center}
+th small{display:block;font-family:'IM Fell English',serif;font-style:italic;font-weight:400;letter-spacing:0;font-size:9.5px;color:#8c7a52;margin-top:2px}
+td.n{font-size:7px;letter-spacing:.12em;color:#6b5a38;text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;width:9px}
+td.s{background:radial-gradient(90% 120% at 50% 40%,#26211a 0%,#0d0c09 90%);border:1px solid #3a2e18}
+td.s svg{display:block}
+.cap{font-size:8.5px;letter-spacing:.2em;color:#8c6d3a;margin:12px 17px 4px}
+.ph{display:grid;grid-template-columns:repeat(8,1fr);margin:0 12px;text-align:center;font-family:'IM Fell English',serif;font-style:italic;font-size:8px;color:#8c7a52;line-height:1.1}
+.ph svg{display:block;margin:0 auto 2px}
+.hd{display:flex;gap:4px;margin:4px 8px 14px 17px}
+.hd>div{flex:1;text-align:right;padding:6px 6px 4px;background:radial-gradient(90% 120% at 50% 40%,#26211a 0%,#0d0c09 90%);border:1px solid #3a2e18}
+.hd .t{font-family:serif;font-size:18px;color:#f2e6c6;line-height:1}
+.hd .w{font-family:'IM Fell English',serif;font-style:italic;font-size:9px;color:#a8987a;margin:3px 0 2px}
+</style></head><body>
+<div id="g"></div>
+<script src="T4-weather.js"></script>
+<script>
+/* the preview uses tonight's real moon (25 Oct 2026, 20:00 UTC); the app will use the phone's clock */
+var today=WX.phaseOf(Date.UTC(2026,9,25,20,0));WX.setPhase(today);
+var L={clear:'Clear',clearnight:'Night',partly:'Partly',cloudy:'Cloudy',rain:'Rain',storm:'Storm',snow:'Snow',fog:'Fog'};
+var P=[['accent','A1. Plain','as you picked'],['accentSoft','A2. Soft','dustier, calmer colours'],['accentGlow','A3. Glow','brighter, soft halos']];
+var h='<table><tr><th></th>'+P.map(function(p){return '<th>'+p[1]+'<small>'+p[2]+'</small></th>'}).join('')+'</tr>';
+WX.names.forEach(function(k){h+='<tr><td class="n">'+L[k]+'</td>'+P.map(function(p){return '<td class="s">'+WX.svg(k,112,46,p[0])+'</td>'}).join('')+'</tr>'});
+h+='</table>';
+var NM=['New','Waxing crescent','First quarter','Waxing gibbous','Full','Waning gibbous','Last quarter','Waning crescent'];
+h+='<div class="cap">THE MOON FOLLOWS THE REAL SKY. TONIGHT: '+NM[Math.round(today*8)%8].toUpperCase()+', '+Math.round((1-Math.cos(2*Math.PI*today))*50)+'% LIT</div><div class="ph">';
+for(var i=0;i<8;i++)h+='<div>'+WX.moonOnly(i/8,'accent',36)+NM[i]+'</div>';
+h+='</div><div class="cap">AT REAL SIZE, UNDER THE TIME (TONIGHT, CLEAR)</div><div class="hd">'+P.map(function(p){return '<div><div class="t">10:36</div><div class="w">48° · Clear</div>'+WX.svg('clearnight',64,26,p[0])+'</div>'}).join('')+'</div>';
+document.getElementById('g').innerHTML=h;
+/* freeze at a moment where the storm bolt is visible */
+document.getAnimations().forEach(function(a){a.pause();a.currentTime=850});
+</script></body></html>

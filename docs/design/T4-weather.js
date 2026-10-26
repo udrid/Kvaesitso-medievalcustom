@@ -6,11 +6,16 @@ var G='#c9a55a',GD='#8c6d3a',GDD='#4a3a20',GL='#e3cf9c',RD='#a8352b',RDD='#6e1a1
 
 /* colour palettes (owner picks one). gold = all gold line work; the others add pigment to the weather and land */
 var BASE={hill1:'#17140e',hill2:'#0f0d09',edge:GD,edge2:GDD,grass:GD,leaf:'#1d1a14',leafEdge:GD,leafHatch:GDD,roof:RDD,
- sun:'#b8913c',rays:G,moon:GL,rain:MUTE,snow:GL,fog:MUTE,bolt:RD,boltEdge:GL,glow:'#e58a3c',sky:null};
+ sun:'#b8913c',rays:G,moon:GL,rain:MUTE,snow:GL,fog:MUTE,bolt:RD,boltEdge:GL,glow:'#e58a3c',sky:null,
+ flash:GL,flashA:.09,halo:null,moonHalo:null};
 function pal(o){var p={};for(var k in BASE)p[k]=BASE[k];for(k in o)p[k]=o[k];return p}
 var PAL={
  gold:pal({}),
  accent:pal({sun:'#e0a83a',rays:'#e8b84a',rain:'#6f9fd8',snow:'#f4f1e8',bolt:'#f2c94c',boltEdge:'#fff1b0',glow:'#f0a040'}),
+ /* variants of "accent" (owner chose A, 2026-10-25) */
+ accentSoft:pal({sun:'#d4a04a',rays:'#d8b060',rain:'#8aa4c4',snow:'#ece6d6',bolt:'#e2c060',boltEdge:'#f4e4b0',glow:'#e0963c',fog:'#a8a490'}),
+ accentGlow:pal({sun:'#e8aa36',rays:'#f0bc46',moon:'#f2ead0',rain:'#5f9ae6',snow:'#ffffff',bolt:'#ffd23a',boltEdge:'#fff6c8',glow:'#ffb050',
+  flash:'#ffe08a',flashA:.16,halo:'#f0b040',moonHalo:'#f2ead0'}),
  pigment:pal({hill1:'#1c2112',hill2:'#12160b',edge:'#7d8a4a',edge2:'#4a5230',grass:'#8aa05a',leaf:'#34492a',leafEdge:'#8aa05a',leafHatch:'#5c7640',roof:'#8a2a1e',
   sun:'#dca23a',rays:'#e4b44a',rain:'#5f8fcf',snow:'#f4f1e8',bolt:'#f2c94c',boltEdge:'#fff1b0',glow:'#f0a040',fog:'#9aa4a0',
   sky:{clear:'#2c4466',clearnight:'#141b36',partly:'#2a3a52',cloudy:'#262a30',rain:'#1c2632',storm:'#1c1a2a',snow:'#2a3240',fog:'#2a2c2a'}}),
@@ -70,16 +75,23 @@ function sun(x,y,faint){
  function rays(rot,sc){var s='';for(var i=0;i<16;i++){s+='<g transform="rotate('+(i*22.5+rot)+') scale('+sc+')">'+(i%2?
    '<path d="M0 -8.6Q1.3 -10 0 -11.2Q-1.3 -12.4 0 -13.4" stroke="'+C.rays+'" stroke-width=".8" stroke-linecap="round"/>':
    '<path d="M-1.4 -8.6L0 -14.2L1.4 -8.6Z" fill="'+C.rays+'"/>')+'</g>'}return s}
- return '<g transform="translate('+x+' '+y+')">'+frames([rays(0,1),rays(4,1.05),rays(8,.97)],1.2)+
+ return '<g transform="translate('+x+' '+y+')">'+(C.halo?'<circle r="17" fill="'+C.halo+'" opacity=".16"/><circle r="12" fill="'+C.halo+'" opacity=".16"/>':'')+frames([rays(0,1),rays(4,1.05),rays(8,.97)],1.2)+
  '<circle r="7.6" fill="'+C.sun+'" stroke="'+GL+'" stroke-width="1"/><circle r="6.1" stroke="#8a6a22" stroke-width=".5"/>'+
  '<path d="M-3.6 -1.4q1.1-1.1 2.2 0M1.4 -1.4q1.1-1.1 2.2 0M0 -.8V1.6H-.9M-2.4 3.1Q0 4.9 2.4 3.1" stroke="#4a2e0c" stroke-width=".7" stroke-linecap="round" stroke-linejoin="round"/>'+
  '<circle cx="-3.6" cy="2" r=".9" fill="'+RD+'" opacity=".55"/><circle cx="3.6" cy="2" r=".9" fill="'+RD+'" opacity=".55"/></g>';
 }
-function moon(x,y){
- return '<g transform="translate('+x+' '+y+')"><path d="M3 -8.5A8.5 8.5 0 1 0 3 8.5A10 10 0 0 1 3 -8.5Z" fill="'+C.moon+'" stroke="'+G+'" stroke-width=".8"/>'+
- '<path d="M-5.2 -2.2q1.3 1 2.6 0M-3.4 2.6q-1 1.2-2.4 1" stroke="'+GD+'" stroke-width=".7" stroke-linecap="round"/>'+
- '</g>';
+/* moon drawn in its real phase: p = 0 new, .25 first quarter, .5 full, .75 last quarter (northern sky: waxing lit on the right) */
+function moon(x,y,p){
+ var r=8,f=Math.cos(2*Math.PI*p),rx=Math.abs(f)*r,wax=p<.5,q=wax?p:1-p;
+ var s='<g transform="translate('+x+' '+y+')">'+(C.moonHalo?'<circle r="13" fill="'+C.moonHalo+'" opacity=".18"/>':'')+
+  '<circle r="'+r+'" fill="#16130e" stroke="'+GD+'" stroke-width=".6" opacity=".9"/>';
+ if(q>.02)s+='<path transform="scale('+(wax?1:-1)+' 1)" d="M0 -'+r+'A'+r+' '+r+' 0 0 1 0 '+r+'A'+rx.toFixed(2)+' '+r+' 0 0 '+(q<.25?0:1)+' 0 -'+r+'Z" fill="'+C.moon+'" stroke="'+G+'" stroke-width=".7"/>';
+ s+='<circle cx="2.6" cy="-2.4" r="1.3" fill="'+GD+'" opacity=".35"/><circle cx="-2.2" cy="2.8" r="1" fill="'+GD+'" opacity=".35"/><circle cx="3.4" cy="3.2" r=".8" fill="'+GD+'" opacity=".35"/>';
+ if(q>.44)s+='<path d="M-3.4 -1.2q1-1 2 0M1.4 -1.2q1-1 2 0M-2.2 2.8Q0 4.2 2.2 2.8" stroke="'+GD+'" stroke-width=".6" stroke-linecap="round"/>';
+ return s+'</g>';
 }
+function phaseOf(d){var syn=29.530588853,ref=Date.UTC(2000,0,6,18,14);var a=((d-ref)/864e5)/syn;return a-Math.floor(a)}
+var PHASE=phaseOf(Date.now());
 function star(x,y,r){return '<path transform="translate('+x+' '+y+')" d="M0 -'+r+'Q0 0 '+r+' 0Q0 0 0 '+r+'Q0 0 -'+r+' 0Q0 0 0 -'+r+'Z" fill="'+GL+'"/>'}
 function cloud(x,y,s,fill,shade){
  return '<g transform="translate('+x+' '+y+') scale('+s+')">'+
@@ -113,19 +125,21 @@ var SCENE={
  clear:function(){return sun(36,15)+birds()+land()},
  clearnight:function(){
   var tw=frames([star(12,8,1.8)+star(52,6,1.2)+star(70,14,1.6)+star(24,22,1),star(12,8,1)+star(52,6,2)+star(70,14,1)+star(24,22,1.6)],1.4);
-  return moon(36,15)+tw+star(80,5,.9)+star(62,20,.8)+land({win:C.glow})+
+  return moon(36,15,PHASE)+tw+star(80,5,.9)+star(62,20,.8)+land({win:C.glow})+
    frames(['<rect x="101.8" y="21.5" width="1.4" height="3" rx=".7" fill="#ffc070"/>',''],1.2);},
  partly:function(){return sun(30,14)+drifting(function(){return cloud(34,10,.9,'#1d1a14',true)},4,2.4)+land()},
  cloudy:function(){return drifting(function(){return cloud(6,3,1,'#221d15',true)},4,2.8)+
   frames([-0,-2,-4,-2].map(function(o){return '<g transform="translate('+o+' 0)">'+cloud(46,11,.85,'#1d1a14',true)+'</g>'}),2.8)+land()},
  rain:function(){return cloud(20,2,1.25,'#14110c',true)+rain(9,-1.6,22,44)+land()+ripples()},
- storm:function(){return frames(['','','<rect width="128" height="40" fill="'+GL+'" opacity=".09"/>','','',''],2.4)+
+ storm:function(){return frames(['','','<rect width="128" height="40" fill="'+C.flash+'" opacity="'+C.flashA+'"/>','','',''],2.4)+
   cloud(18,0,1.35,'#0d0b08',true)+cloud(54,5,.8,'#14110c',true)+rain(12,-2.4,22,44)+
   frames(['','',bolt(),'',bolt(),''],2.4)+land({flag:.45})},
  snow:function(){return cloud(22,2,1.2,'#1d1a14',true)+land({snow:true})+snowfall()},
  fog:function(){return sun(40,14,true)+land()+fog()}
 };
-window.WX={css:css,names:Object.keys(SCENE),palettes:Object.keys(PAL),svg:function(k,w,h,p){C=PAL[p||'gold'];
+window.WX={css:css,names:Object.keys(SCENE),palettes:Object.keys(PAL),phaseOf:phaseOf,setPhase:function(p){PHASE=p},
+ moonOnly:function(p,pl,w){C=PAL[pl||'gold'];return '<svg width="'+(w||40)+'" height="'+(w||40)+'" viewBox="-14 -14 28 28" fill="none" aria-hidden="true">'+moon(0,0,p)+'</svg>'},
+ svg:function(k,w,h,p){C=PAL[p||'gold'];
  return '<svg class="wx" width="'+(w||64)+'" height="'+(h||26)+'" viewBox="0 0 128 52" fill="none" aria-hidden="true">'+sky(k,k+(p||''))+SCENE[k]()+'</svg>'}};
 var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 })();
