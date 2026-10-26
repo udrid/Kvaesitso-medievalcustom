@@ -9,3 +9,5 @@
 - T4b-fix: the launcher draws edge to edge and the home component's `insets` parameter holds only the display cutout; read `WindowInsets.navigationBars/statusBars` yourself for the bars (UNVERIFIED on phone).
 - T4b-fix: Kvaesitso's default long-press on Home is NoAction, so launcher settings are unreachable unless the home screen adds an entry; launch `SettingsActivity` with `EXTRA_ROUTE` (e.g. `ROUTE_WEATHER_INTEGRATION`) to open a screen directly.
 - T4c-weather: a WorkManager job gets no live GPS without background-location permission; never wait long for a fix there. The header now takes a fix in the foreground. The Kvaesitso weather widget and our header share the same flow, so look at the fetch job first, not the UI.
+- T5-pill: Samsung's status bar icons cannot be moved or filtered by a launcher; the only options are hide the whole bar (WindowInsetsController) and redraw what you want. Show the owner this limit before designing.
+- T5-pill: the scaffold re-shows the status bar on resume (`LauncherScaffold.kt`), so hiding it from a child composable depends on effect order (UNVERIFIED); the sure way is `showStatusBar = false` in the config.
