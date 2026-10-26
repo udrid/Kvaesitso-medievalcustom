@@ -9,3 +9,5 @@
    - You should see: the pill is still centred on the hole.
 4. Restart the launcher (swipe it away in recent apps, then open it again).
    - You should see: same centred pill. Nothing is saved by this feature.
+
+Note for step 1: if the hole is now slightly too LOW instead of too high, tell me. The phone may be using a 5 dp guessed nudge (the Samsung gave no hole outline), and I can adjust it.

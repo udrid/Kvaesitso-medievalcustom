@@ -74,16 +74,26 @@ private fun findHole(view: android.view.View, density: Float, statusBarPx: Int):
     // The cutout rect is a bounding box that may be taller than the hole, so its centre sat above the
     // hole on the phone. The cutout path (API 31+) is the hole's real outline: centre on its bounds.
     var shape = RectF(top)
+    var fromPath = false
     if (Build.VERSION.SDK_INT >= 31) {
         val path = view.rootWindowInsets?.displayCutout?.cutoutPath
         if (path != null) {
             val b = RectF()
             path.computeBounds(b, true)
-            if (!b.isEmpty) shape = b
+            if (!b.isEmpty) {
+                shape = b
+                fromPath = true
+            }
         }
     }
-    Log.i("medieval", "Pill: cutout rect $top, hole shape $shape, status bar ${statusBarPx}px")
-    return Hole(shape.centerX(), shape.centerY(), shape.width(), shape.height())
+    // No outline: nudge the rect centre down 5 dp (a guess from the owner's photos)
+    val nudge = if (fromPath) 0f else 5f * density
+    Log.i(
+        "medieval",
+        "Pill: cutout rect $top, hole shape $shape, status bar ${statusBarPx}px, " +
+            if (fromPath) "using cutout path, no nudge" else "no cutout path, nudge ${nudge}px down"
+    )
+    return Hole(shape.centerX(), shape.centerY() + nudge, shape.width(), shape.height())
 }
 
 private fun Context.findActivity(): Activity? {
