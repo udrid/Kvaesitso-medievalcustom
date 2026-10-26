@@ -19,3 +19,5 @@ Before you start: install the new APK. Make sure Android location is ON (swipe d
    - Go back to Home. Within a minute you should see the temperature. Report what you see.
 
 Report back: what the weather text said at each step, and the words you saw.
+
+Extra: if the text says "No weather for your area", report it and tell me roughly where you are (city only). That means Bright Sky has no station near you and we will add another source.

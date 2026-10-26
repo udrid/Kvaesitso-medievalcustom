@@ -9,6 +9,7 @@ import de.mm20.launcher2.preferences.weather.WeatherSettings
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withTimeoutOrNull
@@ -31,7 +32,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-enum class WeatherStatus { SetUp, AllowLocation, Fetching, Unavailable, Ready }
+enum class WeatherStatus { SetUp, AllowLocation, Fetching, Unavailable, NoCoverage, Ready }
 
 /** Data for the Deliverance Home screen that comes from Kvaesitso's own repositories. */
 class MedievalHomeVM : ViewModel(), KoinComponent {
@@ -71,6 +72,8 @@ class MedievalHomeVM : ViewModel(), KoinComponent {
     var weatherStatus by mutableStateOf(WeatherStatus.Fetching)
         private set
 
+    private var haveFix = false
+
     private val hasLocationPermission = permissionsManager.hasPermission(PermissionGroup.Location)
 
     init {
@@ -101,7 +104,8 @@ class MedievalHomeVM : ViewModel(), KoinComponent {
                     // The background job reports nothing back, so give it a minute, then say so.
                     delay(60_000)
                     Log.e("medieval", "Weather: no forecast after 60 s")
-                    weatherStatus = WeatherStatus.Unavailable
+                    // Bright Sky ("dwd") only answers near a DWD station: with a fix and no data, say so.
+                    weatherStatus = if (haveFix && weatherSettings.providerId.first() == "dwd") WeatherStatus.NoCoverage else WeatherStatus.Unavailable
                 }
             }
         }
@@ -118,6 +122,7 @@ class MedievalHomeVM : ViewModel(), KoinComponent {
                     if (fix == null) {
                         Log.e("medieval", "Weather: no location fix within 30 s (is Android location on?)")
                     } else {
+                        haveFix = true
                         weatherSettings.setLastLocation(LatLon(fix.latitude, fix.longitude))
                     }
                 }

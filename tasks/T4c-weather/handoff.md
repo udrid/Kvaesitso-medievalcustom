@@ -20,3 +20,7 @@ NOT verified
 - "Unavailable" is time-based (60 s), not a real error signal from the worker; a slow first fetch could show it briefly then recover.
 - Whether the texts fit the 76 dp column on 2 lines ("Weather unavailable" is the longest).
 - Manual city entry path is from the settings code, not seen on screen.
+
+Addendum (peer message, owner chose option A: keep Bright Sky, test the fix first)
+- The settings label "Deutscher Wetterdienst (Germany only)" is just a label: curl to api.brightsky.dev for Seattle (47.6,-122.33) returned hourly data (source 149), Open-Meteo also answers 200 (option B if A fails). MET Norway needs a contact email (C); OpenWeatherMap needs a key (D). Not built.
+- New state `NoCoverage` -> "No weather for your area": shown after the 60 s wait only when the provider is "dwd" and a location fix was obtained (heuristic, the worker reports no error). Compile green.

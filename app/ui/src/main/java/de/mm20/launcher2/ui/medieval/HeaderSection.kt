@@ -139,6 +139,7 @@ internal fun HeaderSection(
                     WeatherStatus.SetUp -> "Tap to set up weather"
                     WeatherStatus.AllowLocation -> "Allow location"
                     WeatherStatus.Unavailable -> "Weather unavailable"
+                    WeatherStatus.NoCoverage -> "No weather for your area"
                     else -> "Fetching weather…"
                 } else weatherLine(forecast),
                 if (needsSetup) 10f else 11f, Medieval.WeatherGrey,
