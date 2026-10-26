@@ -6,7 +6,6 @@ import android.provider.Settings
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -15,11 +14,8 @@ import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import de.mm20.launcher2.weather.Forecast
 import kotlinx.coroutines.delay
 
 private class StatusFlags(val bluetoothOn: Boolean, val hushed: Boolean)
@@ -53,9 +49,9 @@ private fun StatusItem(label: String, icon: List<String>, iconSize: Float, color
     }
 }
 
-/** Bluetooth and Hushed on the left, the weather line (under the clock) on the right. */
+/** Bluetooth and Hushed under the header divider (the weather now sits in the header). */
 @Composable
-internal fun StatusLine(forecast: Forecast?) {
+internal fun StatusLine() {
     val context = LocalContext.current
     val flags by produceState(readFlags(context)) {
         while (true) {
@@ -65,19 +61,12 @@ internal fun StatusLine(forecast: Forecast?) {
     }
     Row(
         Modifier
-            .at(22f, 112f)
-            .width(346.dp)
-            .drawBehind {
-                drawLine(Medieval.GoldLine, Offset(0f, 0f), Offset(size.width, 0f), 1.dp.toPx())
-            }
-            .padding(top = 6.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .at(22f, HeaderTop + 98f)
+            .width(346.dp),
+        horizontalArrangement = Arrangement.spacedBy(9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(9.dp), verticalAlignment = Alignment.CenterVertically) {
-            StatusItem("Bluetooth", MedievalIcons.Bluetooth, 11f, Medieval.Gold, lit = flags.bluetoothOn)
-            StatusItem("Hushed", MedievalIcons.Hushed, 12f, Medieval.Gold, lit = flags.hushed)
-        }
-        MText(weatherLine(forecast), 12f, Medieval.WeatherGrey, italic = true)
+        StatusItem("Bluetooth", MedievalIcons.Bluetooth, 11f, Medieval.Gold, lit = flags.bluetoothOn)
+        StatusItem("Hushed", MedievalIcons.Hushed, 12f, Medieval.Gold, lit = flags.hushed)
     }
 }
