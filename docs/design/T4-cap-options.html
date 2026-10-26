@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T4 drop cap options</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;width:390px;background:#0d0c09;color:#a8884c;font-family:Cinzel,serif}
+.l{font-size:9px;font-weight:700;letter-spacing:.2em;padding:14px 22px 2px;text-transform:uppercase}
+.r{position:relative;height:84px;margin:0 22px;border-bottom:1px solid #2a2418}
+.c{position:absolute;left:0;font-family:UnifrakturCook,serif;line-height:1}
+.n{position:absolute;font-family:UnifrakturCook,serif;font-size:31px;line-height:1;color:#ecdfbf}
+.d{position:absolute;font-size:10px;font-weight:700;letter-spacing:.2em;top:62px;white-space:nowrap}
+svg{position:absolute;left:0;top:0}
+</style></head><body>
+<div id="o"></div>
+<script>
+var W=[['M','onday','20th'],['W','ednesday','22nd'],['S','aturday','25th']];
+var V=[
+ ['A. Same cream blackletter, one size bigger, thin gold underline swash',
+  function(w){return '<div class="c" style="top:4px;font-size:60px;color:#ecdfbf;text-shadow:0 1px 0 #000">'+w[0]+'</div><svg width="200" height="84"><path d="M2 66C20 72 40 72 60 66" stroke="#c9a55a" fill="none" stroke-width="1.2"/><circle cx="62" cy="66" r="1.6" fill="#a8352b"/></svg>'}, 44],
+ ['B. Blackletter in gold, oxblood shadow, small vine curl',
+  function(w){return '<div class="c" style="top:4px;font-size:60px;color:#d9b868;background:linear-gradient(#f0d890,#a07a30);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(1.5px 1.5px 0 #6a1d16)">'+w[0]+'</div><svg width="200" height="84" fill="none" stroke="#8c6d3a" stroke-width="1"><path d="M0 70C10 62 18 76 28 68S44 62 52 70"/><circle cx="54" cy="70" r="1.5" fill="#c9a55a"/></svg>'}, 48],
+ ['C. Blackletter in oxblood with gold outline and glow (current look, brighter)',
+  function(w){return '<div class="c" style="top:4px;font-size:60px;color:#b8392e;-webkit-text-stroke:1px #c9a55a;text-shadow:0 0 14px rgba(201,165,90,.35),0 2px 0 #2a0a08">'+w[0]+'</div>'}, 48]
+];
+var h='';V.forEach(function(v){h+='<div class="l">'+v[0]+'</div>';W.forEach(function(w){
+ h+='<div class="r">'+v[1](w)+'<div class="n" style="left:'+(v[2]+(w[0]=='W'||w[0]=='M'?8:0))+'px;top:24px">'+w[1]+'</div><div class="d" style="left:'+(v[2]+(w[0]=='W'||w[0]=='M'?8:0)+2)+'px">'+w[2]+' of October</div></div>'})});
+document.getElementById('o').innerHTML=h;
+</script></body></html>
