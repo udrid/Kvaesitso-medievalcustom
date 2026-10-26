@@ -4,3 +4,5 @@
 - T1b-polish: no Python in the workspace shell, so edit with Edit/sed; run git from the repo root (a cd into a subfolder made a pathspec commit fail).
 - T3-dispatches: propose AF entries (UNVERIFIED on this phone): NotificationListenerService + `cancelNotification(key)` via Kvaesitso's NotificationRepository; `Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS` opens the access screen; use `extras.getCharSequence` for title/text (`getString` returns null for styled text).
 - T3-dispatches: upstream `Notification(notification, ranking)` dropped `flags`; fixed in one line. Kvaesitso already has a listener and badge code, so check `data/` before writing services.
+- T4-header: a local compile works here: set JAVA_HOME to Android Studio's `jbr` and run `./gradlew :app:ui:compileDebugKotlin` (system Java 27 is too new). Edge headless (`msedge --headless=new --screenshot`) renders design HTML to PNG.
+- T4-header: owner design rounds took 8+ iterations on the drop cap; show 2-3 rendered options side by side early instead of one at a time.
