@@ -9,6 +9,7 @@
 | T4-header | 1 | DONE (owner verified on phone 2026-10-26) | claude/T4-header | New header: date per weekday, time and weather small on right, assets +8% |
 | T4b-fix | 1 | DONE (owner verified on phone 2026-10-26) | claude/T4b-fix | Fix off-center layout and dock under nav bar; weather setup. From T4 phone test |
 | T4c-weather | 1 | DONE (owner verified: weather and scene show, 2026-10-26) | claude/T4c-weather | Weather never arrives (provider list shows only the German one). From T4b phone test |
+| T5-pill | 1 | active (Part 1: preview, owner OK needed) | claude/T5-pill | Camera pill on Home: left slot rotating alarm, charging, Ready; battery % right |
 | T2-treasury | 1 | deferred: owner wants it last (2026-10-25) | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner
