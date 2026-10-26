@@ -39,6 +39,11 @@ internal object Medieval {
         Font(R.font.unifrakturcook_bold, FontWeight.Normal),
     )
 
+    /** T4 header: weekday name and its handpainted first letter. */
+    val Gothic = FontFamily(
+        Font(R.font.unifrakturmaguntia_book, FontWeight.Normal),
+    )
+
     val Cinzel = FontFamily(
         Font(
             R.font.cinzel_variable,
