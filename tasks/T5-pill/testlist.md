@@ -22,3 +22,9 @@ Before you start: install the new APK. The notification icons need "notification
 8. Restart check: swipe the launcher away from recent apps and open it again. The pill and its icons should come back right away.
 
 Report back: what you saw at each step, and a photo of the top of the screen if something looks off.
+
+## Extra: Today's Ledger dates (coordinator fix, owner report 2026-10-26)
+1. Look at Today's Ledger on Home.
+   You should see: for all-day events, the date they fall on in short form (for example "Oct 31" before Halloween, "Nov 1" before Daylight Saving Time ends), not the word "Day".
+   Report: any date that is wrong by one day, or text that is cut off.
+2. Should NOT happen: the word "Day" must not appear any more.

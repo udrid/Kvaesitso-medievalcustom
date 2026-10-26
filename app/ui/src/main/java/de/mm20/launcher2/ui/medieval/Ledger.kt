@@ -26,8 +26,11 @@ import java.util.Locale
 
 private fun timeLabel(context: android.content.Context, event: CalendarEvent): String {
     val start = event.startTime ?: return ""
-    if (event.allDay) return "Day"
     val zoned = Instant.ofEpochMilli(start).atZone(ZoneId.systemDefault())
+    if (event.allDay) {
+        // All-day events have no clock time, so show the date they fall on (e.g. "Oct 31").
+        return zoned.format(DateTimeFormatter.ofPattern("MMM d", Locale.getDefault()))
+    }
     if (zoned.toLocalDate() != LocalDate.now()) {
         return zoned.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
     }
