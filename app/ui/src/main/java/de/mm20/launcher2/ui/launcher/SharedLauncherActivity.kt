@@ -396,7 +396,7 @@ abstract class SharedLauncherActivity(
                                         darkStatusBarIcons = false, // Deliverance: dark theme only
                                         darkNavBarIcons = false,
                                         backgroundColor = backgroundColor,
-                                        showStatusBar = !hideStatus,
+                                        showStatusBar = false, // Deliverance: the camera pill replaces the system top bar (T5-pill)
                                         showNavBar = !hideNav,
                                         darkSearchBar = darkSearchBar,
                                         wallpaperBlurRadius = if (wallpaperBlur) wallpaperBlurRadius.dp else 0.dp,
