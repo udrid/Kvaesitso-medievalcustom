@@ -1,19 +1,30 @@
 package de.mm20.launcher2.ui.medieval
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import de.mm20.launcher2.ui.launcher.search.SearchVM
 import de.mm20.launcher2.ui.launcher.scaffold.LauncherScaffoldState
 import kotlinx.coroutines.launch
 
 /**
  * "Command the Oracle..." is the launcher's own search (apps, contacts, calendar, settings, web).
- * SUMMON is left out: no verified way yet to hand text to the Claude app (see handoff).
+ * SUMMON hands the search text to the Claude app (see Summon.kt); with no text it only shows a hint.
  */
 @Composable
 internal fun CommandBar(state: LauncherScaffoldState) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val searchVM: SearchVM = viewModel()
     Panel(top = 404f, height = 44f, onClick = { scope.launch { state.onSearchBarTap() } }) {
+        SummonButton(Modifier.align(Alignment.TopEnd).padding(top = 7.dp, end = 8.dp)) {
+            summonToClaude(context, searchVM.searchQuery.value)
+        }
         SvgIcon(MedievalIcons.Quill, 20f, Medieval.Gold, Modifier.at(16f, 12f))
         MText(
             "Command the Oracle…", 16f, Medieval.TextFaint,
