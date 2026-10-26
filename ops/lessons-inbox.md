@@ -16,3 +16,4 @@
 - T6-summon (proposed api-facts line): sending text to the Claude app = `ACTION_SEND text/plain` + `setPackage("com.anthropic.claude")`; UNVERIFIED on the S20 FE (only an outside report, from adb it opened a new chat; from services it sometimes joined the open chat). No route auto-sends.
 - T5c-pill-position: an OEM cutout path is often a box from the screen's top edge down past the hole, so cutoutPath == boundingRect and its centre is above the hole; for a punch hole use bottom - width/2. UNVERIFIED on the S20 FE until the on-screen numbers come back.
 - T5c-pill-position: when only the phone can test, ship on-screen numbers (screenshot-readable) in the first fix build instead of a guessed offset.
+- T8-header-size: Compose line boxes are taller than the glyphs; a column offset plus natural line heights hid ~10 units of overflow past the header block. Set explicit lineHeight when stacking text above a fixed line.

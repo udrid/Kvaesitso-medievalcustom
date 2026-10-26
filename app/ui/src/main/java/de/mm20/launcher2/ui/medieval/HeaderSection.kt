@@ -129,10 +129,10 @@ internal fun HeaderSection(
             originX = -44f, originY = -35f,
         )
         Column(
-            Modifier.align(Alignment.TopEnd).offset(y = 9.dp),
+            Modifier.align(Alignment.TopEnd),
             horizontalAlignment = Alignment.End,
         ) {
-            MText(clock, 25f, Medieval.TextBright)
+            MText(clock, 29f, Medieval.TextBright, lineHeight = 31f)
             val needsSetup = forecast == null
             MText(
                 if (needsSetup) when (status) {
@@ -142,8 +142,8 @@ internal fun HeaderSection(
                     WeatherStatus.NoCoverage -> "No weather for your area"
                     else -> "Fetching weather…"
                 } else weatherLine(forecast),
-                if (needsSetup) 10f else 11f, Medieval.WeatherGrey,
-                Modifier.padding(top = 5.dp).width(if (needsSetup) 76.dp else 64.dp)
+                if (needsSetup) 11.5f else 12.5f, Medieval.WeatherGrey,
+                Modifier.padding(top = 2.dp).width(if (needsSetup) 84.dp else 74.dp)
                     .let {
                         if (needsSetup) it.clickable {
                             val activity = context as? AppCompatActivity
@@ -154,7 +154,7 @@ internal fun HeaderSection(
                             }
                         } else it
                     },
-                italic = true, align = TextAlign.End, maxLines = if (needsSetup) 2 else 1,
+                italic = true, align = TextAlign.End, maxLines = if (needsSetup) 2 else 1, lineHeight = if (needsSetup) 13f else 14f,
             )
             WeatherScene(forecast, now.toInstant().toEpochMilli(), Modifier.padding(top = 3.dp))
         }

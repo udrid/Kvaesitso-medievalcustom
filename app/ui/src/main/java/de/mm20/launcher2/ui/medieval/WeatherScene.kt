@@ -295,5 +295,5 @@ internal fun WeatherScene(forecast: Forecast?, nowMs: Long, modifier: Modifier =
     // phase in 1/100 steps so the drawing is rebuilt a few times a day, not every tick
     val phaseKey = (moonPhase(nowMs) * 100).toInt()
     val parts = remember(sky, phaseKey) { weatherParts(sky, phaseKey / 100f) }
-    VectorCanvas(parts, 128f, modifier.size(64.dp, 26.dp), animated = true)
+    VectorCanvas(parts, 128f, modifier.size(74.dp, 30.dp), animated = true)
 }

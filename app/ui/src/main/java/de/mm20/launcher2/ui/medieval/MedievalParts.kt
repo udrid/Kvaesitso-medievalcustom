@@ -64,6 +64,7 @@ internal fun MText(
     spacingEm: Float = 0f,
     align: TextAlign? = null,
     maxLines: Int = 1,
+    lineHeight: Float = 0f,
 ) {
     Text(
         text = text,
@@ -77,7 +78,7 @@ internal fun MText(
         textAlign = align,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
-        style = TextStyle(),
+        style = if (lineHeight > 0f) TextStyle(lineHeight = lineHeight.sp) else TextStyle(),
     )
 }
 
