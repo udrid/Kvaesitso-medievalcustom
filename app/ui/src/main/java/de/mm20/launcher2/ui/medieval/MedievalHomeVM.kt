@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.mm20.launcher2.calendar.CalendarRepository
+import de.mm20.launcher2.notifications.Notification
 import de.mm20.launcher2.notifications.NotificationRepository
 import de.mm20.launcher2.permissions.PermissionGroup
 import de.mm20.launcher2.permissions.PermissionsManager
@@ -44,6 +45,11 @@ class MedievalHomeVM : ViewModel(), KoinComponent {
     /** Active notifications, unfiltered; [Dispatches.kt] decides what counts as a dispatch. */
     val notifications = notificationRepository.notifications
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    /** Dismisses the real notification on the phone. */
+    fun dismissNotification(notification: Notification) {
+        notificationRepository.cancelNotification(notification)
+    }
 
     init {
         viewModelScope.launch {

@@ -1,5 +1,6 @@
 package de.mm20.launcher2.ui.medieval
 
+import android.app.PendingIntent
 import android.content.Context
 import android.text.format.DateFormat
 import android.util.Log
@@ -16,7 +17,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlin.math.abs
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -63,16 +70,50 @@ private fun appIcon(context: Context, packageName: String): ImageBitmap? = try {
     null
 }
 
+/** Swipe distance (stage px) after which a dispatch is dismissed. */
+private const val DismissDistance = 90f
+
+/** Opens what the notification opens; falls back to the app itself. Never logs notification text. */
+private fun openDispatch(context: Context, n: Notification) {
+    val intent = n.contentIntent
+    if (intent != null) {
+        try {
+            intent.send()
+            return
+        } catch (e: PendingIntent.CanceledException) {
+            Log.e("medieval", "Dispatch intent of ${n.packageName} was cancelled", e)
+        }
+    }
+    val launch = context.packageManager.getLaunchIntentForPackage(n.packageName)
+    if (launch != null) launchSafely(context, launch, n.packageName)
+}
+
 @Composable
-private fun DispatchRow(n: Notification, first: Boolean) {
+private fun DispatchRow(n: Notification, first: Boolean, onOpen: () -> Unit, onDismiss: () -> Unit) {
     val context = LocalContext.current
     val icon = remember(n.packageName) { appIcon(context, n.packageName) }
     val title = n.dispatchTitle()
     val text = n.dispatchText()
     val line = listOfNotNull(title, text).joinToString(" · ")
+    var drag by remember(n.key) { mutableFloatStateOf(0f) }
 
     Row(
-        Modifier.width(322.dp),
+        Modifier
+            .width(322.dp)
+            .graphicsLayer {
+                translationX = drag
+                alpha = 1f - (abs(drag) / (3f * DismissDistance)).coerceIn(0f, 0.6f)
+            }
+            .pointerInput(n.key) {
+                detectHorizontalDragGestures(
+                    onDragEnd = {
+                        if (abs(drag) > DismissDistance) onDismiss() else drag = 0f
+                    },
+                    onDragCancel = { drag = 0f },
+                    onHorizontalDrag = { _, delta -> drag += delta },
+                )
+            }
+            .clickable(onClick = onOpen),
         horizontalArrangement = Arrangement.spacedBy(9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -119,7 +160,13 @@ internal fun Dispatches(vm: MedievalHomeVM) {
                 )
 
                 dispatches.isEmpty() -> MText("No dispatches", 13f, Medieval.TextDim)
-                else -> dispatches.take(3).forEachIndexed { i, n -> DispatchRow(n, first = i == 0) }
+                else -> dispatches.take(3).forEachIndexed { i, n ->
+                    DispatchRow(
+                        n, first = i == 0,
+                        onOpen = { openDispatch(context, n) },
+                        onDismiss = { vm.dismissNotification(n) },
+                    )
+                }
             }
         }
     }
