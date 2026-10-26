@@ -12,3 +12,5 @@
 - T5-pill: Samsung's status bar icons cannot be moved or filtered by a launcher; the only options are hide the whole bar (WindowInsetsController) and redraw what you want. Show the owner this limit before designing.
 - T5-pill: the scaffold re-shows the status bar on resume (`LauncherScaffold.kt`), so hiding it from a child composable depends on effect order (UNVERIFIED); the sure way is `showStatusBar = false` in the config.
 - T5b-fix: Samsung cutout `boundingRects` may be taller than the hole (pill centred on it sat high); use `cutoutPath` bounds (API 31+). UNVERIFIED on phone.
+- T6-summon: the Home command bar is only a tap target; the real text field is the scaffold's search bar (hidden on Home), whose text is `SearchVM.searchQuery`. Anything that needs the typed text must read that.
+- T6-summon (proposed api-facts line): sending text to the Claude app = `ACTION_SEND text/plain` + `setPackage("com.anthropic.claude")`; UNVERIFIED on the S20 FE (only an outside report, from adb it opened a new chat; from services it sometimes joined the open chat). No route auto-sends.
