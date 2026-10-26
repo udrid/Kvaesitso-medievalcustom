@@ -1,11 +1,23 @@
 <!doctype html><html><head><meta charset="utf-8"><title>T4 weather scenes</title>
 <style>
 @font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf");font-style:italic}
 body{margin:0;width:390px;background:#0d0c09;color:#a8884c;font-family:Cinzel,serif}
-.g{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;padding:16px 22px}
-.c{background:linear-gradient(#1d1a14,#12100c);border:1px solid #6b5430;padding:8px 6px 6px;text-align:center;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
-.c svg{display:block;margin:0 auto 4px}
-</style></head><body><div class="g" id="g"></div>
+.c{margin:12px 16px;background:radial-gradient(90% 120% at 50% 40%,#26211a 0%,#0d0c09 90%);border:1px solid #6b5430;padding:10px 10px 8px}
+.t{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;margin-bottom:6px}
+.t i{font-family:'IM Fell English',serif;font-weight:400;letter-spacing:0;text-transform:none;color:#8c7a52;float:right}
+.f{display:flex;justify-content:space-between;margin-top:6px}
+.f div{font-size:7.5px;letter-spacing:.2em;color:#6b5a38;text-align:center}
+.f svg{display:block;border:1px solid #2a2418}
+</style></head><body><div id="g"></div>
 <script src="T4-weather.js"></script>
-<script>var L={clear:'Clear',clearnight:'Clear night',partly:'Partly cloudy',cloudy:'Cloudy',rain:'Rain',storm:'Thunderstorm',snow:'Snow',fog:'Fog'},h='';
-WX.names.forEach(function(k){h+='<div class="c">'+WX.svg(k,160,65)+L[k]+'</div>'});document.getElementById('g').innerHTML=h;</script></body></html>
+<script>
+var L={clear:'Clear day',clearnight:'Clear night',partly:'Partly cloudy',cloudy:'Cloudy',rain:'Rain',storm:'Thunderstorm',snow:'Snow',fog:'Fog'},h='';
+var STILL=[0,300,600,900];
+WX.names.forEach(function(k){h+='<div class="c"><div class="t">'+L[k]+'<i>moving · and its frames below</i></div>'+WX.svg(k,346,140)+'<div class="f">';
+ STILL.forEach(function(t,i){h+='<div><span class="still" data-t="'+t+'">'+WX.svg(k,82,33)+'</span>frame '+(i+1)+'</div>'});h+='</div></div>'});
+document.getElementById('g').innerHTML=h;
+/* freeze the small copies at fixed moments so a screenshot shows the stop-motion frames */
+document.querySelectorAll('.still').forEach(function(el){var t=+el.dataset.t;
+ el.getAnimations({subtree:true}).forEach(function(a){a.pause();a.currentTime=t})});
+</script></body></html>
