@@ -60,8 +60,11 @@ import de.mm20.launcher2.notifications.Notification
 private val PillGold = Color(0xFFE0B25C)
 private const val MaxNotificationIcons = 4
 
-/** The camera hole in window pixels (centre and size). */
-private class Hole(val cx: Float, val cy: Float, val w: Float, val h: Float)
+/** The camera hole in window pixels (centre and size); [method] and [outline] say how it was found. */
+private class Hole(
+    val cx: Float, val cy: Float, val w: Float, val h: Float,
+    val method: String = "none", val outline: RectF? = null,
+)
 
 /** Top cutout of the window; falls back to the top centre (about 14 dp down, 12 dp wide). */
 private fun findHole(view: android.view.View, density: Float, statusBarPx: Int): Hole {
@@ -71,10 +74,8 @@ private fun findHole(view: android.view.View, density: Float, statusBarPx: Int):
         Log.w("medieval", "Pill: no display cutout, using top centre of the status bar (height ${statusBarPx}px)")
         return Hole(view.width / 2f, if (statusBarPx > 0) statusBarPx / 2f else 14f * density, 12f * density, 12f * density)
     }
-    // The cutout rect is a bounding box that may be taller than the hole, so its centre sat above the
-    // hole on the phone. The cutout path (API 31+) is the hole's real outline: centre on its bounds.
     var shape = RectF(top)
-    var fromPath = false
+    var source = "rect"
     if (Build.VERSION.SDK_INT >= 31) {
         val path = view.rootWindowInsets?.displayCutout?.cutoutPath
         if (path != null) {
@@ -82,18 +83,19 @@ private fun findHole(view: android.view.View, density: Float, statusBarPx: Int):
             path.computeBounds(b, true)
             if (!b.isEmpty) {
                 shape = b
-                fromPath = true
+                source = "path"
             }
         }
     }
-    // No outline: nudge the rect centre down 5 dp (a guess from the owner's photos)
-    val nudge = if (fromPath) 0f else 5f * density
-    Log.i(
-        "medieval",
-        "Pill: cutout rect $top, hole shape $shape, status bar ${statusBarPx}px, " +
-            if (fromPath) "using cutout path, no nudge" else "no cutout path, nudge ${nudge}px down"
-    )
-    return Hole(shape.centerX(), shape.centerY() + nudge, shape.width(), shape.height())
+    // Phone makers often describe a punch hole as a box from the top edge of the screen down past the
+    // hole, not as a circle (path and rect are then the same box). The box centre is above the hole,
+    // which put the pill too high. Such a box: the hole is a circle as wide as the box, at its bottom.
+    val fromTopEdge = shape.top <= 2f * density && shape.height() > shape.width() * 1.15f
+    val d = if (fromTopEdge) shape.width() else minOf(shape.width(), shape.height())
+    val cy = if (fromTopEdge) shape.bottom - d / 2f else shape.centerY()
+    val method = if (fromTopEdge) "$source-bottom" else "$source-centre"
+    Log.i("medieval", "Pill: cutout rect $top, outline $shape ($source), status bar ${statusBarPx}px, hole y $cy ($method)")
+    return Hole(shape.centerX(), cy, d, d, method, shape)
 }
 
 private fun Context.findActivity(): Activity? {
