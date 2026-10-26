@@ -59,10 +59,10 @@ private class ShieldSlot(
 )
 
 private val Slots = listOf(
-    ShieldSlot(0, 24f, 276f, 13f, 352f, "com.twitter.android", MedievalIcons.Bird),
-    ShieldSlot(1, 304f, 276f, 293f, 352f, "com.discord", MedievalIcons.Mug),
-    ShieldSlot(2, 24f, 372f, 13f, 448f, "com.google.android.youtube", MedievalIcons.Play),
-    ShieldSlot(3, 304f, 372f, 293f, 448f, "com.samsung.android.messaging", MedievalIcons.Letter),
+    ShieldSlot(0, 18f, 136f, 7f, 212f, "com.twitter.android", MedievalIcons.Bird),
+    ShieldSlot(1, 281f, 136f, 270f, 212f, "com.discord", MedievalIcons.Mug),
+    ShieldSlot(2, 18f, 232f, 7f, 308f, "com.google.android.youtube", MedievalIcons.Play),
+    ShieldSlot(3, 281f, 232f, 270f, 308f, "com.samsung.android.messaging", MedievalIcons.Letter),
 )
 
 internal class AppEntry(val packageName: String, val label: String)

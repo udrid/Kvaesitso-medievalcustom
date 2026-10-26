@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.CompositionLocalProvider
@@ -80,15 +81,32 @@ private fun MedievalStage(state: LauncherScaffoldState) {
     val vm: MedievalHomeVM = viewModel()
     val density = LocalDensity.current
     CompositionLocalProvider(LocalDensity provides Density(density.density, 1f)) {
-        HeaderSection()
-        StatusLine(vm.forecast)
-        TreasuryPanel()
-        Pennants()
-        OracleOrb()
-        Shields(vm)
-        Ledger(vm)
-        Dispatches(vm)
-        CommandBar(state)
-        Dock()
+        HeaderSection(vm.forecast)
+        StatusLine()
+        // T4: everything below the header is laid out on a 361 wide body and drawn 8% larger (361 x 1.08 = 390)
+        Box(
+            Modifier
+                .at(0f, BodyTop)
+                .requiredSize(BodyWidth.dp, BodyHeight.dp)
+                .graphicsLayer {
+                    scaleX = BodyScale
+                    scaleY = BodyScale
+                    transformOrigin = TransformOrigin(0f, 0f)
+                }
+        ) {
+            TreasuryPanel()
+            Pennants()
+            OracleOrb()
+            Shields(vm)
+            Ledger(vm)
+            Dispatches(vm)
+            CommandBar(state)
+            Dock()
+        }
     }
 }
+
+private const val BodyScale = 1.08f
+private const val BodyWidth = 361f
+private const val BodyHeight = 640f
+private const val BodyTop = HeaderTop + 120f

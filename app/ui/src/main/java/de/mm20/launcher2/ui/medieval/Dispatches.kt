@@ -99,7 +99,7 @@ private fun DispatchRow(n: Notification, first: Boolean, onOpen: () -> Unit, onD
 
     Row(
         Modifier
-            .width(322.dp)
+            .width(297.dp)
             .graphicsLayer {
                 translationX = drag
                 alpha = 1f - (abs(drag) / (3f * DismissDistance)).coerceIn(0f, 0.6f)
@@ -138,7 +138,7 @@ internal fun Dispatches(vm: MedievalHomeVM) {
     val all by vm.notifications.collectAsState()
     val dispatches = remember(all) { all.asDispatches() }
 
-    Panel(top = 612f, height = 90f, ribbon = "Dispatches") {
+    Panel(top = 454f, height = 90f, ribbon = "Dispatches") {
         if (hasAccess != false && dispatches.isNotEmpty()) {
             Cap(
                 "${dispatches.size} unheeded", Modifier.align(Alignment.TopEnd).padding(end = 16.dp, top = 8.dp),

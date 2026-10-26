@@ -59,7 +59,7 @@ internal fun Ledger(vm: MedievalHomeVM) {
     val now = System.currentTimeMillis()
     val upcoming = vm.events.filter { it.endTime >= now }.take(2)
 
-    Panel(top = 476f, height = 68f, ribbon = "Today's Ledger") {
+    Panel(top = 330f, height = 68f, ribbon = "Today's Ledger") {
         Column(
             Modifier.at(16f, 25f),
             verticalArrangement = Arrangement.spacedBy(9.dp),

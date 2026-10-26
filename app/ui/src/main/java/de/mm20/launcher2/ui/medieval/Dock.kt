@@ -56,16 +56,16 @@ private fun WaxSeal(icon: List<String>, name: String, label: String, intent: () 
 /** Divider ornament and four oxblood wax seals: Herald, Portrait, Road, Smithy. */
 @Composable
 internal fun Dock() {
-    Canvas(Modifier.at(18f, 710f).size(354.dp, 10.dp)) {
+    Canvas(Modifier.at(0f, 551f).size(361.dp, 10.dp)) {
         val line = Medieval.GoldLine
-        drawLine(line, Offset(0f, 5f * density), Offset(158f * density, 5f * density), density)
-        drawLine(line, Offset(196f * density, 5f * density), Offset(354f * density, 5f * density), density)
+        drawLine(line, Offset(0f, 5f * density), Offset(161f * density, 5f * density), density)
+        drawLine(line, Offset(199f * density, 5f * density), Offset(361f * density, 5f * density), density)
         val gold = Medieval.GoldDeep
-        drawLine(gold, Offset(177f * density, 0f), Offset(177f * density, 10f * density), 1.6f * density)
-        drawLine(gold, Offset(172f * density, 4f * density), Offset(182f * density, 4f * density), 1.6f * density)
+        drawLine(gold, Offset(180f * density, 0f), Offset(180f * density, 10f * density), 1.6f * density)
+        drawLine(gold, Offset(175f * density, 4f * density), Offset(185f * density, 4f * density), 1.6f * density)
     }
     Row(
-        Modifier.at(18f, 730f).width(354.dp),
+        Modifier.at(0f, 566f).width(361.dp),
         horizontalArrangement = Arrangement.SpaceAround,
     ) {
         WaxSeal(MedievalIcons.Phone, "Phone", "HERALD") { Intent(Intent.ACTION_DIAL) }

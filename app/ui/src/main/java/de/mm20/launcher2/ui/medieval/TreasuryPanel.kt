@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 /** Treasury: placeholders only, no invented numbers. Real data comes in T2 (SimpleFIN). */
 @Composable
 internal fun TreasuryPanel() {
-    Panel(top = 140f, height = 56f, ribbon = "Treasury") {
+    Panel(top = 0f, height = 56f, ribbon = "Treasury") {
         Box(
             Modifier
                 .at(14f, 9f)
@@ -60,10 +60,10 @@ internal fun TreasuryPanel() {
             }
         }
         MText(
-            "[YOUR TOTAL]", 17f, Medieval.TextBright, Modifier.at(64f, 17f).width(144.dp),
+            "[YOUR TOTAL]", 16f, Medieval.TextBright, Modifier.at(62f, 18f).width(130.dp),
             font = Medieval.Cinzel, bold = true, spacingEm = 0.04f,
         )
-        Box(Modifier.at(212f, 9f).width(128.dp)) {
+        Box(Modifier.at(197f, 9f).width(118.dp)) {
             Cap("Quest: [GOAL]", size = 11f, spacingEm = 0.14f)
             Box(
                 Modifier

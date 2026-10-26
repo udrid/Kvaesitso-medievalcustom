@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun CommandBar(state: LauncherScaffoldState) {
     val scope = rememberCoroutineScope()
-    Panel(top = 554f, height = 44f, onClick = { scope.launch { state.onSearchBarTap() } }) {
+    Panel(top = 404f, height = 44f, onClick = { scope.launch { state.onSearchBarTap() } }) {
         SvgIcon(MedievalIcons.Quill, 20f, Medieval.Gold, Modifier.at(16f, 12f))
         MText(
             "Command the Oracle…", 16f, Medieval.TextFaint,

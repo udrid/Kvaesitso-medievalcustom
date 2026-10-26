@@ -75,7 +75,7 @@ internal fun OracleOrb() {
     }
 
     // ring with inscription (176 x 176 at 107, 258)
-    Canvas(Modifier.at(107f, 258f).size(176.dp)) {
+    Canvas(Modifier.at(92f, 118f).size(176.dp)) {
         val k = size.width / 176f
         drawCircle(Medieval.GoldDark, radius = 86f * k, center = center, style = Stroke(1.5f * k))
         drawCircle(Color(0xFF3A2E18), radius = 57f * k, center = center, style = Stroke(1f * k))
@@ -102,7 +102,7 @@ internal fun OracleOrb() {
     // orb (124 at 133, 284)
     Box(
         Modifier
-            .at(133f, 284f)
+            .at(118f, 144f)
             .size(124.dp)
             .drawBehind {
                 drawCircle(
@@ -133,7 +133,7 @@ internal fun OracleOrb() {
 
     MText(
         "The Oracle", 19f, Medieval.Text,
-        Modifier.at(95f, 436f).width(200.dp),
+        Modifier.at(80f, 296f).width(200.dp),
         font = Medieval.Blackletter, bold = true, align = TextAlign.Center,
     )
 }

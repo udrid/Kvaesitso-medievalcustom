@@ -83,7 +83,7 @@ internal fun rememberVitals(): State<Vitals> {
 
 @Composable
 private fun Pennant(x: Float, label: String, value: String, fraction: Float, fill: Color) {
-    Box(Modifier.at(x, 204f).size(58.dp, 62.dp)) {
+    Box(Modifier.at(x, 64f).size(58.dp, 62.dp)) {
         Canvas(Modifier.size(58.dp, 62.dp)) {
             val k = size.width / 58f
             val path = Path().apply {
@@ -129,8 +129,8 @@ internal fun Pennants() {
     } ?: "-"
     // gold rises from 20 C (empty) to 50 C (full)
     val heatFraction = v.batteryTempC?.let { (it - 20f) / 30f } ?: 0f
-    Pennant(22f, "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Color(0xFF7A5E2C))
-    Pennant(111f, "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-    Pennant(200f, "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-    Pennant(290f, "HEAT", heatText, heatFraction, Color(0xFF6E2A1E))
+    Pennant(18f, "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Color(0xFF7A5E2C))
+    Pennant(99f, "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
+    Pennant(180f, "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
+    Pennant(261f, "HEAT", heatText, heatFraction, Color(0xFF6E2A1E))
 }

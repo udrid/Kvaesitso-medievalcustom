@@ -136,7 +136,7 @@ private class RibbonShape : Shape {
     }
 }
 
-/** Parchment panel with red ribbon tab. Positioned at [top] on the stage, 18 px from both sides. */
+/** Parchment panel with red ribbon tab. Positioned at [top] on the body stage (361 wide), 16 px from both sides. */
 @Composable
 internal fun Panel(
     top: Float,
@@ -148,8 +148,8 @@ internal fun Panel(
 ) {
     Box(
         modifier
-            .at(18f, top)
-            .size(354.dp, height.dp)
+            .at(16f, top)
+            .size(329.dp, height.dp)
             .panelLook()
             .let { if (onClick != null) it.clickable(onClick = onClick) else it }
     ) {
