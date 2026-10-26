@@ -12,6 +12,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -59,13 +62,14 @@ private const val MaxNotificationIcons = 4
 private class Hole(val cx: Float, val cy: Float, val w: Float, val h: Float)
 
 /** Top cutout of the window; falls back to the top centre (about 14 dp down, 12 dp wide). */
-private fun findHole(view: android.view.View, density: Float): Hole {
+private fun findHole(view: android.view.View, density: Float, statusBarPx: Int): Hole {
     val rects: List<Rect> = ViewCompat.getRootWindowInsets(view)?.displayCutout?.boundingRects.orEmpty()
     val top = rects.filter { it.top <= 8 * density }.minByOrNull { it.top }
     if (top == null) {
-        Log.w("medieval", "Pill: no display cutout, using top centre")
-        return Hole(view.width / 2f, 14f * density, 12f * density, 12f * density)
+        Log.w("medieval", "Pill: no display cutout, using top centre of the status bar (height ${statusBarPx}px)")
+        return Hole(view.width / 2f, if (statusBarPx > 0) statusBarPx / 2f else 14f * density, 12f * density, 12f * density)
     }
+    Log.i("medieval", "Pill: cutout rect $top, status bar ${statusBarPx}px")
     return Hole(top.exactCenterX(), top.exactCenterY(), top.width().toFloat(), top.height().toFloat())
 }
 
@@ -114,7 +118,9 @@ internal fun MedievalPill(notifications: List<Notification>, hasNotificationAcce
     val view = LocalView.current
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
-    val hole = remember(view, configuration, view.width) { findHole(view, density.density) }
+    val statusBarPx = WindowInsets.statusBarsIgnoringVisibility.getTop(density)
+    // read again whenever the pill is laid out: the window insets are not there on the first frame
+    var hole by remember { mutableStateOf(Hole(0f, 14f * density.density, 12f * density.density, 12f * density.density)) }
     var originX by remember { mutableFloatStateOf(0f) }
     var originY by remember { mutableFloatStateOf(0f) }
 
@@ -125,6 +131,8 @@ internal fun MedievalPill(notifications: List<Notification>, hasNotificationAcce
                 val p = it.positionInWindow()
                 originX = p.x
                 originY = p.y
+                val h = findHole(view, density.density, statusBarPx)
+                if (h.cx != hole.cx || h.cy != hole.cy || h.w != hole.w || h.h != hole.h) hole = h
             }
     ) {
         val holeDp = with(density) { minOf(hole.w, hole.h).toDp() }
