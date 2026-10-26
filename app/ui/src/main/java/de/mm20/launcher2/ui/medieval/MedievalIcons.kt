@@ -5,6 +5,7 @@ internal object MedievalIcons {
     val Wifi = listOf("M3 9a14 14 0 0 1 18 0M6 13a9 9 0 0 1 12 0M9.5 17a4 4 0 0 1 5 0")
     val Bluetooth = listOf("M7 7l10 10-5 5V2l5 5L7 17")
     val Hushed = listOf("M4 9v6h4l5 4V5L8 9zM17 9l4 6M21 9l-4 6")
+    val Moon = listOf("M17 3a9 9 0 1 0 4 15A9 9 0 0 1 17 3z")
     val Voicemail = listOf(svgCircle(7f, 12f, 4f), svgCircle(17f, 12f, 4f), "M7 16h10")
     val Flame = listOf("M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z")
     val Quill = listOf(

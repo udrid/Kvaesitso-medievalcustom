@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -70,7 +72,7 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
             // taller than the 20 dp the design already leaves above the header at the top.
             val density = LocalDensity.current
             val bottomInset = with(density) { WindowInsets.navigationBars.getBottom(this).toDp() }
-            val topInset = with(density) { WindowInsets.statusBars.getTop(this).toDp() }
+            val topInset = with(density) { WindowInsets.statusBarsIgnoringVisibility.getTop(this).toDp() }
             val topPad = (topInset - 20.dp).coerceAtLeast(0.dp)
             val freeHeight = maxHeight - topPad - bottomInset
             val scale = minOf(maxWidth.value / StageWidth, freeHeight.value / StageHeight)
@@ -91,6 +93,11 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
                     MedievalStage(state)
                 }
             }
+            val vm: MedievalHomeVM = viewModel()
+            val notifications by vm.notifications.collectAsState()
+            val hasNotificationAccess by vm.hasNotificationAccess.collectAsState()
+            HideStatusBarWhileHome()
+            MedievalPill(notifications, hasNotificationAccess == true)
             GrainAndVignette(Modifier.fillMaxSize())
         }
     }
@@ -104,7 +111,6 @@ private fun MedievalStage(state: LauncherScaffoldState) {
         HeaderSection(vm.forecast, vm.weatherStatus) {
             vm.permissionsManager.requestPermission(it, PermissionGroup.Location)
         }
-        StatusLine()
         // T4: everything below the header is laid out on a 361 wide body and drawn 8% larger (361 x 1.08 = 390)
         Box(
             Modifier
