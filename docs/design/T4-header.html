@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>T4 header: seven planetary days</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap">
 <style>
 @font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
 @font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf");font-style:normal}
@@ -14,8 +15,9 @@ body{margin:0;background:#050403;width:390px;font-family:'IM Fell English',Georg
 .label{font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.2em;color:#6b5a38;text-transform:uppercase;padding:14px 22px 6px}
 .frame{position:relative;width:390px;height:118px;overflow:hidden;background:radial-gradient(90% 120% at 50% 40%,#26211a 0%,#0d0c09 90%),#0a0907}
 .hd{position:absolute;top:10px;left:22px;right:22px;height:76px}
-.dc{position:absolute;left:0;top:14px;font-family:UnifrakturCook,serif;font-size:74px;line-height:.78;color:#a8352b;text-shadow:0 0 1px #000,0 1px 0 #3a0e0a,0 0 18px rgba(168,53,43,.28)}
-.nm{position:absolute;top:21px;font-family:UnifrakturCook,serif;font-size:31px;line-height:1;color:#ecdfbf;text-shadow:0 1px 0 #000}
+.dc{position:absolute;left:0;top:10px;font-family:UnifrakturMaguntia,serif;font-size:68px;line-height:1;filter:url(#paint) drop-shadow(2px 2px 0 #1c0605) drop-shadow(0 0 12px rgba(168,53,43,.35))}
+.dc span{color:transparent;background:linear-gradient(168deg,#d9574a 0%,#b03a2e 38%,#6e1710 66%,#9a2f25 100%);-webkit-background-clip:text;-webkit-text-stroke:1.3px #c9a55a;paint-order:stroke fill}
+.nm{position:absolute;top:26px;font-family:UnifrakturMaguntia,serif;font-size:29px;line-height:1;color:#ecdfbf;text-shadow:0 1px 0 #000}
 .pl{position:absolute;left:0;top:0;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.3em;color:#8c6d3a;text-transform:uppercase;white-space:nowrap}
 .dt{position:absolute;top:64px;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.2em;color:#a8884c;text-transform:uppercase;white-space:nowrap}
 .med{position:absolute;top:2px;width:88px;height:70px}
@@ -45,6 +47,7 @@ body{margin:0;background:#050403;width:390px;font-family:'IM Fell English',Georg
 </style>
 </head>
 <body>
+<svg width="0" height="0"><filter id="paint" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="2.4"/></filter></svg>
 <div id="days"></div>
 <div class="label" style="padding-top:22px">Full Home, Sunday (everything else about 8% larger)</div>
 <div id="home"></div>
@@ -121,7 +124,7 @@ var DAYS=[
  ['sol','Sunday','S','unday','Sol'],['luna','Monday','M','onday','Luna'],['mars','Tuesday','T','uesday','Mars'],
  ['mercury','Wednesday','W','ednesday','Mercury'],['jupiter','Thursday','T','hursday','Jupiter'],
  ['venus','Friday','F','riday','Venus'],['saturn','Saturday','S','aturday','Saturn']];
-var CAPW={W:56,M:56,T:56,F:56,S:56};  /* drop-cap widths in px, tuned by eye */
+var CAPW={W:68,M:64,T:46,F:42,S:46};
 function capTile(ch){
  var vine='<path d="M4 14C4 8 8 4 14 4M7 14C7 10 10 7 14 7" stroke="'+GD+'" stroke-width="1"/><circle cx="14" cy="14" r="1.4" fill="'+G+'"/>';
  var corners=vine+'<g transform="translate(56 0) scale(-1 1)">'+vine+'</g><g transform="translate(0 56) scale(1 -1)">'+vine+'</g><g transform="translate(56 56) scale(-1 -1)">'+vine+'</g>';
@@ -134,11 +137,11 @@ function header(d,time,weather,datestr){
  var k=d[0],dcw=CAPW[d[2]]||42;
  return '<div class="hd">'+
   '<div class="pl">Day of '+d[4]+'</div>'+
-  capTile(d[2])+
+  '<div class="dc"><span>'+d[2]+'</span></div>'+
   '<div class="nm" style="left:'+(dcw+6)+'px">'+d[3]+'</div>'+
   '<div class="dt" style="left:'+(dcw+6)+'px">'+datestr+'</div>'+
   '<div class="abs" style="left:'+(dcw+3)+'px;right:96px;top:0;height:72px">'+'</div>'+
-  '<div class="med" style="left:auto;position:absolute;left:'+196+'px">'+medallion(k)+'</div>'+
+  '<div class="med" style="left:auto;position:absolute;left:'+204+'px">'+medallion(k)+'</div>'+
   '<div class="tm"><div class="t">'+time+'</div><div class="w">'+weather+'</div></div>'+
  '</div>'+rule(k);
 }
