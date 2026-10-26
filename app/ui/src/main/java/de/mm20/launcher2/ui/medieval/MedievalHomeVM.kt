@@ -35,6 +35,9 @@ class MedievalHomeVM : ViewModel(), KoinComponent {
     val hasCalendarPermission = permissionsManager.hasPermission(PermissionGroup.Calendar)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
+    val hasNotificationAccess = permissionsManager.hasPermission(PermissionGroup.Notifications)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+
     init {
         viewModelScope.launch {
             weatherRepository.getDailyForecasts().collectLatest { days ->
