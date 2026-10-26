@@ -14,3 +14,5 @@
 - T5b-fix: Samsung cutout `boundingRects` may be taller than the hole (pill centred on it sat high); use `cutoutPath` bounds (API 31+). UNVERIFIED on phone.
 - T6-summon: the Home command bar is only a tap target; the real text field is the scaffold's search bar (hidden on Home), whose text is `SearchVM.searchQuery`. Anything that needs the typed text must read that.
 - T6-summon (proposed api-facts line): sending text to the Claude app = `ACTION_SEND text/plain` + `setPackage("com.anthropic.claude")`; UNVERIFIED on the S20 FE (only an outside report, from adb it opened a new chat; from services it sometimes joined the open chat). No route auto-sends.
+- T5c-pill-position: an OEM cutout path is often a box from the screen's top edge down past the hole, so cutoutPath == boundingRect and its centre is above the hole; for a punch hole use bottom - width/2. UNVERIFIED on the S20 FE until the on-screen numbers come back.
+- T5c-pill-position: when only the phone can test, ship on-screen numbers (screenshot-readable) in the first fix build instead of a guessed offset.

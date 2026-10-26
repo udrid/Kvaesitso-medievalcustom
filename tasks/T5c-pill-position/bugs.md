@@ -11,3 +11,10 @@ Hypotheses to test with research, not with guesses:
 - The status bar being hidden changes the window's top inset after the hole is read (read order / stale value).
 - Samsung reports a cutout rect and path that do not match the visible camera glass; other apps (Dynamic Island style overlays, Samsung's own camera-cutout UIs, notch-aware apps) place content using other APIs (`DisplayCutout.getBoundingRectTop`, `getSafeInsetTop`, `Display.getCutout()`, `getWaterfallInsets`, or a fixed per-device table).
 - Pill internal layout: the hole is centred on the pill's centre, but the pill's own height or padding is asymmetric (hole circle drawn off-centre inside the pill).
+
+## Root cause (T5c, Opus; strong inference, NOT yet proven on the phone; see research.md)
+Checked and ruled out:
+- Coordinate space: theme `shortEdges` + `enableEdgeToEdge` + `setDecorFitsSystemWindows(false)` mean the window starts at screen y=0 and does not move when the bar hides; cutout rects and `positionInWindow` are both window pixels. Consistent.
+- Pill inside: background at y=0 with the full height, hole box placed at (height - hole)/2. Symmetric; not the cause.
+Likely cause: phone makers describe a punch hole as a box from the top edge of the screen (y=0) down past the hole (AOSP path string, example from a Xiaomi overlay). `boundingRects` and `cutoutPath` are then the same box, so T5b-fix's switch to the path changed nothing. The pill was centred on the middle of that box, which lies above the hole's centre. The drawn hole size (min of width/height = box width) still matched, which fits this.
+Fix: if the outline starts at the top edge and is taller than wide, the hole is a circle as wide as the box at its bottom (centre = bottom - width/2). 5 dp guess removed. Residual risk: if Samsung adds a margin below the hole, the pill is still a little high; the on-screen numbers (diagnostic) will show the box and let us correct exactly.

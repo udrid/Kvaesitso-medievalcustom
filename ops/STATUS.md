@@ -12,7 +12,7 @@
 | T5-pill | 1 | TESTED: top bar gone, pill, Wi-Fi, signal, notifications OK; position fix in T5b-fix | claude/T5-pill | Camera pill on Home: notification icons left; Hushed, Bluetooth, Wi-Fi, signal right; system top bar hidden on Home (design v5)|
 | T5b-fix | 1 | FINISHED: READY TO PUSH, needs owner phone test (testlist.md) | claude/T5b-fix | Camera pill sits slightly too high | 
 | T6-summon | 1 | FINISHED: READY TO PUSH, needs owner phone test (testlist.md) | claude/T6-summon | SUMMON button hands typed text to the Claude app |
-| T5c-pill-position | 1 | active (Opus: research, root cause, fix) | claude/T5c-pill-position | Pill still too high after two fixes. Goes into the T6 push |
+| T5c-pill-position | 1 | FINISHED: READY TO PUSH (with T6), needs owner phone test + screenshot of the numbers (testlist.md); diagnostic commit 2e718ce8e to revert after | claude/T5c-pill-position | Pill still too high after two fixes. Goes into the T6 push |
 | T2-treasury | 1 | deferred: owner wants it last (2026-10-25) | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner
