@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T4 drop cap options 3</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Grenze+Gotisch:wght@800&family=UnifrakturMaguntia&family=Texturina:wght@800&family=New+Rocker&display=swap">
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+body{margin:0;width:390px;background:#0d0c09;color:#a8884c;font-family:Cinzel,serif}
+.l{font-size:9px;font-weight:700;letter-spacing:.2em;padding:12px 22px 0;text-transform:uppercase}
+.r{display:flex;gap:6px;padding:0 22px;align-items:flex-end;height:84px;border-bottom:1px solid #2a2418}
+.g{font-size:70px;line-height:1.05;filter:url(#paint)}
+.g span{display:inline-block;color:transparent;background:linear-gradient(170deg,#f6e2a0 0%,#d9b050 38%,#8f6a22 62%,#c9a55a 100%);-webkit-background-clip:text;-webkit-text-stroke:1.4px #2a0a08;paint-order:stroke fill}
+.sh{position:relative;display:inline-block}
+.sh:before{content:attr(data-c);position:absolute;left:2.5px;top:2.5px;color:#7a1f16;-webkit-text-stroke:1.4px #2a0a08;z-index:-1}
+.n{font-size:24px;color:#ecdfbf;padding-bottom:12px}
+</style></head><body>
+<svg width="0" height="0"><filter id="paint" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="3" seed="4" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="2.6"/></filter></svg>
+<div id="o"></div>
+<script>
+var F=['Pirata One','Grenze Gotisch','UnifrakturMaguntia','Texturina','New Rocker'],h='';
+F.forEach(function(f){h+='<div class="l">'+f+'</div><div class="r" style="font-family:\''+f+'\',serif">';
+['M','W','S','T'].forEach(function(c){h+='<div class="sh" data-c="'+c+'" style="font-weight:800"><div class="g"><span>'+c+'</span></div></div>'});
+h+='<div class="n">onday</div></div>'});
+document.getElementById('o').innerHTML=h;
+</script></body></html>

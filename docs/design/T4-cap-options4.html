@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T4 drop cap options 4</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap">
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+body{margin:0;width:390px;background:#0d0c09;color:#a8884c;font-family:Cinzel,serif}
+.l{font-size:9px;font-weight:700;letter-spacing:.2em;padding:12px 22px 0;text-transform:uppercase}
+.r{position:relative;height:92px;margin:0 22px;border-bottom:1px solid #2a2418}
+.cap{position:absolute;left:0;top:6px;font-family:UnifrakturMaguntia,serif;font-size:68px;line-height:1;filter:url(#paint) drop-shadow(2px 2px 0 #4a120d) drop-shadow(0 0 12px rgba(201,165,90,.25))}
+.cap span{color:transparent;background:linear-gradient(168deg,#f8e6a8 0%,#dcb455 36%,#93691f 64%,#d2ac5a 100%);-webkit-background-clip:text;-webkit-text-stroke:1.2px #2a0a08;paint-order:stroke fill}
+.n{position:absolute;top:30px;font-family:UnifrakturMaguntia,serif;font-size:32px;line-height:1;color:#ecdfbf;filter:url(#paint2)}
+.d{position:absolute;top:70px;font-size:10px;font-weight:700;letter-spacing:.2em;white-space:nowrap}
+svg.v{position:absolute;left:0;top:0;overflow:visible}
+</style></head><body>
+<svg width="0" height="0"><filter id="paint" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="2.4"/></filter>
+<filter id="paint2"><feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="9" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="1.2"/></filter></svg>
+<div class="l">Handpainted initial, UnifrakturMaguntia (closest to your Canterbury sample)</div><div id="o"></div>
+<script>
+var G='#c9a55a',GD='#8c6d3a';
+function leaf(x,y,a,s,f){return '<path transform="translate('+x+' '+y+') rotate('+a+') scale('+s+')" d="M0 0C3 -5 9 -5 12 0C9 5 3 5 0 0Z M0 0H12" fill="'+f+'" stroke="'+G+'" stroke-width=".8"/>'}
+function vine(){return '<svg class="v" width="300" height="92" fill="none">'+
+ '<path d="M60 2C72 -4 84 6 100 2" stroke="'+GD+'" stroke-width="1"/>'+leaf(76,2,-30,.8,'#5a1a14')+'<circle cx="101" cy="2" r="1.8" fill="'+G+'"/></svg>'}
+var W=[['M','onday','20TH'],['W','ednesday','22ND'],['S','aturday','25TH'],['T','hursday','23RD'],['F','riday','24TH']],h='';
+W.forEach(function(w){var off={M:80,W:84,S:64,T:60,F:56}[w[0]];
+ h+='<div class="r">'+vine()+'<div class="cap"><span>'+w[0]+'</span></div><div class="n" style="left:'+off+'px">'+w[1]+'</div><div class="d" style="left:'+(off+2)+'px">'+w[2]+' OF OCTOBER</div></div>'});
+document.getElementById('o').innerHTML=h;
+</script></body></html>
