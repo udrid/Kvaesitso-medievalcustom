@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T5 camera pill: three states</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap">
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf");font-style:normal}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf");font-style:italic}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:411px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+.abs{position:absolute}
+.cap{font-family:Cinzel,serif;font-size:9.5px;font-weight:700;letter-spacing:.24em;color:#a8884c;text-transform:uppercase}
+.label{font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.2em;color:#6b5a38;text-transform:uppercase;padding:14px 22px 6px}
+.frame{position:relative;width:390px;height:118px;overflow:hidden;background:radial-gradient(90% 120% at 50% 40%,#26211a 0%,#0d0c09 90%),#0a0907}
+.hd{position:absolute;top:10px;left:22px;right:22px;height:76px}
+.dc{position:absolute;left:0;top:10px;font-family:UnifrakturMaguntia,serif;font-size:68px;line-height:1;filter:url(#paint) drop-shadow(2px 2px 0 #1c0605) drop-shadow(0 0 7px rgba(168,53,43,.16))}
+.dc span{color:transparent;background:linear-gradient(168deg,#d9574a 0%,#b03a2e 38%,#6e1710 66%,#9a2f25 100%);-webkit-background-clip:text;-webkit-text-stroke:1.3px #c9a55a;paint-order:stroke fill}
+.nm{position:absolute;top:26px;font-family:UnifrakturMaguntia,serif;font-size:29px;line-height:1;color:#ecdfbf;text-shadow:0 1px 0 #000}
+.pl{position:absolute;left:0;top:0;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.3em;color:#8c6d3a;text-transform:uppercase;white-space:nowrap}
+.dt{position:absolute;top:64px;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.2em;color:#a8884c;text-transform:uppercase;white-space:nowrap}
+.med{position:absolute;top:2px;width:88px;height:70px}
+.tm{position:absolute;right:0;top:9px;text-align:right}
+.tm .t{font-size:25px;line-height:1;color:#f2e6c6;text-shadow:0 0 12px rgba(201,165,90,.22)}
+.tm .w{margin-top:5px;font-size:11px;font-style:italic;color:#a8987a;line-height:1.15}
+.rule{position:absolute;left:22px;top:92px}
+.panel{position:absolute;left:16px;right:16px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);box-shadow:inset 0 0 26px rgba(0,0,0,.6),0 2px 0 #050403}
+.panel::before{content:"";position:absolute;inset:4px;border:1px solid rgba(140,109,58,.26);pointer-events:none}
+.ribbon{position:absolute;top:-8px;left:12px;height:17px;padding:0 17px 0 11px;background:linear-gradient(#6a1d16,#481510);border-top:1px solid #c9a55a;color:#f0e2bd;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;display:flex;align-items:center;clip-path:polygon(0 0,100% 0,calc(100% - 7px) 50%,100% 100%,0 100%);z-index:2}
+.node{position:absolute;width:62px;height:72px;background:none;border:0;padding:0;color:#e6d9b8}
+.node svg.shield{position:absolute;inset:0}
+.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.badge{position:absolute;top:-5px;right:-3px;min-width:18px;height:18px;box-sizing:border-box;border-radius:9px;background:#6e1a14;border:1.5px solid #c9a55a;color:#f2e6c8;font-family:Cinzel,serif;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;z-index:2}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bfae86}
+.row{display:flex;align-items:center;gap:9px;font-size:13px;color:#d9ccaa;line-height:1}
+.time{width:42px;font-family:Cinzel,serif;font-size:10px;font-weight:700;color:#c9a55a;flex:none}
+.rub{color:#a8352b;font-size:12px;line-height:1;flex:none}
+.pen{position:absolute;top:64px;width:58px;height:62px}
+.pen svg{position:absolute;inset:0}
+.pen .l{position:absolute;left:0;right:0;top:9px;text-align:center;font-family:Cinzel,serif;font-size:7px;font-weight:700;letter-spacing:.16em;color:#d9c48c;text-shadow:0 1px 2px #000}
+.pen .v{position:absolute;left:0;right:0;top:22px;text-align:center;font-family:Cinzel,serif;font-size:13px;font-weight:700;color:#f2e6c6;text-shadow:0 1px 3px #000}
+.seal{position:relative;width:54px;height:54px;background:none;border:0;padding:0}
+.seal svg.wax{position:absolute;inset:0}
+.seal .ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.dockcol{display:flex;flex-direction:column;align-items:center;gap:7px;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.2em;color:#a8884c}
+</style>
+</head>
+<body>
+<svg width="0" height="0"><filter id="paint" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="4" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="2.4"/></filter></svg>
+<div id="days"></div>
+
+<script src="T4-weather.js"></script>
+<script>
+var G='#c9a55a', GD='#8c6d3a', GL='#e3cf9c', RD='#a8352b';
+var NS='http://www.w3.org/2000/svg';
+
+/* alchemical signs, centred on 0,0, about 26 units tall */
+var SIGN={
+ sol:'<circle r="9.5"/><circle r="2" fill="'+G+'"/>',
+ luna:'<path d="M5 -12A12 12 0 1 0 5 12A9 9 0 1 1 5 -12Z" fill="'+G+'" fill-opacity=".85"/>',
+ mars:'<circle cx="-2.5" cy="3.5" r="7.5"/><path d="M3 -2L11 -10M4 -10H11V-3"/>',
+ mercury:'<circle cy="2" r="5.2"/><path d="M0 7.2V14M-3.4 10.8H3.4M-6.5 -11A6.5 6.5 0 0 0 6.5 -11"/>',
+ jupiter:'<path d="M-9 -6C-9 -13 -1 -13 -1 -6C-1 -1 -6 3 -11 4H10M4.5 -12V13"/>',
+ venus:'<circle cy="-4.5" r="6.5"/><path d="M0 2V13M-4.5 7.5H4.5"/>',
+ saturn:'<path d="M-6 -11H0M-3 -14V3M-3 -4C0 -7 6 -5 6 0C6 5 2 7 2 12"/>'
+};
+
+/* rings around the medallion, centre 44,35 in an 88x70 box; medallion radius 25 */
+function rays(n,r1,r2,r3,fill){var s='';for(var i=0;i<n;i++){var a=i*2*Math.PI/n,b=a+Math.PI/n*0.55,c=a-Math.PI/n*0.55,l=(i%2?r2:r3);
+ s+='<path d="M'+(r1*Math.cos(b)).toFixed(1)+' '+(r1*Math.sin(b)).toFixed(1)+'L'+(l*Math.cos(a)).toFixed(1)+' '+(l*Math.sin(a)).toFixed(1)+'L'+(r1*Math.cos(c)).toFixed(1)+' '+(r1*Math.sin(c)).toFixed(1)+'Z" fill="'+fill+'"/>';}return s}
+function star4(x,y,r){return '<path d="M'+x+' '+(y-r)+'Q'+x+' '+y+' '+(x+r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y+r)+'Q'+x+' '+y+' '+(x-r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y-r)+'Z" fill="'+G+'"/>'}
+function feathers(sd){var s='';for(var i=0;i<4;i++){var y=-6+i*5,x0=26,x1=40-i*2.2,y1=y-9+i*3.2;
+ s+='<path d="M'+(sd*x0)+' '+y+'Q'+(sd*(x0+8))+' '+(y-8)+' '+(sd*x1)+' '+y1+'Q'+(sd*(x1-2))+' '+(y1+8)+' '+(sd*x0)+' '+(y+3)+'Z" fill="#2a2216" stroke="'+G+'" stroke-width="1"/>';}return s}
+var RING={
+ sol:function(){return rays(32,26,31,35,GD)+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2" stroke-dasharray="2 2.4"/>'},
+ luna:function(){var s='<circle r="27" fill="none" stroke="'+GD+'" stroke-width="1" stroke-dasharray="1 3"/>';
+  [[-36,-20,3],[36,-18,3.6],[-34,18,2.4],[37,17,2.8],[0,-33,2.6],[0,33,2.6]].forEach(function(p){s+=star4(p[0],p[1],p[2])});
+  return s+'<path d="M-30 -5A5 5 0 1 0 -30 5A3.8 3.8 0 1 1 -30 -5Z" fill="'+G+'"/><path d="M30 -5A5 5 0 1 1 30 5A3.8 3.8 0 1 0 30 -5Z" fill="'+G+'"/>'},
+ mars:function(){var s='';for(var i=0;i<8;i++){var a=i*Math.PI/4;s+='<g transform="rotate('+(i*45)+')"><path d="M26 0L35 '+(i%2?0:0)+'" stroke="'+GD+'" stroke-width="1"/>'+(i%2?'<path d="M27 -3.5L36 0L27 3.5Z" fill="'+GD+'"/>':'<path d="M27 -4.5L40 0L27 4.5L30 0Z" fill="'+RD+'" stroke="'+G+'" stroke-width=".9"/>')+'</g>'}
+  return s+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2"/>'},
+ mercury:function(){return feathers(1)+feathers(-1)+'<circle r="26" fill="none" stroke="'+GD+'" stroke-width="1"/>'},
+ jupiter:function(){var s='';[45,135,225,315].forEach(function(d){s+='<g transform="rotate('+d+')"><path d="M24 -2L30 -5L29 -1L36 -3L28 4L29 0L24 2Z" fill="'+G+'"/></g>'});
+  [0,90,180,270].forEach(function(d){s+='<g transform="rotate('+d+')"><circle cx="30" r="1.8" fill="'+RD+'" stroke="'+G+'" stroke-width=".7"/></g>'});
+  return s+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2"/><circle r="28" fill="none" stroke="'+GD+'" stroke-width=".8" stroke-dasharray="1 2.6"/>'},
+ venus:function(){var s='';for(var i=0;i<10;i++){s+='<g transform="rotate('+(i*36)+')"><path d="M25 0C28 -6 34 -6 36 0C34 6 28 6 25 0Z" fill="'+(i%2?'#2a2216':'#5a1a14')+'" stroke="'+G+'" stroke-width=".9"/></g>'}
+  return s+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2"/>'},
+ saturn:function(){var s='<path d="M0 -34L10 -28L28 -22L34 0L28 22L10 28L0 34L-10 28L-28 22L-34 0L-28 -22L-10 -28Z" fill="none" stroke="'+GD+'" stroke-width="1"/>';
+  for(var i=0;i<12;i++){s+='<g transform="rotate('+(i*30)+')"><path d="M26 0H31" stroke="'+G+'" stroke-width="1.4"/></g>'}
+  [0,90,180,270].forEach(function(d){s+='<g transform="rotate('+d+' 0 0)"><path d="M31 -3L36 0L31 3L26 0Z" fill="'+RD+'" stroke="'+G+'" stroke-width=".8" transform="translate(4 0)"/></g>'});
+  return s+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2"/>'}
+};
+function medallion(k){
+ return '<svg class="med" viewBox="-44 -35 88 70" fill="none" aria-hidden="true">'+
+ '<defs><radialGradient id="mg'+k+'" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#3a2a14"/><stop offset="1" stop-color="#0f0904"/></radialGradient></defs>'+
+ RING[k]()+'<circle r="21" fill="url(#mg'+k+')" stroke="'+GD+'" stroke-width="1.4"/>'+
+ '<g transform="scale(.78)" stroke="'+GL+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 4px rgba(229,138,60,.45))">'+SIGN[k]+'</g></svg>';
+}
+
+/* the flourish rule under the header, 346 x 14, centre ornament at 173 */
+function rule(k){
+ var W=346,c=173,s='<path d="M0 7H'+(c-34)+'M'+(c+34)+' 7H'+W+'" stroke="#4a3a20"/>';
+ var i,x;
+ if(k=='sol'){for(i=1;i<=6;i++){x=c-34-i*24;s+='<circle cx="'+x+'" cy="7" r="1.6" fill="'+GD+'"/><circle cx="'+(W-x)+'" cy="7" r="1.6" fill="'+GD+'"/>';}
+  s+=rays(12,4,5.5,8,G).replace(/<path/g,'<path transform="translate('+c+' 7)"');s+='<circle cx="'+c+'" cy="7" r="3.2" fill="'+RD+'" stroke="'+G+'"/>';}
+ if(k=='luna'){for(i=1;i<=5;i++){x=c-34-i*28;s+='<path transform="translate('+x+' 7)" d="M2 -5A5 5 0 1 0 2 5A3.8 3.8 0 1 1 2 -5Z" fill="'+G+'"/><path transform="translate('+(W-x)+' 7) scale(-1 1)" d="M2 -5A5 5 0 1 0 2 5A3.8 3.8 0 1 1 2 -5Z" fill="'+G+'"/>';}
+  s+=star4(c,7,6)+'<circle cx="'+(c-16)+'" cy="7" r="1.3" fill="'+G+'"/><circle cx="'+(c+16)+'" cy="7" r="1.3" fill="'+G+'"/>';}
+ if(k=='mars'){for(i=1;i<=9;i++){x=c-34-i*15;s+='<path d="M'+(x+4)+' 2L'+x+' 7L'+(x+4)+' 12" stroke="'+GD+'" stroke-width="1.3"/><path d="M'+(W-x-4)+' 2L'+(W-x)+' 7L'+(W-x-4)+' 12" stroke="'+GD+'" stroke-width="1.3"/>';}
+  s+='<path d="M'+(c-30)+' 7H'+(c+30)+'" stroke="'+G+'" stroke-width="1.5"/><path d="M'+(c-30)+' 3V11M'+(c-34)+' 5L'+(c-30)+' 3L'+(c-26)+' 5M'+(c+30)+' 3V11" stroke="'+G+'" stroke-width="1.5"/><path d="M'+(c-7)+' 7L'+c+' 1L'+(c+7)+' 7L'+c+' 13Z" fill="'+RD+'" stroke="'+G+'"/>';}
+ if(k=='mercury'){for(i=1;i<=10;i++){x=c-34-i*14;s+='<path d="M'+x+' 11Q'+(x+2)+' 5 '+(x+9)+' 3" stroke="'+GD+'" stroke-width="1.2"/><path d="M'+(W-x)+' 11Q'+(W-x-2)+' 5 '+(W-x-9)+' 3" stroke="'+GD+'" stroke-width="1.2"/>';}
+  s+='<path d="M'+(c-30)+' 7Q'+(c-14)+' -2 '+c+' 7Q'+(c+14)+' 16 '+(c+30)+' 7" stroke="'+G+'" stroke-width="1.3"/><path d="M'+(c-30)+' 7Q'+(c-14)+' 16 '+c+' 7Q'+(c+14)+' -2 '+(c+30)+' 7" stroke="'+G+'" stroke-width="1.3"/><circle cx="'+c+'" cy="7" r="3" fill="'+RD+'" stroke="'+G+'"/>';}
+ if(k=='jupiter'){for(i=1;i<=4;i++){x=c-34-i*38;s+='<path d="M'+(x+10)+' 1L'+(x+3)+' 7L'+(x+8)+' 7L'+x+' 13" stroke="'+GD+'" stroke-width="1.4" stroke-linejoin="round"/><path d="M'+(W-x-10)+' 1L'+(W-x-3)+' 7L'+(W-x-8)+' 7L'+(W-x)+' 13" stroke="'+GD+'" stroke-width="1.4" stroke-linejoin="round"/>';}
+  s+='<path d="M'+(c+5)+' -1L'+(c-4)+' 7H'+(c+2)+'L'+(c-6)+' 15" stroke="'+G+'" stroke-width="2" stroke-linejoin="round"/><circle cx="'+(c-22)+'" cy="7" r="2.4" fill="'+RD+'" stroke="'+G+'"/><circle cx="'+(c+22)+'" cy="7" r="2.4" fill="'+RD+'" stroke="'+G+'"/>';}
+ if(k=='venus'){for(i=1;i<=5;i++){x=c-34-i*28;var d='M'+x+' 7C'+(x+7)+' -3 '+(x+14)+' 17 '+(x+21)+' 7';s+='<path d="'+d+'" stroke="'+GD+'" stroke-width="1.2"/><path d="'+d.replace(/(\d+)/g,function(m){return m})+'" stroke="none"/>';
+   s+='<path transform="translate('+W+' 0) scale(-1 1)" d="'+d+'" stroke="'+GD+'" stroke-width="1.2"/>';s+='<circle cx="'+(x+10)+'" cy="7" r="1.5" fill="'+GD+'"/><circle cx="'+(W-x-10)+'" cy="7" r="1.5" fill="'+GD+'"/>';}
+  s+='<path d="M'+c+' 13C'+(c-10)+' 8 '+(c-9)+' 1 '+c+' 4C'+(c+9)+' 1 '+(c+10)+' 8 '+c+' 13Z" fill="'+RD+'" stroke="'+G+'"/>';}
+ if(k=='saturn'){for(i=1;i<=9;i++){x=c-34-i*16;s+='<path transform="translate('+x+' 7) rotate(45)" d="M-2.6 -2.6H2.6V2.6H-2.6Z" fill="'+(i%2?GD:'none')+'" stroke="'+GD+'" stroke-width="1"/><path transform="translate('+(W-x)+' 7) rotate(45)" d="M-2.6 -2.6H2.6V2.6H-2.6Z" fill="'+(i%2?GD:'none')+'" stroke="'+GD+'" stroke-width="1"/>';}
+  s+='<path d="M'+(c-7)+' 0H'+(c+7)+'M'+(c-7)+' 14H'+(c+7)+'M'+(c-5)+' 0L'+(c+5)+' 14M'+(c+5)+' 0L'+(c-5)+' 14" stroke="'+G+'" stroke-width="1.4" stroke-linejoin="round"/>';}
+ return '<svg class="rule" width="'+W+'" height="14" viewBox="0 0 '+W+' 14" fill="none" aria-hidden="true">'+s+'</svg>';
+}
+
+var DAYS=[
+ ['sol','Sunday','S','unday','Sol'],['luna','Monday','M','onday','Luna'],['mars','Tuesday','T','uesday','Mars'],
+ ['mercury','Wednesday','W','ednesday','Mercury'],['jupiter','Thursday','T','hursday','Jupiter'],
+ ['venus','Friday','F','riday','Venus'],['saturn','Saturday','S','aturday','Saturn']];
+var CAPW={W:68,M:64,T:46,F:42,S:46};
+function capTile(ch){
+ var vine='<path d="M4 14C4 8 8 4 14 4M7 14C7 10 10 7 14 7" stroke="'+GD+'" stroke-width="1"/><circle cx="14" cy="14" r="1.4" fill="'+G+'"/>';
+ var corners=vine+'<g transform="translate(56 0) scale(-1 1)">'+vine+'</g><g transform="translate(0 56) scale(1 -1)">'+vine+'</g><g transform="translate(56 56) scale(-1 -1)">'+vine+'</g>';
+ return '<svg class="dc" width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><defs><linearGradient id="ct" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6e1f17"/><stop offset="1" stop-color="#2e0c09"/></linearGradient></defs>'+
+ '<rect x="1.5" y="1.5" width="53" height="53" fill="url(#ct)" stroke="'+G+'" stroke-width="1.6"/><rect x="5" y="5" width="46" height="46" stroke="'+GD+'" stroke-width="1"/>'+corners+
+ '<path d="M28 1.5L31 5H25Z M28 54.5L31 51H25Z M1.5 28L5 25V31Z M54.5 28L51 25V31Z" fill="'+G+'"/>'+
+ '<text x="28" y="40" text-anchor="middle" font-family="Cinzel,serif" font-weight="700" font-size="32" fill="'+GL+'" stroke="#1a0604" stroke-width=".8" paint-order="stroke">'+ch+'</text></svg>';
+}
+function header(d,time,weather,datestr){
+ var k=d[0],dcw=CAPW[d[2]]||42;
+ return '<div class="hd">'+
+  '<div class="pl">Day of '+d[4]+'</div>'+
+  '<div class="dc"><span>'+d[2]+'</span></div>'+
+  '<div class="nm" style="left:'+(dcw+6)+'px">'+d[3]+'</div>'+
+  '<div class="dt" style="left:'+(dcw+6)+'px">'+datestr+'</div>'+
+  '<div class="abs" style="left:'+(dcw+3)+'px;right:96px;top:0;height:72px">'+'</div>'+
+  '<div class="med" style="left:auto;position:absolute;left:'+204+'px">'+medallion(k)+'</div>'+
+  '<div class="tm"><div class="t">'+time+'</div><div class="w">'+weather[0]+'</div><div style="margin-top:3px;margin-right:-1px">'+WX.svg(weather[1],64,26,'accentSoft')+'</div></div>'+
+ '</div>'+rule(k);
+}
+
+/* ---------- T5 pill: 411dp-wide S20 FE top area, hole centre x 205.5, y 14 ---------- */
+var BOLT='<svg width="11" height="11" viewBox="0 0 24 24" fill="#e0b25c" aria-hidden="true"><path d="M13 2L5 14h6l-1 8 8-12h-6z"/></svg>';
+var BELL='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#e0b25c" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 17V11a6 6 0 0 1 12 0v6l2 2H4zM10 21h4"/></svg>';
+var FLAME='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#e58a3c" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg>';
+function pill(ic,txt,pct){
+ return '<div class="abs" style="top:2px;left:107.5px;width:196px;height:24px;box-sizing:border-box;border-radius:12px;background:#050505;border:1px solid #6b5430;box-shadow:0 0 0 1.5px #0a0907;display:grid;grid-template-columns:1fr 12px 1fr;align-items:center;column-gap:6px;padding:0 11px;font-family:Cinzel,serif;font-weight:700;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#d9c48c;z-index:3;pointer-events:none">'+
+  '<span style="display:flex;align-items:center;gap:4px;white-space:nowrap">'+ic+txt+'</span>'+
+  '<span style="width:12px;height:12px;border-radius:50%;background:#0c0d10;border:1.5px solid #2a2418;box-sizing:border-box"></span>'+
+  '<span style="text-align:right">'+pct+'</span></div>';
+}
+function sysbar(){
+ return '<div class="abs" style="top:0;left:0;right:0;height:24px;font-family:Arial,sans-serif;font-size:12px;color:#ddd;z-index:2">'+
+  '<span class="abs" style="left:14px;top:4px">10:36</span>'+
+  '<span class="abs" style="left:52px;top:7px;display:flex;gap:4px"><i style="width:9px;height:9px;border-radius:50%;background:#888"></i><i style="width:9px;height:9px;border-radius:50%;background:#888"></i></span>'+
+  '<span class="abs" style="right:12px;top:5px;display:flex;gap:6px;align-items:center"><svg width="12" height="12" viewBox="0 0 12 12" fill="#ddd"><path d="M1 11h2V8H1zM5 11h2V5H5zM9 11h2V1H9z"/></svg><svg width="13" height="12" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="2.4"><path d="M2 9a14 14 0 0 1 20 0M6 13a8 8 0 0 1 12 0M10 17a3 3 0 0 1 4 0"/></svg><span style="display:inline-block;width:20px;height:10px;border:1.4px solid #ddd;border-radius:2px;box-sizing:border-box;position:relative"><i style="position:absolute;left:1px;top:1px;bottom:1px;width:11px;background:#ddd"></i></span></span></div>';
+}
+var STATES=[
+ ['1. Ready (nothing else applies)',FLAME,'Ready','84%'],
+ ['2. Alarm set',BELL,'Alarm 6:30','84%'],
+ ['3. Charging (time to full)',BOLT,'Full in 42m','61%']];
+var out='';
+STATES.forEach(function(s){
+ out+='<div class="label">'+s[0]+'</div><div class="frame" style="width:411px;height:128px">'+sysbar()+pill(s[1],s[2],s[3])+
+  '<div class="abs" style="left:10.5px;top:24px;width:390px;height:104px">'+header(DAYS[0],'10:36',['62° · Clear','clear'],'25th of October')+'</div></div>';
+});
+out+='<div class="label" style="text-transform:none;letter-spacing:.04em;font-size:11px;line-height:1.5">Mock status bar (clock and icons) is only a guess at Samsung\'s layout. Pill 196 x 24 dp, centred on the camera hole (x 205.5, y 14); it sits entirely inside the 24 dp status bar, so the header (starting about y 34) does not move. The rotating left slot shows one of these three at a time, switching about every 4 seconds. Touches pass through the pill.</div>';
+document.getElementById('days').innerHTML=out;
+</script>
+</body>
+</html>
