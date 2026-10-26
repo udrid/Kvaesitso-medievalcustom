@@ -28,6 +28,7 @@ Need more? Search the code (Grep), then open only the files that match. Never re
 ## Owner rules
 - Ask before ANY design decision: look, name, layout, wording, a new feature. Give choices as multiple choice. Only decisions the owner delegated in `ops/decisions.md` may be made by Claude.
 - Whenever the owner must do something (install the APK, grant a permission, test, answer), write numbered steps in plain words: where to be on the phone, what to tap, what they should see, what to report. Assume no technical background. Never say only a step code. At most 3 do-lines per step.
+- **Never push to GitHub (or start a build) without the owner's explicit yes.** Commit locally, do all steps of a task in one batch, then report READY TO PUSH with a plain-words summary and wait. Approval covers that batch only (owner, 2026-10-25).
 - Say what was NOT verified. The workspace can't run the app; only the owner's phone can.
 - Treasury (finance panel): placeholders only, no invented numbers. Manual entry first. Bank links need a backend, keys and cost: ask first.
 
@@ -40,7 +41,7 @@ Need more? Search the code (Grep), then open only the files that match. Never re
 - Commit messages end with: `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`.
 
 ## Definition of done (each stage)
-1. `ops/gate.md` checks pass; the GitHub Actions build for the branch is green.
+1. `ops/gate.md` checks pass; after the owner approves the push, the GitHub Actions build for the branch is green.
 2. Owner checks for the phone are written in `tasks/<id>/testlist.md` (see Owner rules): the visible result first, at least 1 "should NOT happen" step, and a restart-the-launcher step if the feature saves data.
 3. `tasks/<id>/handoff.md` written from the template.
 4. 0-3 lines in `ops/lessons-inbox.md` (surprises only).
