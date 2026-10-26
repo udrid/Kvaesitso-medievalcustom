@@ -132,6 +132,7 @@ fun LauncherSearchBar(
                         }
                     }
                 }
+                de.mm20.launcher2.ui.medieval.SummonSearchBarButton() // Deliverance
                 SearchBarMenu(searchBarValue = value, onInputClear = {
                     searchVM.reset()
                 })
