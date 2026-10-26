@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Rect
+import android.graphics.RectF
+import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -69,8 +71,19 @@ private fun findHole(view: android.view.View, density: Float, statusBarPx: Int):
         Log.w("medieval", "Pill: no display cutout, using top centre of the status bar (height ${statusBarPx}px)")
         return Hole(view.width / 2f, if (statusBarPx > 0) statusBarPx / 2f else 14f * density, 12f * density, 12f * density)
     }
-    Log.i("medieval", "Pill: cutout rect $top, status bar ${statusBarPx}px")
-    return Hole(top.exactCenterX(), top.exactCenterY(), top.width().toFloat(), top.height().toFloat())
+    // The cutout rect is a bounding box that may be taller than the hole, so its centre sat above the
+    // hole on the phone. The cutout path (API 31+) is the hole's real outline: centre on its bounds.
+    var shape = RectF(top)
+    if (Build.VERSION.SDK_INT >= 31) {
+        val path = view.rootWindowInsets?.displayCutout?.cutoutPath
+        if (path != null) {
+            val b = RectF()
+            path.computeBounds(b, true)
+            if (!b.isEmpty) shape = b
+        }
+    }
+    Log.i("medieval", "Pill: cutout rect $top, hole shape $shape, status bar ${statusBarPx}px")
+    return Hole(shape.centerX(), shape.centerY(), shape.width(), shape.height())
 }
 
 private fun Context.findActivity(): Activity? {
