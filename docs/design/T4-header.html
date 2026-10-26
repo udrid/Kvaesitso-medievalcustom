@@ -52,6 +52,7 @@ body{margin:0;background:#050403;width:390px;font-family:'IM Fell English',Georg
 <div class="label" style="padding-top:22px">Full Home, Sunday (everything else about 8% larger)</div>
 <div id="home"></div>
 
+<script src="T4-weather.js"></script>
 <script>
 var G='#c9a55a', GD='#8c6d3a', GL='#e3cf9c', RD='#a8352b';
 var NS='http://www.w3.org/2000/svg';
@@ -142,12 +143,12 @@ function header(d,time,weather,datestr){
   '<div class="dt" style="left:'+(dcw+6)+'px">'+datestr+'</div>'+
   '<div class="abs" style="left:'+(dcw+3)+'px;right:96px;top:0;height:72px">'+'</div>'+
   '<div class="med" style="left:auto;position:absolute;left:'+204+'px">'+medallion(k)+'</div>'+
-  '<div class="tm"><div class="t">'+time+'</div><div class="w">'+weather+'</div></div>'+
+  '<div class="tm"><div class="t">'+time+'</div><div class="w">'+weather[0]+'</div><div style="margin-top:3px;margin-right:-1px">'+WX.svg(weather[1],64,26)+'</div></div>'+
  '</div>'+rule(k);
 }
 var out='';
 DAYS.forEach(function(d,i){
- out+='<div class="label">'+(i+1)+'. '+d[1]+' · '+d[4]+'</div><div class="frame">'+header(d,'10:36','62° · Clear',['19th','20th','21st','22nd','23rd','24th','25th'][i]+' of October')+'</div>';
+ out+='<div class="label">'+(i+1)+'. '+d[1]+' · '+d[4]+'</div><div class="frame">'+header(d,'10:36',[['62° · Clear','clear'],['58° · Partly cloudy','partly'],['51° · Rain','rain'],['55° · Cloudy','cloudy'],['49° · Storms','storm'],['30° · Snow','snow'],['46° · Fog','fog']][i],['19th','20th','21st','22nd','23rd','24th','25th'][i]+' of October')+'</div>';
 });
 document.getElementById('days').innerHTML=out;
 
@@ -188,7 +189,7 @@ var inner=
 
 document.getElementById('home').innerHTML=
  '<div class="frame" style="height:866px;background:radial-gradient(90% 55% at 50% 42%,#26211a 0%,#0d0c09 82%),#0a0907">'+
- '<div class="abs" style="top:0;left:0;right:0;height:118px;">'+header(S0,'10:36','62° · Clear','25th of October')+'</div>'+
+ '<div class="abs" style="top:0;left:0;right:0;height:118px;">'+header(S0,'10:36',['62° · Clear','clear'],'25th of October')+'</div>'+
  '<div class="abs cap" style="top:119px;left:22px;right:22px;display:flex;gap:12px;align-items:center;font-size:8px;letter-spacing:.14em;color:#8c7a52;border-top:1px solid #4a3a20;padding-top:6px"><span>✱ Bluetooth</span><span>Hushed</span></div>'+
  '<div class="abs" style="top:146px;left:0;width:361px;height:660px;transform:scale(1.0803);transform-origin:0 0;">'+inner+'</div></div>';
 </script>
