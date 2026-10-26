@@ -15,9 +15,9 @@ body{margin:0;background:#050403;width:390px;font-family:'IM Fell English',Georg
 .frame{position:relative;width:390px;height:118px;overflow:hidden;background:radial-gradient(90% 120% at 50% 40%,#26211a 0%,#0d0c09 90%),#0a0907}
 .hd{position:absolute;top:10px;left:22px;right:22px;height:76px}
 .dc{position:absolute;left:0;top:14px;font-family:UnifrakturCook,serif;font-size:74px;line-height:.78;color:#a8352b;text-shadow:0 0 1px #000,0 1px 0 #3a0e0a,0 0 18px rgba(168,53,43,.28)}
-.nm{position:absolute;top:21px;font-family:UnifrakturCook,serif;font-size:34px;line-height:1;color:#ecdfbf;text-shadow:0 1px 0 #000}
+.nm{position:absolute;top:21px;font-family:UnifrakturCook,serif;font-size:31px;line-height:1;color:#ecdfbf;text-shadow:0 1px 0 #000}
 .pl{position:absolute;left:0;top:0;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.3em;color:#8c6d3a;text-transform:uppercase;white-space:nowrap}
-.dt{position:absolute;top:60px;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.2em;color:#a8884c;text-transform:uppercase;white-space:nowrap}
+.dt{position:absolute;top:64px;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.2em;color:#a8884c;text-transform:uppercase;white-space:nowrap}
 .med{position:absolute;top:2px;width:88px;height:70px}
 .tm{position:absolute;right:0;top:9px;text-align:right}
 .tm .t{font-size:25px;line-height:1;color:#f2e6c6;text-shadow:0 0 12px rgba(201,165,90,.22)}
@@ -121,16 +121,24 @@ var DAYS=[
  ['sol','Sunday','S','unday','Sol'],['luna','Monday','M','onday','Luna'],['mars','Tuesday','T','uesday','Mars'],
  ['mercury','Wednesday','W','ednesday','Mercury'],['jupiter','Thursday','T','hursday','Jupiter'],
  ['venus','Friday','F','riday','Venus'],['saturn','Saturday','S','aturday','Saturn']];
-var CAPW={W:70,M:68,T:46,F:38,S:44};  /* drop-cap widths in px, tuned by eye */
+var CAPW={W:56,M:56,T:56,F:56,S:56};  /* drop-cap widths in px, tuned by eye */
+function capTile(ch){
+ var vine='<path d="M4 14C4 8 8 4 14 4M7 14C7 10 10 7 14 7" stroke="'+GD+'" stroke-width="1"/><circle cx="14" cy="14" r="1.4" fill="'+G+'"/>';
+ var corners=vine+'<g transform="translate(56 0) scale(-1 1)">'+vine+'</g><g transform="translate(0 56) scale(1 -1)">'+vine+'</g><g transform="translate(56 56) scale(-1 -1)">'+vine+'</g>';
+ return '<svg class="dc" width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><defs><linearGradient id="ct" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6e1f17"/><stop offset="1" stop-color="#2e0c09"/></linearGradient></defs>'+
+ '<rect x="1.5" y="1.5" width="53" height="53" fill="url(#ct)" stroke="'+G+'" stroke-width="1.6"/><rect x="5" y="5" width="46" height="46" stroke="'+GD+'" stroke-width="1"/>'+corners+
+ '<path d="M28 1.5L31 5H25Z M28 54.5L31 51H25Z M1.5 28L5 25V31Z M54.5 28L51 25V31Z" fill="'+G+'"/>'+
+ '<text x="28" y="40" text-anchor="middle" font-family="Cinzel,serif" font-weight="700" font-size="32" fill="'+GL+'" stroke="#1a0604" stroke-width=".8" paint-order="stroke">'+ch+'</text></svg>';
+}
 function header(d,time,weather,datestr){
  var k=d[0],dcw=CAPW[d[2]]||42;
  return '<div class="hd">'+
   '<div class="pl">Day of '+d[4]+'</div>'+
-  '<div class="dc">'+d[2]+'</div>'+
-  '<div class="nm" style="left:'+(dcw+2)+'px">'+d[3]+'</div>'+
+  capTile(d[2])+
+  '<div class="nm" style="left:'+(dcw+6)+'px">'+d[3]+'</div>'+
   '<div class="dt" style="left:'+(dcw+6)+'px">'+datestr+'</div>'+
   '<div class="abs" style="left:'+(dcw+3)+'px;right:96px;top:0;height:72px">'+'</div>'+
-  '<div class="med" style="left:auto;position:absolute;left:'+(206-22)+'px">'+medallion(k)+'</div>'+
+  '<div class="med" style="left:auto;position:absolute;left:'+196+'px">'+medallion(k)+'</div>'+
   '<div class="tm"><div class="t">'+time+'</div><div class="w">'+weather+'</div></div>'+
  '</div>'+rule(k);
 }
