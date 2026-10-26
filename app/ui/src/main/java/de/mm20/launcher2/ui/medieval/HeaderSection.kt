@@ -1,6 +1,10 @@
 package de.mm20.launcher2.ui.medieval
 
 import android.text.format.DateFormat
+import android.content.Intent
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +29,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.mm20.launcher2.ui.settings.SettingsActivity
 import de.mm20.launcher2.weather.Forecast
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -82,6 +87,7 @@ private fun DropCap(letter: String) {
 
 /** T4 header: planetary day line, handpainted weekday, date, medallion, clock, weather and its little scene. */
 @Composable
+@OptIn(ExperimentalFoundationApi::class)
 internal fun HeaderSection(forecast: Forecast?) {
     val context = LocalContext.current
     val now: ZonedDateTime by rememberNow()
@@ -94,7 +100,11 @@ internal fun HeaderSection(forecast: Forecast?) {
     val medallionParts = remember(planet) { medallion(planet) }
     val ruleParts = remember(planet) { dayRule(planet) }
 
-    Box(Modifier.at(22f, HeaderTop).size(346.dp, 80.dp)) {
+    // Owner choice 2026-10-26: long-press the header opens the launcher settings.
+    Box(
+        Modifier.at(22f, HeaderTop).size(346.dp, 80.dp)
+            .combinedClickable(onClick = {}, onLongClick = { launchSafely(context, settingsIntent(context, null), "launcher settings") }),
+    ) {
         Cap("Day of ${planet.label}", size = 8.5f, color = Medieval.GoldDeep, spacingEm = 0.3f)
         Row(Modifier.offset(y = 10.dp)) {
             DropCap(dayName.take(1))
@@ -118,12 +128,26 @@ internal fun HeaderSection(forecast: Forecast?) {
             horizontalAlignment = Alignment.End,
         ) {
             MText(clock, 25f, Medieval.TextBright)
+            val needsSetup = forecast == null
             MText(
-                weatherLine(forecast), 11f, Medieval.WeatherGrey, Modifier.padding(top = 5.dp).width(64.dp),
-                italic = true, align = TextAlign.End,
+                if (needsSetup) "Tap to set up weather" else weatherLine(forecast),
+                if (needsSetup) 10f else 11f, Medieval.WeatherGrey,
+                Modifier.padding(top = 5.dp).width(if (needsSetup) 76.dp else 64.dp)
+                    .let {
+                        if (needsSetup) it.clickable {
+                            launchSafely(context, settingsIntent(context, SettingsActivity.ROUTE_WEATHER_INTEGRATION), "weather settings")
+                        } else it
+                    },
+                italic = true, align = TextAlign.End, maxLines = if (needsSetup) 2 else 1,
             )
             WeatherScene(forecast, now.toInstant().toEpochMilli(), Modifier.padding(top = 3.dp))
         }
     }
     VectorCanvas(ruleParts, 346f, Modifier.at(22f, HeaderTop + 80f).size(346.dp, 14.dp))
 }
+
+/** Opens the launcher's own settings, or one of its screens when [route] is given. */
+internal fun settingsIntent(context: android.content.Context, route: String?): Intent =
+    Intent(context, SettingsActivity::class.java).apply {
+        if (route != null) putExtra(SettingsActivity.EXTRA_ROUTE, route)
+    }

@@ -129,8 +129,14 @@ internal fun Pennants() {
     } ?: "-"
     // gold rises from 20 C (empty) to 50 C (full)
     val heatFraction = v.batteryTempC?.let { (it - 20f) / 30f } ?: 0f
-    Pennant(18f, "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Color(0xFF7A5E2C))
-    Pennant(99f, "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-    Pennant(180f, "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-    Pennant(261f, "HEAT", heatText, heatFraction, Color(0xFF6E2A1E))
+    Pennant(PennantX[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Color(0xFF7A5E2C))
+    Pennant(PennantX[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
+    Pennant(PennantX[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
+    Pennant(PennantX[3], "HEAT", heatText, heatFraction, Color(0xFF6E2A1E))
 }
+
+/**
+ * Pennant left edges. The flag shape inside the 58 wide box runs from x 2 to 56, so the outer
+ * flags' visible edges meet the panel edges (16 and 345) and the gaps between the four are equal.
+ */
+private val PennantX = List(4) { 14f + it * (289f - 14f) / 3f }

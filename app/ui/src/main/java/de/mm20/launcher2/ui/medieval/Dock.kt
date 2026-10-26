@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -25,9 +26,9 @@ private const val WaxPath =
     "M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z"
 
 @Composable
-private fun WaxSeal(icon: List<String>, name: String, label: String, intent: () -> Intent) {
+private fun RowScope.WaxSeal(icon: List<String>, name: String, label: String, intent: () -> Intent) {
     val context = LocalContext.current
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(7.dp)) {
+    Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(7.dp)) {
         Box(
             Modifier
                 .size(54.dp)
@@ -66,7 +67,7 @@ internal fun Dock() {
     }
     Row(
         Modifier.at(0f, 566f).width(361.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.Center,
     ) {
         WaxSeal(MedievalIcons.Phone, "Phone", "HERALD") { Intent(Intent.ACTION_DIAL) }
         WaxSeal(MedievalIcons.Camera, "Camera", "PORTRAIT") { Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA) }

@@ -2,6 +2,10 @@ package de.mm20.launcher2.ui.medieval
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +30,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import de.mm20.launcher2.ui.launcher.scaffold.LauncherScaffoldState
 import de.mm20.launcher2.ui.launcher.scaffold.components.ScaffoldComponent
 
-/** Design C5 is laid out on a 390 x 844 dp stage that is scaled to fit the screen. */
+/** Design C5 is laid out on a 390 x 842 dp stage that is scaled to fit the screen. */
 internal const val StageWidth = 390f
-internal const val StageHeight = 844f
+internal const val StageHeight = 842f
 
 internal object MedievalHomeComponent : ScaffoldComponent() {
 
@@ -59,17 +63,31 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
                 }
                 .pointerInput(Unit) {},
         ) {
-            val scale = minOf(maxWidth.value / StageWidth, maxHeight.value / StageHeight)
+            // The launcher draws edge to edge, so keep the stage clear of the system bars:
+            // the navigation bar (3 buttons or gesture line) at the bottom, and any status bar
+            // taller than the 20 dp the design already leaves above the header at the top.
+            val density = LocalDensity.current
+            val bottomInset = with(density) { WindowInsets.navigationBars.getBottom(this).toDp() }
+            val topInset = with(density) { WindowInsets.statusBars.getTop(this).toDp() }
+            val topPad = (topInset - 20.dp).coerceAtLeast(0.dp)
+            val freeHeight = maxHeight - topPad - bottomInset
+            val scale = minOf(maxWidth.value / StageWidth, freeHeight.value / StageHeight)
             Box(
                 Modifier
-                    .align(Alignment.Center)
-                    .requiredSize(StageWidth.dp, StageHeight.dp)
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                    }
+                    .fillMaxSize()
+                    .padding(top = topPad, bottom = bottomInset),
             ) {
-                MedievalStage(state)
+                Box(
+                    Modifier
+                        .align(Alignment.Center)
+                        .requiredSize(StageWidth.dp, StageHeight.dp)
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                        }
+                ) {
+                    MedievalStage(state)
+                }
             }
             GrainAndVignette(Modifier.fillMaxSize())
         }
