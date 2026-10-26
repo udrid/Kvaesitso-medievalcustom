@@ -7,7 +7,7 @@
 | T1b-polish | 1 | DONE (owner verified on phone 2026-10-25) | claude/T1b-polish | Status line, picker grid, Treasury overlap, ring text, ribbon border, Quest size; Actions run 40242634891 green. Thread archived. Owner moving to Android Studio (tasks/T1b-polish/local-build-setup.md); Studio installed, SDK not yet downloaded; C: has ~19 GB free |
 | T3-dispatches | 1 | DONE (owner verified on phone 2026-10-26) | claude/T3-dispatches | Dispatches list, "N unheeded", shield badges. Needs notification access | Actions run 40263211930 green (last code commit "4"); owner chose swipe = dismiss for real
 | T4-header | 1 | READY TO PUSH (Part 2 built, local compile of :app:ui green 2026-10-25; push + Actions build need owner OK) | claude/T4-header | New header: date per weekday, time and weather small on right, assets +8% |
-| T4b-fix | 1 | active | claude/T4b-fix | Fix off-center layout and dock under nav bar; weather setup. From T4 phone test |
+| T4b-fix | 1 | READY TO PUSH (local compile green 2026-10-26; push + Actions build need owner OK; testlist at tasks/T4b-fix/testlist.md) | claude/T4b-fix | Fix off-center layout and dock under nav bar; weather setup. From T4 phone test |
 | T2-treasury | 1 | deferred: owner wants it last (2026-10-25) | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner

@@ -6,3 +6,5 @@
 - T3-dispatches: upstream `Notification(notification, ranking)` dropped `flags`; fixed in one line. Kvaesitso already has a listener and badge code, so check `data/` before writing services.
 - T4-header: a local compile works here: set JAVA_HOME to Android Studio's `jbr` and run `./gradlew :app:ui:compileDebugKotlin` (system Java 27 is too new). Edge headless (`msedge --headless=new --screenshot`) renders design HTML to PNG.
 - T4-header: owner design rounds took 8+ iterations on the drop cap; show 2-3 rendered options side by side early instead of one at a time.
+- T4b-fix: the launcher draws edge to edge and the home component's `insets` parameter holds only the display cutout; read `WindowInsets.navigationBars/statusBars` yourself for the bars (UNVERIFIED on phone).
+- T4b-fix: Kvaesitso's default long-press on Home is NoAction, so launcher settings are unreachable unless the home screen adds an entry; launch `SettingsActivity` with `EXTRA_ROUTE` (e.g. `ROUTE_WEATHER_INTEGRATION`) to open a screen directly.
