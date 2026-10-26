@@ -22,7 +22,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.zIndex
+import de.mm20.launcher2.notifications.Notification
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -119,9 +125,29 @@ private fun ShieldBody() {
     }
 }
 
+/** Oxblood count badge with a gold rim (".badge" in C5.html). */
+@Composable
+private fun Badge(count: Int, modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .defaultMinSize(minWidth = 18.dp)
+            .height(18.dp)
+            .zIndex(2f)
+            .background(Color(0xFF6E1A14), CircleShape)
+            .border(1.5.dp, Medieval.Gold, CircleShape)
+            .padding(horizontal = 4.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        MText(
+            count.toString(), 10f, Color(0xFFF2E6C8),
+            font = Medieval.Cinzel, bold = true,
+        )
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun Shield(slot: ShieldSlot, refresh: Int, onPick: () -> Unit) {
+private fun Shield(slot: ShieldSlot, refresh: Int, notifications: List<Notification>, onPick: () -> Unit) {
     val context = LocalContext.current
     val pkg = remember(refresh) { slotPackage(context, slot) }
     val label = remember(pkg) { pkg?.let { appLabel(context, it) } ?: "Empty" }
@@ -151,7 +177,10 @@ private fun Shield(slot: ShieldSlot, refresh: Int, onPick: () -> Unit) {
             )
     ) {
         ShieldBody()
-        // Badges stay hidden until notification access exists (T3).
+        if (pkg != null) {
+            val count = notifications.count { it.packageName == pkg }
+            if (count > 0) Badge(count, Modifier.align(Alignment.TopEnd).offset(3.dp, (-5).dp))
+        }
         Box(Modifier.fillMaxWidth().padding(top = 22.dp), contentAlignment = Alignment.TopCenter) {
             when {
                 icon != null -> Image(icon, null, Modifier.size(26.dp))
@@ -169,13 +198,15 @@ private fun Shield(slot: ShieldSlot, refresh: Int, onPick: () -> Unit) {
 
 /** Four heater shields around the orb. Tap opens the app, long-press (or tap on empty) picks one. */
 @Composable
-internal fun Shields() {
+internal fun Shields(vm: MedievalHomeVM) {
     val context = LocalContext.current
     var refresh by remember { mutableStateOf(0) }
     var picking by remember { mutableStateOf<ShieldSlot?>(null) }
+    val all by vm.notifications.collectAsState()
+    val dispatches = remember(all) { all.asDispatches() }
 
     for (slot in Slots) {
-        Shield(slot, refresh) { picking = slot }
+        Shield(slot, refresh, dispatches) { picking = slot }
     }
 
     val apps = remember { launchableApps(context) }
