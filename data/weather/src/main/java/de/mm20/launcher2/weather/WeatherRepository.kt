@@ -24,7 +24,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.Duration
 import java.util.*
-import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 interface WeatherRepository {
     fun getActiveProvider(): Flow<WeatherProviderInfo?>
@@ -252,10 +252,11 @@ class WeatherUpdateWorker(
         }
     }
 
-    @OptIn(FlowPreview::class)
-    private suspend fun getLastKnownLocation(): LatLon? = locationProvider.getLocation(skipCache = true)
-        .timeout(10.minutes)
-        .firstOrNull()
+    // A background job gets no live GPS updates without background-location permission, so waiting
+    // 10 minutes for a fix just stalls. Wait briefly, then fall back to the cached/last stored location.
+    private suspend fun getLastKnownLocation(): LatLon? = withTimeoutOrNull(20.seconds) {
+        locationProvider.getLocation(skipCache = true).firstOrNull()
+    }
         .or { locationProvider.lastCachedLocation }
         ?.let { LatLon(it.latitude, it.longitude) }
 }
