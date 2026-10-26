@@ -14,3 +14,4 @@
 - Ring text (owner, 2026-10-25, replaces the C5 motto): NOSCE TE IPSUM + SAPERE AUDE + LUX ET VERITAS. Real Latin: Delphic maxim, Horace, common motto. Ring spacing to be fixed to fit the circle.
 - Treasury (T2) is the LAST task (owner, 2026-10-25).
 - Push rule (owner, 2026-10-25): nothing goes to GitHub without the owner's approval; threads batch all steps locally first, then report READY TO PUSH. Per-batch approval.
+- T3 verified on phone (owner, 2026-10-26). Header redesign (owner, 2026-10-26): date moves higher, bigger, more intricate; EACH WEEKDAY has its own design, built on the medieval planetary days (Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn with their alchemical signs). Time and weather become smaller, stacked on the right of the date row (time on top, weather under). Every other asset about 8% larger using the freed space.
