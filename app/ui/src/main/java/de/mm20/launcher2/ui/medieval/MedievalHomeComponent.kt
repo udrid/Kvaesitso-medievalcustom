@@ -1,5 +1,7 @@
 package de.mm20.launcher2.ui.medieval
 
+import de.mm20.launcher2.permissions.PermissionGroup
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -99,7 +101,9 @@ private fun MedievalStage(state: LauncherScaffoldState) {
     val vm: MedievalHomeVM = viewModel()
     val density = LocalDensity.current
     CompositionLocalProvider(LocalDensity provides Density(density.density, 1f)) {
-        HeaderSection(vm.forecast)
+        HeaderSection(vm.forecast, vm.weatherStatus) {
+            vm.permissionsManager.requestPermission(it, PermissionGroup.Location)
+        }
         StatusLine()
         // T4: everything below the header is laid out on a 361 wide body and drawn 8% larger (361 x 1.08 = 390)
         Box(

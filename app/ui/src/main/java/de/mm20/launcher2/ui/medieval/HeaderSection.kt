@@ -2,6 +2,7 @@ package de.mm20.launcher2.ui.medieval
 
 import android.text.format.DateFormat
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.clickable
@@ -88,7 +89,11 @@ private fun DropCap(letter: String) {
 /** T4 header: planetary day line, handpainted weekday, date, medallion, clock, weather and its little scene. */
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-internal fun HeaderSection(forecast: Forecast?) {
+internal fun HeaderSection(
+    forecast: Forecast?,
+    status: WeatherStatus,
+    onAllowLocation: (AppCompatActivity) -> Unit,
+) {
     val context = LocalContext.current
     val now: ZonedDateTime by rememberNow()
     val planet = planetOf(now.dayOfWeek)
@@ -130,12 +135,22 @@ internal fun HeaderSection(forecast: Forecast?) {
             MText(clock, 25f, Medieval.TextBright)
             val needsSetup = forecast == null
             MText(
-                if (needsSetup) "Tap to set up weather" else weatherLine(forecast),
+                if (needsSetup) when (status) {
+                    WeatherStatus.SetUp -> "Tap to set up weather"
+                    WeatherStatus.AllowLocation -> "Allow location"
+                    WeatherStatus.Unavailable -> "Weather unavailable"
+                    else -> "Fetching weather…"
+                } else weatherLine(forecast),
                 if (needsSetup) 10f else 11f, Medieval.WeatherGrey,
                 Modifier.padding(top = 5.dp).width(if (needsSetup) 76.dp else 64.dp)
                     .let {
                         if (needsSetup) it.clickable {
-                            launchSafely(context, settingsIntent(context, SettingsActivity.ROUTE_WEATHER_INTEGRATION), "weather settings")
+                            val activity = context as? AppCompatActivity
+                            if (status == WeatherStatus.AllowLocation && activity != null) {
+                                onAllowLocation(activity)
+                            } else {
+                                launchSafely(context, settingsIntent(context, SettingsActivity.ROUTE_WEATHER_INTEGRATION), "weather settings")
+                            }
                         } else it
                     },
                 italic = true, align = TextAlign.End, maxLines = if (needsSetup) 2 else 1,
