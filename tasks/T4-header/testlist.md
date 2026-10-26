@@ -36,6 +36,14 @@ Compare with the pictures `docs/design/T4-header.png` and `docs/design/T4-weathe
 3. Swipe a dispatch left or right.
    You should see: it still dismisses like before.
 
+## D2. The ring around the Oracle
+1. Look at the gold ring around the orb in the middle of the home screen.
+   You should see: three phrases, NOSCE TE IPSUM at the top, SAPERE AUDE at the lower right, LUX ET VERITAS at the lower left, in bold capitals. Together they go almost all the way round, with a small gold cross between each pair.
+2. Turn your head, don't turn the phone: every letter should stand upright and be easy to read (the two lower phrases read left to right along the bottom).
+3. Look at the two thin ring lines.
+   You should see: the letters sit in the middle between them and touch neither line.
+   Report: any letter touching a ring line, letters overlapping each other, or a phrase with big uneven gaps.
+
 ## E. Things that should NOT happen
 1. The weather picture should NOT show when the weather line says "[weather]" (no weather set up); that spot stays empty.
 2. The phone should NOT get warm or the battery drain faster than before while the home screen is open.
