@@ -12,3 +12,4 @@
 - Shield apps (owner delegated, "your picks", 2026-10-25): the four shields open apps picked from a list in settings; defaults X, Discord, YouTube, Samsung Messages if installed. Dock Road opens the default browser.
 - T1 phone test passed (owner, 2026-10-25): installs, all taps work. Changes ordered: top rows less cluttered, drop Wi-Fi call and Voicemail, weather under the clock; app picker = 4-5 column scrolling grid of icon + name with search bar on top. Maps shield custom artwork: later task (owner knows).
 - Ring text (owner, 2026-10-25, replaces the C5 motto): NOSCE TE IPSUM + SAPERE AUDE + LUX ET VERITAS. Real Latin: Delphic maxim, Horace, common motto. Ring spacing to be fixed to fit the circle.
+- Treasury (T2) is the LAST task (owner, 2026-10-25).
