@@ -149,7 +149,7 @@ internal fun Dispatches(vm: MedievalHomeVM) {
         rememberRises(dispatches.maxOfOrNull { it.postTime } ?: 0L), 1_800L, LocalMotion.current.ambient,
     )
 
-    Panel(top = 454f, height = 90f, ribbon = "Dispatches") {
+    Panel(top = 454f, height = 90f + BodyLift / BodyScaleF, ribbon = "Dispatches") {
         Box(Modifier.matchParentSize().drawBehind {
             val k = bump(glow.value, 0f, 1f)
             if (k <= 0f) return@drawBehind

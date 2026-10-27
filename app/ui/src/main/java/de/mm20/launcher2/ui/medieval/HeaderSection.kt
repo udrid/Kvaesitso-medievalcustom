@@ -40,6 +40,10 @@ import java.util.Locale
 /** Top of the T4 header on the stage; the divider sits 80 below it and the status row 98 below it. */
 internal const val HeaderTop = 30f
 
+/** T16: the body sits this many stage units closer to the header; Dispatches grows and the dock moves down by the same amount (in body units) so the dock stays put. */
+internal const val BodyLift = 8f
+internal const val BodyScaleF = 1.08f
+
 private fun ordinal(day: Int): String {
     val suffix = if (day in 11..13) "th" else when (day % 10) {
         1 -> "st"

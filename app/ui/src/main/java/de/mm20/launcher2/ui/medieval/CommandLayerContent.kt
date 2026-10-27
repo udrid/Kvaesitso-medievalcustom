@@ -73,6 +73,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.appcompat.app.AppCompatActivity
+import de.mm20.launcher2.permissions.PermissionGroup
+import de.mm20.launcher2.permissions.PermissionsManager
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.mm20.launcher2.search.Application
@@ -102,7 +105,7 @@ internal fun CommandLayerContent(modifier: Modifier = Modifier) {
         modifier
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(26.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         MostUsedApps(tick)
         PeopleAndSwitches(tick) { tick++ }
@@ -132,6 +135,8 @@ internal object UsageCounter {
 /** Apps the launcher itself ranks as frequently used (launches through search results). */
 internal class CommandLayerVM : ViewModel(), KoinComponent {
     private val favoritesService: FavoritesService by inject()
+    val permissionsManager: PermissionsManager by inject()
+    val hasContacts = permissionsManager.hasPermission(PermissionGroup.Contacts)
 
     val rankedPackages = favoritesService.getFavorites(
         includeTypes = listOf("app"),
@@ -254,7 +259,9 @@ private fun loadStarred(context: Context): List<Person> {
 @Composable
 private fun PeopleAndSwitches(tick: Int, onChanged: () -> Unit) {
     val context = LocalContext.current
-    val people by produceState(emptyList<Person>(), tick) {
+    val vm: CommandLayerVM = viewModel()
+    val hasContacts by vm.hasContacts.collectAsState(initial = null)
+    val people by produceState(emptyList<Person>(), tick, hasContacts) {
         value = withContext(Dispatchers.IO) { loadStarred(context) }
     }
     Box(Modifier.fillMaxWidth().padding(top = 8.dp)) {
@@ -266,6 +273,17 @@ private fun PeopleAndSwitches(tick: Int, onChanged: () -> Unit) {
                 .padding(start = 12.dp, end = 12.dp, top = 22.dp, bottom = 14.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
+            if (hasContacts == false || (hasContacts == true && people.isEmpty())) {
+                MText(
+                    if (hasContacts == false) "Tap to allow contacts" else "Star contacts in your Contacts app to see them here",
+                    13f, Medieval.TextDim,
+                    if (hasContacts == false) Modifier.clickable {
+                        (context as? AppCompatActivity)?.let { vm.permissionsManager.requestPermission(it, PermissionGroup.Contacts) }
+                    } else Modifier,
+                    italic = true, maxLines = 2,
+                )
+                Box(Modifier.fillMaxWidth().height(1.dp).background(Medieval.GoldLine))
+            }
             if (people.isNotEmpty()) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     people.forEach { PersonCell(it) }
@@ -280,7 +298,7 @@ private fun PeopleAndSwitches(tick: Int, onChanged: () -> Unit) {
             }
         }
         Box(Modifier.align(Alignment.TopStart).offset(12.dp, (-8).dp)) {
-            LayerRibbon(if (people.isNotEmpty()) "People and switches" else "Switches")
+            LayerRibbon(if (people.isNotEmpty() || hasContacts != null) "People and switches" else "Switches")
         }
     }
 }

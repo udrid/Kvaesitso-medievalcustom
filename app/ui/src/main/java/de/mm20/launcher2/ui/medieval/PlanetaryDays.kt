@@ -129,16 +129,21 @@ internal fun medallion(p: Planet): List<Part> {
 }
 
 /** Divider under the header, 346 x 14 units. */
+/** The weather scene starts at x=272 of the header; the rule on its right ends here (6 clear) and mirrored ornaments must fit before it. */
+internal const val RuleEnd = 266f
+
+private fun fits(rx: Float, extent: Float) = rx + extent <= RuleEnd
+
 internal fun dayRule(p: Planet): List<Part> {
     val w = 346f
     val c = 173f
-    val out = mutableListOf(prim("M0 7H${c - 34}M${c + 34} 7H$w", stroke = Medieval.GoldLine, width = 1f))
+    val out = mutableListOf(prim("M0 7H${c - 34}M${c + 34} 7H$RuleEnd", stroke = Medieval.GoldLine, width = 1f))
     when (p) {
         Planet.Sol -> {
             for (i in 1..6) {
                 val x = c - 34 - i * 24
                 out += prim(circlePath(x, 7f, 1.6f), fill = GD)
-                out += prim(circlePath(w - x, 7f, 1.6f), fill = GD)
+                if (fits(w - x, 1.6f)) out += prim(circlePath(w - x, 7f, 1.6f), fill = GD)
             }
             out += rays(12, 4f, 5.5f, 8f, G, dx = c, dy = 7f)
             out += prim(circlePath(c, 7f, 3.2f), fill = RD, stroke = G, width = 1f)
@@ -148,7 +153,7 @@ internal fun dayRule(p: Planet): List<Part> {
             for (i in 1..5) {
                 val x = c - 34 - i * 28
                 out += prim(moon, fill = G, dx = x, dy = 7f)
-                out += prim(moon, fill = G, scale = 1f, scaleX = -1f, dx = w - x, dy = 7f)
+                if (fits(w - x, 3.5f)) out += prim(moon, fill = G, scale = 1f, scaleX = -1f, dx = w - x, dy = 7f)
             }
             out += star4(c, 7f, 6f)
             out += prim(circlePath(c - 16, 7f, 1.3f), fill = G)
@@ -158,7 +163,7 @@ internal fun dayRule(p: Planet): List<Part> {
             for (i in 1..9) {
                 val x = c - 34 - i * 15
                 out += prim("M${x + 4} 2L$x 7L${x + 4} 12", stroke = GD, width = 1.3f)
-                out += prim("M${w - x - 4} 2L${w - x} 7L${w - x - 4} 12", stroke = GD, width = 1.3f)
+                if (fits(w - x, 1.7f)) out += prim("M${w - x - 4} 2L${w - x} 7L${w - x - 4} 12", stroke = GD, width = 1.3f)
             }
             out += prim("M${c - 30} 7H${c + 30}", stroke = G, width = 1.5f)
             out += prim("M${c - 30} 3V11M${c - 34} 5L${c - 30} 3L${c - 26} 5M${c + 30} 3V11", stroke = G, width = 1.5f)
@@ -168,7 +173,7 @@ internal fun dayRule(p: Planet): List<Part> {
             for (i in 1..10) {
                 val x = c - 34 - i * 14
                 out += prim("M$x 11Q${x + 2} 5 ${x + 9} 3", stroke = GD, width = 1.2f)
-                out += prim("M${w - x} 11Q${w - x - 2} 5 ${w - x - 9} 3", stroke = GD, width = 1.2f)
+                if (fits(w - x, 0.7f)) out += prim("M${w - x} 11Q${w - x - 2} 5 ${w - x - 9} 3", stroke = GD, width = 1.2f)
             }
             out += prim("M${c - 30} 7Q${c - 14} -2 $c 7Q${c + 14} 16 ${c + 30} 7", stroke = G, width = 1.3f)
             out += prim("M${c - 30} 7Q${c - 14} 16 $c 7Q${c + 14} -2 ${c + 30} 7", stroke = G, width = 1.3f)
@@ -178,7 +183,7 @@ internal fun dayRule(p: Planet): List<Part> {
             for (i in 1..4) {
                 val x = c - 34 - i * 38
                 out += prim("M${x + 10} 1L${x + 3} 7L${x + 8} 7L$x 13", stroke = GD, width = 1.4f)
-                out += prim("M${w - x - 10} 1L${w - x - 3} 7L${w - x - 8} 7L${w - x} 13", stroke = GD, width = 1.4f)
+                if (fits(w - x, 1.5f)) out += prim("M${w - x - 10} 1L${w - x - 3} 7L${w - x - 8} 7L${w - x} 13", stroke = GD, width = 1.4f)
             }
             out += prim("M${c + 5} -1L${c - 4} 7H${c + 2}L${c - 6} 15", stroke = G, width = 2f)
             out += prim(circlePath(c - 22, 7f, 2.4f), fill = RD, stroke = G, width = 1f)
@@ -188,9 +193,9 @@ internal fun dayRule(p: Planet): List<Part> {
             for (i in 1..5) {
                 val x = c - 34 - i * 28
                 out += prim("M$x 7C${x + 7} -3 ${x + 14} 17 ${x + 21} 7", stroke = GD, width = 1.2f)
-                out += prim("M${w - x} 7C${w - x - 7} -3 ${w - x - 14} 17 ${w - x - 21} 7", stroke = GD, width = 1.2f)
+                if (fits(w - x, 0.7f)) out += prim("M${w - x} 7C${w - x - 7} -3 ${w - x - 14} 17 ${w - x - 21} 7", stroke = GD, width = 1.2f)
                 out += prim(circlePath(x + 10, 7f, 1.5f), fill = GD)
-                out += prim(circlePath(w - x - 10, 7f, 1.5f), fill = GD)
+                if (fits(w - x, 0.7f)) out += prim(circlePath(w - x - 10, 7f, 1.5f), fill = GD)
             }
             out += prim("M$c 13C${c - 10} 8 ${c - 9} 1 $c 4C${c + 9} 1 ${c + 10} 8 $c 13Z", fill = RD, stroke = G, width = 1f)
         }
@@ -200,7 +205,7 @@ internal fun dayRule(p: Planet): List<Part> {
                 val x = c - 34 - i * 16
                 val fill = if (i % 2 == 1) GD else null
                 out += prim(sq, fill = fill, stroke = GD, width = 1f, rotate = 45f, dx = x, dy = 7f)
-                out += prim(sq, fill = fill, stroke = GD, width = 1f, rotate = 45f, dx = w - x, dy = 7f)
+                if (fits(w - x, 4.2f)) out += prim(sq, fill = fill, stroke = GD, width = 1f, rotate = 45f, dx = w - x, dy = 7f)
             }
             out += prim(
                 "M${c - 7} 0H${c + 7}M${c - 7} 14H${c + 7}M${c - 5} 0L${c + 5} 14M${c + 5} 0L${c - 5} 14",

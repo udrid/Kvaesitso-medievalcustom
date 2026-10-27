@@ -146,7 +146,7 @@ private fun MedievalStage(state: LauncherScaffoldState, onCommandOpen: () -> Uni
     }
 }
 
-private const val BodyScale = 1.08f
+private const val BodyScale = BodyScaleF
 private const val BodyWidth = 361f
-private const val BodyHeight = 640f
-private const val BodyTop = HeaderTop + 120f
+private const val BodyHeight = 640f + BodyLift / BodyScaleF
+private const val BodyTop = HeaderTop + 120f - BodyLift

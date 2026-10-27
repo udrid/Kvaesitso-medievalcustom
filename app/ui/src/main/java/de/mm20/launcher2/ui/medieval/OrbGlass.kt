@@ -39,10 +39,10 @@ private const val OrbFps = 5
 private const val KindleMs = 1100L
 private const val ChargePulseSec = 4.5f
 private val Heart = Color(0xFFFFA060)
-/** T15: fewer grains lit at once (only the top of each sine counts) and a gentler peak. */
-private const val TwinkleRate = 1.3f
-private const val TwinkleFloor = 0.35f
-private const val TwinkleGain = 0.6f
+/** T15/T16: few grains (7), lit about 21 % of the time (only the top of each sine counts), gentle peak 0.4, period about 7 s. */
+private const val TwinkleRate = 0.9f
+private const val TwinkleFloor = 0.6f
+private const val TwinkleGain = 0.4f
 private val Twinkle = Color(0xFFFFF0C0)
 
 /** A gold dust grain that twinkles: position in orb radii (turns with the smoke) and its own phase. */
@@ -56,7 +56,7 @@ internal fun OrbGlass(modifier: Modifier = Modifier) {
     val setting = ImageBitmap.imageResource(R.drawable.medieval_orb_setting)
     val grains = remember {
         val r = Random(77)
-        List(10) {
+        List(7) {
             val a = r.nextFloat() * 2f * PI.toFloat()
             val d = 0.17f + r.nextFloat() * 0.62f
             Grain(d * cos(a), d * sin(a), r.nextFloat() * 2f * PI.toFloat(), 0.6f + r.nextFloat() * 1.2f)

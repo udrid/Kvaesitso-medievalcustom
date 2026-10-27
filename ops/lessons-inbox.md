@@ -30,3 +30,4 @@
 - T13: a text field on Home cannot share the screen with the results: the bar is mid-screen, so the keyboard leaves almost no room. An overlay with the bar at the top (one `BasicTextField`, text in `SearchVM.searchQuery`, existing `SearchColumn` below) needed no upstream edit.
 - Home press while on top = onNewIntent with ACTION_MAIN+CATEGORY_HOME; HomePressed.kt now turns it into a signal for pop-ups.
 - T14: Android 13 apps can flip only torch and ringer (Normal/Vibrate) without special access; Wi-Fi/Bluetooth/location/saver are page-open only. Home taps bypass Kvaesitso's launchCount, hence own UsageCounter.
+- T16: the weather column renders ~8-10 stage units lower than the fixed line heights say, so check layout from the owner's screenshot, not from arithmetic; a horizontal clearance is safer than a vertical one.
