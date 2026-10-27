@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T9 ring text styles</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf")}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+body{margin:0;background:#050403;width:820px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+.grid{display:grid;grid-template-columns:390px 390px;gap:20px 20px;padding:10px}
+.cell{width:390px}
+.lab{font-family:Cinzel,serif;font-size:11px;font-weight:700;letter-spacing:.16em;color:#c9a55a;text-transform:uppercase;padding:6px 4px 2px}
+.desc{font-size:12.5px;font-style:italic;color:#a8987a;padding:0 4px 8px;min-height:50px;line-height:1.25}
+.stage{position:relative;width:390px;height:230px;background:radial-gradient(90% 90% at 50% 50%,#26211a 0%,#0d0c09 85%),#0a0907;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.zoom{position:relative;width:390px;height:390px;background:radial-gradient(90% 90% at 50% 50%,#26211a 0%,#0d0c09 85%),#0a0907;overflow:hidden;margin-top:8px}
+.zoom .orbbox{position:absolute;left:-1px;top:-1px;width:190px;height:190px;transform:scale(2.05);transform-origin:0 0;left:0;top:0}
+.hint{padding:6px 14px 14px;font-size:12.5px;color:#8c7a52;font-style:italic}
+</style>
+</head>
+<body>
+<div class="hint">Four versions of the writing on the ring around the Oracle orb. Top-left is what the phone shows now. Each box shows the real size, then a close-up so you can see the detail.</div>
+<div class="grid" id="g"></div>
+<script src="T9-orb.js"></script>
+<script>
+var ITEMS=[
+ ['built','0. As built now','Plain gold-brown Cinzel capitals with a small cross between the sayings. For comparison only.'],
+ ['illum','1. Illuminated lettering','Bright gold capitals with a thin dark outline and a soft glow. The first letter of each saying is red (like the big red date letter). A small red diamond with two dots sits between the sayings.'],
+ ['engraved','2. Engraved metal','Letters look cut into a bronze band: a dark shadow inside the cut and a light edge on the lower lip. Quiet, no colour. The crosses are engraved the same way.'],
+ ['black','3. Blackletter capitals','Old German gothic capitals (same family as the date name), gold with a faint glow. A cross with a little curl on each side sits between the sayings. Capitals in this gothic hand are very ornate, so it is the hardest to read and the most storybook.'],
+ ['blackLower','3b. Blackletter, small letters','Same gothic gold, but Initial Capitals with small letters inside, which is how this hand is really written. Much easier to read than all capitals.']
+];
+var h='';
+ITEMS.forEach(function(it,i){h+='<div class="cell"><div class="lab">'+it[1]+'</div><div class="desc">'+it[2]+'</div><div class="stage" id="s'+i+'"></div><div class="zoom" id="z'+i+'"></div></div>';});
+document.getElementById('g').innerHTML=h;
+T9.ready(function(){
+ ITEMS.forEach(function(it,i){
+  document.getElementById('s'+i).innerHTML=T9.orb(it[0],'a'+i);
+  document.getElementById('z'+i).innerHTML=T9.orb(it[0],'b'+i);
+ });
+ document.body.setAttribute('data-ready','1');
+});
+</script>
+</body>
+</html>

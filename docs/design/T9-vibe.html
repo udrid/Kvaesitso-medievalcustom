@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T9 animation menu</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf")}
+@font-face{font-family:"IM Fell English";font-style:italic;src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf")}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+body{margin:0;background:#050403;width:860px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8;display:flex;gap:18px;padding:10px;box-sizing:border-box}
+.stage{position:relative;width:390px;height:690px;flex:none;overflow:hidden;background:radial-gradient(90% 55% at 50% 38%,#26211a 0%,#0d0c09 82%),#0a0907}
+.abs{position:absolute}
+.cap{font-family:Cinzel,serif;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.panel{position:absolute;left:16px;right:16px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);box-shadow:inset 0 0 26px rgba(0,0,0,.6)}
+.ribbon{position:absolute;top:-8px;left:12px;height:17px;padding:0 17px 0 11px;background:linear-gradient(#6a1d16,#481510);border-top:1px solid #c9a55a;color:#f0e2bd;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;display:flex;align-items:center;clip-path:polygon(0 0,100% 0,calc(100% - 7px) 50%,100% 100%,0 100%)}
+.node{position:absolute;width:62px;height:72px;background:none;border:0;padding:0;color:#e6d9b8;cursor:pointer;transition:transform .12s}
+.node svg.shield{position:absolute;inset:0}
+.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.badge{position:absolute;top:-5px;right:-3px;min-width:18px;height:18px;box-sizing:border-box;border-radius:9px;background:#6e1a14;border:1.5px solid #c9a55a;color:#f2e6c8;font-family:Cinzel,serif;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;z-index:2}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bfae86}
+.seal{position:relative;width:54px;height:54px;background:none;border:0;padding:0;cursor:pointer;transition:transform .12s}
+.seal svg.wax{position:absolute;inset:0}
+.seal .ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.dockcol{display:flex;flex-direction:column;align-items:center;gap:7px;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.2em;color:#a8884c}
+/* tap reaction: gold flash + tiny scale, 250 ms, one draw layer */
+.tap{animation:tap .25s ease-out}
+@keyframes tap{0%{transform:scale(1);filter:none}30%{transform:scale(1.045);filter:brightness(1.5) drop-shadow(0 0 6px rgba(240,200,110,.7))}100%{transform:scale(1);filter:none}}
+/* notification glow: once, 1.8 s */
+.nglow{animation:ng 1.8s ease-in-out 1}
+@keyframes ng{0%,100%{box-shadow:inset 0 0 26px rgba(0,0,0,.6),0 0 0 rgba(201,165,90,0)}40%{box-shadow:inset 0 0 26px rgba(0,0,0,.6),0 0 16px rgba(229,178,90,.45)}}
+.bpulse{animation:bp 1.8s ease-in-out 1}
+@keyframes bp{0%,100%{transform:scale(1)}25%{transform:scale(1.35);box-shadow:0 0 10px rgba(240,190,100,.8)}55%{transform:scale(1)}75%{transform:scale(1.15)}}
+.still .nglow-s{box-shadow:inset 0 0 26px rgba(0,0,0,.6),0 0 16px rgba(229,178,90,.45)}
+/* ring light: a soft arc of light in the ring band; the conic angle is moved by script at 12 fps */
+.ringlight{position:absolute;left:0;top:0;width:176px;height:176px;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
+ -webkit-mask:radial-gradient(circle,transparent 55px,#000 57px,#000 86px,transparent 88px);mask:radial-gradient(circle,transparent 55px,#000 57px,#000 86px,transparent 88px);
+ background:conic-gradient(from var(--a,0deg),rgba(255,226,160,0) 0deg,rgba(255,226,160,.34) 22deg,rgba(255,226,160,0) 50deg,rgba(255,226,160,0) 360deg)}
+.pill{position:absolute;left:100px;width:190px;height:34px;box-sizing:border-box;border-radius:17px;border:1px solid #6b5430;background:linear-gradient(#1d1a14,#12100c);display:flex;align-items:center;justify-content:center;font-family:'IM Fell English',serif;font-style:italic;font-size:14px;color:#8c7a52}
+/* ---- menu ---- */
+.menu{flex:1;font-size:12.5px}
+h1{font-family:Cinzel,serif;font-size:12px;letter-spacing:.18em;color:#c9a55a;margin:4px 0 8px;text-transform:uppercase}
+.it{border:1px solid #3a2e18;background:#12100c;padding:8px 10px;margin-bottom:8px}
+.it label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.it b{font-family:Cinzel,serif;font-size:11px;letter-spacing:.08em;color:#e3cf9c}
+.it .d{color:#a8987a;line-height:1.25;margin-top:2px}
+.it .c{margin-top:4px;color:#8c7a52;line-height:1.25}
+.tag{display:inline-block;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.14em;padding:1px 6px;border:1px solid #8c6d3a;color:#c9a55a;margin-right:6px;text-transform:uppercase}
+.tag.amb{color:#e5a64a}
+button.sim{font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.14em;color:#f0e2bd;background:#481510;border:1px solid #c9a55a;padding:4px 10px;cursor:pointer;margin-top:5px}
+.note{color:#8c7a52;font-style:italic;line-height:1.3;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+<div class="menu">
+ <h1>Animation menu (tick to try)</h1>
+ <div class="it"><label><input type="checkbox" id="flame" checked><span><b><span class="tag amb">ambient</span>1. Orb flame flicker</b><div class="d">The flame glows a little brighter and dimmer and leans a hair, like a candle in a draught. Only the orb's flame layer redraws.</div><div class="c"><b>Cost: very low.</b> About 10 redraws a second of one 54 px area, stops when the screen is off or Home is hidden.</div></span></label></div>
+ <div class="it"><label><input type="checkbox" id="ring" checked><span><b><span class="tag amb">ambient</span>2. Light drifting around the ring</b><div class="d">A faint warm glint walks once round the ring lettering about every 20 seconds, as if a candle passed behind it. Low contrast on purpose.</div><div class="c"><b>Cost: low.</b> One thin ring layer, capped at 12 fps. Cheapest form: it only runs while the glint is visible, then sleeps for the rest of the 20 s (about 1 s of work in 3).</div></span></label></div>
+ <div class="it"><label><input type="checkbox" id="pill"><span><b><span class="tag amb">ambient</span>3. Slow breathing glow on the camera pill (proposal)</b><div class="d">The pill's edge slowly brightens and fades over about 6 seconds. Shown here as a stand-in pill.</div><div class="c"><b>Cost: low.</b> Only the pill's border colour changes, 8 fps. Only worth it if you want the pill to feel alive; it would be the third ambient effect, so it can run only while one of the others is off.</div></span></label></div>
+ <div class="it"><label><input type="checkbox" id="tap" checked><span><b><span class="tag">touch</span>4. Tap reactions</b><div class="d">Shield, wax seal or orb: a brief gold flash and a tiny swell, a quarter of a second. Tap them on the left.</div><div class="c"><b>Cost: none.</b> Runs only when you touch; full speed for 0.25 s, then nothing.</div></span></label></div>
+ <div class="it"><label><input type="checkbox" id="notif" checked><span><b><span class="tag">once</span>5. Notification arrives</b><div class="d">The Dispatches panel glows once and the shield badge swells once, then both settle. Press the button to simulate.</div><div class="c"><b>Cost: none to very low.</b> Plays once, about 2 s, only if Home is visible when the message arrives.</div></span><button class="sim" id="simn" type="button">Simulate a notification</button></label></div>
+ <div class="it" style="border-color:#6b5430"><div class="d"><b>Proposed setting "Animations":</b><br><b>Full</b> = everything ticked (at most two ambient at once). <b>Minimal</b> (default) = 1. flame flicker plus 4 and 5 only. <b>Off</b> = nothing moves.</div></div>
+ <div class="it" style="border-color:#6b5430"><div class="d"><b>Rules that apply to all of it:</b> nothing moves unless Home is on screen; nothing moves in Battery Saver, at 15% battery or less (unless charging), or if Android's "Remove animations" is on; ambient effects at most 12 per second; at most two ambient at once. <span id="cap" style="color:#e5a64a"></span></div></div>
+ <div class="note">Honest estimate (not measured): with the flame alone the screen does about 10 small redraws a second, on the order of 1% extra battery per hour of screen-on Home time. Android's battery usage list for Deliverance will show the true figure after a few days.</div>
+</div>
+<script src="T9-orb.js"></script>
+<script>
+var STILL=location.search.indexOf('still')>=0;
+if(STILL)document.body.classList.add('still');
+function shield(inner,top,left,label,lt,badge){
+ return '<button type="button" class="node react" style="top:'+top+'px;left:'+left+'px">'+(badge?'<span class="badge" '+(badge==3?'id="bdg"':'')+'>'+badge+'</span>':'')+'<svg class="shield" viewBox="0 0 62 72"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/></svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">'+inner+'</svg></span></button><div class="lbl" style="top:'+lt+'px;left:'+(left-11)+'px">'+label+'</div>';
+}
+function seal(ic,lab){
+ return '<div class="dockcol"><button type="button" class="seal react"><svg class="wax" viewBox="0 0 54 54"><path d="M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z" fill="#4e1511"/><circle cx="27" cy="27" r="19" fill="none" stroke="#2a0a08" stroke-width="2"/></svg><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e3cf9c" stroke-width="1.6" stroke-linejoin="round">'+ic+'</svg></span></button>'+lab+'</div>';
+}
+var html=
+ '<div class="abs cap" style="left:22px;top:14px;font-size:10px;color:#a8884c">Sunday</div><div class="abs" style="right:22px;top:10px;font-size:25px;color:#f2e6c6">10:36</div><div class="abs" style="left:22px;right:22px;top:44px;border-top:1px solid #4a3a20"></div>'+
+ '<div class="abs" id="orbhost" style="left:100px;top:60px"></div>'+
+ '<div class="abs" style="top:252px;left:0;right:0;text-align:center;font-family:UnifrakturMaguntia,serif;font-size:19px;color:#e6d9b8">The Oracle</div>'+
+ shield('<path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/>',80,22,'X',156)+
+ shield('<path d="M6 7h9v10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7z"/><path d="M15 9h2a2 2 0 0 1 0 5h-2"/>',80,306,'Discord',156,3)+
+ shield('<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/>',176,22,'YouTube',252)+
+ shield('<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>',176,306,'Messages',252,2)+
+ '<div class="pill" id="pillel" style="top:296px">Command the Oracle…</div>'+
+ '<div class="panel '+(STILL?'nglow-s':'')+'" id="disp" style="top:360px;height:96px"><div class="ribbon">Dispatches</div><div style="padding:30px 16px 0;font-size:14px;color:#d9ccaa;line-height:1.5"><span style="color:#a8352b">✠</span> <span class="cap" style="font-size:10px;color:#c9a55a;letter-spacing:.1em">Now</span>&nbsp; A message from the Smithy<div style="color:#a89a76;font-size:12px;margin-left:15px">Another dispatch, already read</div></div></div>'+
+ '<div class="abs" style="left:0;right:0;top:590px;display:flex;justify-content:space-around">'+
+ seal('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 4 5a1 1 0 0 1 1-1z"/>','HERALD')+
+ seal('<path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.5"/>','PORTRAIT')+
+ seal('<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>','ROAD')+
+ seal('<path d="M12 3v18M7 8h10M9 21h6"/>','SMITHY')+'</div>';
+document.getElementById('stage').innerHTML=html;
+
+T9.ready(function(){
+ document.getElementById('orbhost').innerHTML=T9.orb('built','v');
+ var ringSvg=document.querySelector('.ringsvg'),core=document.querySelector('.orbcore'),flame=document.querySelector('.flame');
+ var lightEl=document.createElement('div');lightEl.className='ringlight';ringSvg.parentNode.insertBefore(lightEl,core);
+ core.classList.add('react');core.style.cursor='pointer';
+ var on=function(id){return document.getElementById(id).checked};
+ var AMB=['flame','ring','pill'];
+ /* at most two ambient at once: turning on a third switches off the oldest */
+ var order=['flame','ring'];
+ AMB.forEach(function(id){document.getElementById(id).addEventListener('change',function(){
+  var i=order.indexOf(id);if(i>=0)order.splice(i,1);
+  if(this.checked){order.push(id);if(order.length>2){var old=order.shift();document.getElementById(old).checked=false;document.getElementById('cap').textContent='(Third ambient switched on, so the oldest was switched off: the two-at-once limit.)';}else document.getElementById('cap').textContent='';}
+ });});
+ /* 12 fps ambient loop, only while the page is visible */
+ var t0=performance.now(),last=0,fl=0;
+ function tick(now){
+  if(document.hidden){requestAnimationFrame(tick);return}
+  if(now-last>=83){last=now;var t=(now-t0)/1000;
+   if(on('flame')){var n=Math.sin(t*3.1)*.5+Math.sin(t*7.3+1)*.3+Math.sin(t*13.7)*.2;fl=n;
+    flame.style.transform='rotate('+(n*1.6).toFixed(2)+'deg) scale('+(1+n*.02).toFixed(3)+')';
+    flame.style.filter='drop-shadow(0 0 '+(6+n*2.5).toFixed(1)+'px rgba(229,138,60,'+(.62+n*.14).toFixed(2)+'))';
+    core.style.boxShadow='0 0 0 3px #0a0907,0 0 '+(34+n*5).toFixed(0)+'px rgba(229,138,60,'+(.26+n*.05).toFixed(2)+'),inset 0 0 30px rgba(0,0,0,.85)';}
+   else{flame.style.transform='';flame.style.filter='drop-shadow(0 0 6px rgba(229,138,60,.65))';core.style.boxShadow='0 0 0 3px #0a0907,0 0 34px rgba(229,138,60,.26),inset 0 0 30px rgba(0,0,0,.85)';}
+   if(on('ring')){var p=(t%20)/20; /* sweeps during the first 7 s of each 20 s */ var sw=Math.min(1,p/.35);lightEl.style.opacity=p<.35?'1':'0';lightEl.style.setProperty('--a',(sw*360-30)+'deg');}else lightEl.style.opacity='0';
+   var pl=document.getElementById('pillel');
+   if(on('pill')){var b=(Math.sin(t*Math.PI*2/6)+1)/2;pl.style.borderColor='rgb('+(107+b*70|0)+','+(84+b*55|0)+','+(48+b*30|0)+')';pl.style.boxShadow='0 0 '+(b*8).toFixed(1)+'px rgba(201,165,90,'+(b*.25).toFixed(2)+')';}else{pl.style.borderColor='';pl.style.boxShadow='';}
+  }
+  requestAnimationFrame(tick);
+ }
+ if(STILL){ /* frozen frame for the PNG */
+  lightEl.style.setProperty('--a','35deg');lightEl.style.opacity='1';flame.style.transform='rotate(.8deg) scale(1.01)';
+ }else requestAnimationFrame(tick);
+ /* tap reactions */
+ document.getElementById('stage').addEventListener('click',function(e){
+  if(!on('tap'))return;var el=e.target.closest('.react');if(!el)return;
+  el.classList.remove('tap');void el.offsetWidth;el.classList.add('tap');
+ });
+ document.getElementById('simn').addEventListener('click',function(){
+  if(!on('notif'))return;
+  var d=document.getElementById('disp'),b=document.getElementById('bdg');
+  [d,b].forEach(function(x,i){x.classList.remove(i?'bpulse':'nglow');void x.offsetWidth;x.classList.add(i?'bpulse':'nglow');});
+ });
+});
+</script>
+</body>
+</html>
