@@ -215,6 +215,7 @@ internal fun Shields(vm: MedievalHomeVM) {
     }
 
     val apps = remember { launchableApps(context) }
+    HomePressed.Listen { picking = null }
     val slot = picking
     if (slot != null) {
         AppPickerDialog(

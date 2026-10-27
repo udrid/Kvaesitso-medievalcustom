@@ -85,6 +85,7 @@ internal fun CommandOverlay(onClose: () -> Unit) {
         if (keepOnStop) keepOnStop = false else close()
     }
     BackHandler { close() }
+    HomePressed.Listen { close() }
 
     val density = LocalDensity.current
     val topInset = with(density) { WindowInsets.statusBarsIgnoringVisibility.getTop(this).toDp() }
