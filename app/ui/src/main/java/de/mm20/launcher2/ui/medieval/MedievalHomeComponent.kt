@@ -14,6 +14,12 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +58,7 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
         insets: PaddingValues,
         state: LauncherScaffoldState,
     ) {
+        var commandOpen by remember { mutableStateOf(false) }
         BoxWithConstraints(
             modifier = modifier
                 .background(Medieval.Ink)
@@ -90,8 +97,11 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
                             scaleY = scale
                         }
                 ) {
-                    MedievalStage(state)
+                    MedievalStage(state) { commandOpen = true }
                 }
+            }
+            AnimatedVisibility(commandOpen, enter = fadeIn(tween(120)), exit = fadeOut(tween(100))) {
+                CommandOverlay { commandOpen = false }
             }
             val vm: MedievalHomeVM = viewModel()
             val notifications by vm.notifications.collectAsState()
@@ -104,7 +114,7 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
 }
 
 @Composable
-private fun MedievalStage(state: LauncherScaffoldState) {
+private fun MedievalStage(state: LauncherScaffoldState, onCommandOpen: () -> Unit) {
     val vm: MedievalHomeVM = viewModel()
     val density = LocalDensity.current
     // T9: what may move (lifecycle, screen, Battery Saver, battery, Android animations, the Animations setting)
@@ -130,7 +140,7 @@ private fun MedievalStage(state: LauncherScaffoldState) {
             Shields(vm)
             Ledger(vm)
             Dispatches(vm)
-            CommandBar(state)
+            CommandBar(onCommandOpen)
             Dock()
         }
     }

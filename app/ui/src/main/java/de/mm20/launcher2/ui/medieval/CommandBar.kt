@@ -2,31 +2,25 @@ package de.mm20.launcher2.ui.medieval
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.mm20.launcher2.ui.launcher.search.SearchVM
-import de.mm20.launcher2.ui.launcher.scaffold.LauncherScaffoldState
-import kotlinx.coroutines.launch
 
 /**
- * "Command the Oracle..." opens the launcher's search page with the keyboard up and the cursor
- * in the box (apps, contacts, calendar, settings, web). SUMMON hands the search text to the Claude
- * app (see Summon.kt); with no text it opens the search so a question can be typed, plus a hint.
+ * "Command the Oracle..." on Home. A tap opens the command overlay (CommandOverlay.kt), where the
+ * bar is a real text field with the keyboard up and the search results below it. SUMMON hands the
+ * text in `SearchVM.searchQuery` to the Claude app (see Summon.kt); with no text it only shows the hint.
  */
 @Composable
-internal fun CommandBar(state: LauncherScaffoldState) {
-    val scope = rememberCoroutineScope()
+internal fun CommandBar(onOpen: () -> Unit) {
     val context = LocalContext.current
     val searchVM: SearchVM = viewModel()
-    Panel(top = 404f, height = 44f, onClick = { scope.launch { state.onSearchBarTap() } }) {
+    Panel(top = 404f, height = 44f, onClick = onOpen) {
         SummonButton(Modifier.align(Alignment.TopEnd).padding(top = 7.dp, end = 8.dp)) {
-            val text = searchVM.searchQuery.value
-            summonToClaude(context, text)
-            if (text.isBlank()) scope.launch { state.onSearchBarTap() }
+            summonToClaude(context, searchVM.searchQuery.value)
         }
         SvgIcon(MedievalIcons.Quill, 20f, Medieval.Gold, Modifier.at(16f, 12f))
         MText(
