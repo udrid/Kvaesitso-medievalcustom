@@ -24,3 +24,11 @@ How it was checked: `./gradlew :app:ui:compileDebugKotlin --offline` exit 0.
 NOT verified: everything on the phone. Looks of the slow turn, smoothness at 5 fps, that the press flash is visible while holding, that the 120 ms delay feels like a blink, the battery numbers (estimates). Assumed: `clickable` delivers `PressInteraction.Press` immediately on touch-down (it does after the tap-timeout only inside scrolling containers; the dock/shield/orb are not scrolled, but if Home sits in a scroll container the press may arrive ~100 ms late; then raise the delay or test).
 
 Follow-ups left alone (out of scope): weather stop-motion ungated and the new-day shimmer (see T9 handoff).
+
+## Addendum: weather stop-motion gated (coordinator request)
+- `VectorScene.kt` `VectorCanvas(animated = true)` (used only by the weather scene) now runs only while `LocalMotion.current.ambient` is true: Home resumed, screen on, Battery Saver off, battery > 15 % or charging, remove-animations off, Animations not Off (Minimal and Full both keep it running). When the gate is closed it draws one still frame (frame 0 of every part, so no lightning bolt is frozen on screen).
+- Rate: 12.5 fps (80 ms) -> **5 fps** (200 ms step). The loop checks a signature of "which frame each part shows"; the picture is redrawn only when some part changed frame, so frames where nothing changes cost no redraw.
+- Header rule and other static `VectorCanvas` uses are unaffected (`animated = false`).
+- Update for the owner's worry: Minimal now has two ambient effects, orb (5 fps) + weather (up to 5 fps, in practice fewer redraws). Weather scene is 74 x 30 dp, about 207 x 84 px = 0.017 Mpx, about 20-40 small paths per frame, CPU well under 1 ms. Added fill: 0.017 x 5 = 0.09 Mpx/s, negligible; the cost is again the display wakes. Estimate for orb + weather together: **about 0.5-1.2 % per hour of screen-on time on Home** (the weather adds a little only when it changes a frame; it shares the orb's wakes at 5 fps). Estimate, not measured. Previous state: weather alone ran at ~12 fps always, even with Battery Saver.
+- NOT verified: that 5 fps still reads as stop-motion (choppy is intended); that the still frame looks right.
+- Still a follow-up: new-day shimmer of the red capital.

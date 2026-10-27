@@ -26,3 +26,4 @@
 - T9-vibe: older Home code animates or polls with no gate (weather stop-motion at ~12 fps; `rememberNow()` every 5 s even when stopped). New motion should read `LocalMotion` so Battery Saver and the Animations setting stop it.
 - T12-orb-tune: a reaction triggered on `PressInteraction.Release` is invisible when the same release opens an app; start it on Press and delay the launch about 120 ms (only while animations are allowed).
 - T12-orb-tune: for a slow turn (<1 deg/s) frame rate can be 5 fps; the twinkle period, not the turn, sets the minimum.
+- T12-orb-tune: the weather stop-motion ran ungated at 12 fps; now uses LocalMotion and 5 fps, redrawing only when a frame changes.

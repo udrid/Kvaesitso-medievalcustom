@@ -43,3 +43,10 @@ Install the new APK (after the build is green and you said yes to the push). Go 
 2. Open Settings, then Battery (Battery and device care), then Battery usage.
 3. Pick "Since last full charge" or "Today", find "Deliverance" and write down its percentage and the screen-on time.
 4. Report both numbers. Expect it to be small (about 1 % or less) next to the screen itself. For a comparison, set Animations to Off for the next day and compare.
+
+## 8. Weather picture freezes when saving power
+1. On Home, look at the small weather picture under the clock. You should see it move in a choppy, hand-drawn way (about 5 steps a second).
+2. Turn Battery Saver on (swipe down the quick panel, tap Power saving). Return to Home.
+3. You should see the weather picture stand still (one calm frame, no lightning stuck on it) and the orb smoke and dust stop moving.
+4. Turn Battery Saver off: both start moving again. Setting Animations to Off should freeze them the same way.
+5. Should NOT happen: the weather picture still moving with Battery Saver on.
