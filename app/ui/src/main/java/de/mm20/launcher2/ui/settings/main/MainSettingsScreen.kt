@@ -8,6 +8,7 @@ import de.mm20.launcher2.ui.component.preferences.Preference
 import de.mm20.launcher2.ui.component.preferences.PreferenceCategory
 import de.mm20.launcher2.ui.component.preferences.PreferenceScreen
 import de.mm20.launcher2.ui.locals.LocalBackStack
+import de.mm20.launcher2.ui.medieval.MedievalAnimationsPreference
 import de.mm20.launcher2.ui.settings.about.AboutSettingsRoute
 import de.mm20.launcher2.ui.settings.appearance.AppearanceSettingsRoute
 import de.mm20.launcher2.ui.settings.backup.BackupSettingsRoute
@@ -30,6 +31,11 @@ fun MainSettingsScreen() {
     PreferenceScreen(
         title = stringResource(R.string.settings),
     ) {
+        item {
+            PreferenceCategory {
+                MedievalAnimationsPreference()
+            }
+        }
         item {
             PreferenceCategory {
                 Preference(
