@@ -7,6 +7,8 @@
   - Renderer parameters: `X({wm:'soft',dust:.017,seed:23.1})`, sparks `('#ffd58a'→'#ffd890',18,11,8,50)`, flare `#ffa060`.
 - 2026-10-26, ring text: **2. Engraved metal** (`docs/design/T9-ring.html`).
 - 2026-10-26, animations: **gold dust twinkle, tap reactions, notification glow, light drifting round the ring** (plus the orb's slow smoke loop). The owner also asked for proposals of other animations and graphics the Home needs: `docs/design/T9-vibe2.html`.
-- 2026-10-26, extras from `T9-vibe2.html`: **A. orb kindles on wake: yes; E. new day, red capital shimmers once: yes; F. Ledger, red cross pulses twice 15 min before an event: yes.** No to B (charging), C (time of day), D (sleeping-orb graphic), G (coin flip), H (Hushed).
+- 2026-10-26, extras from `T9-vibe2.html`: **A. orb kindles on wake: yes; E. new day, red capital shimmers once: yes; F. Ledger, red cross pulses twice 15 min before an event: yes.** No to B as shown (static brighter heart while charging),
+- 2026-10-26, added by the owner after the handoff: **while charging, the orb pulses slowly** (the heart and glow swell and fade on a slow cycle, a few seconds each). It changes only the brightness of the orb layer that is already animating, so it is not a third ambient effect. It stops when charging stops and follows the same battery rules (no pulse while the screen is off or Home is hidden). The Battery Saver rule pauses everything anyway.
+- Also no to C (time of day), D (sleeping-orb graphic), G (coin flip), H (Hushed).
   - Battery rule check: smoke loop + dust twinkle + ring light would be three ambient effects. Proposal: bake the twinkle into the smoke loop frames, so the orb counts as one and the ring light as the second.
 - How to build the orb on the phone is not decided: pre-drawn frame loop (low cost) or a live GPU shader (unverified on the phone).

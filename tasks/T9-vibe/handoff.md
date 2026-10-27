@@ -10,7 +10,7 @@ What changed:
 - Owner picks are in `tasks/T9-vibe/picks.md`:
   - Orb **2a-3 "Heavy gold dust"** (oxblood smoke, gold dust, soft highlight with no window cross, gold setting with rubies, same size as today).
   - Ring text **2. Engraved metal**.
-  - Animations: orb smoke loop with gold-dust twinkle, light drifting round the ring, tap reactions, notification glow, orb kindles on wake, new-day shimmer of the red capital, Ledger red cross pulses before an event.
+  - Animations: orb smoke loop with gold-dust twinkle, light drifting round the ring, tap reactions, notification glow, orb kindles on wake, new-day shimmer of the red capital, Ledger red cross pulses before an event, and the orb pulses slowly while charging. The charging pulse was added later; it only modulates the existing orb layer, so it is not a third ambient effect.
 - Battery-rule note: the twinkle must be baked into the orb's smoke loop, so the ambient effects are orb (1) + ring light (2). The brief allows two.
 - Proposal, not yet an owner decision: Animations setting Minimal = orb loop + one-shots; Full = also ring light; Off = nothing.
 
