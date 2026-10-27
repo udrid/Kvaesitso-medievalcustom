@@ -28,3 +28,4 @@
 - T12-orb-tune: for a slow turn (<1 deg/s) frame rate can be 5 fps; the twinkle period, not the turn, sets the minimum.
 - T12-orb-tune: the weather stop-motion ran ungated at 12 fps; now uses LocalMotion and 5 fps, redrawing only when a frame changes.
 - T13: a text field on Home cannot share the screen with the results: the bar is mid-screen, so the keyboard leaves almost no room. An overlay with the bar at the top (one `BasicTextField`, text in `SearchVM.searchQuery`, existing `SearchColumn` below) needed no upstream edit.
+- Home press while on top = onNewIntent with ACTION_MAIN+CATEGORY_HOME; HomePressed.kt now turns it into a signal for pop-ups.

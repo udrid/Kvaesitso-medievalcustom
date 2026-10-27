@@ -1,0 +1,5 @@
+# Handoff: T15-tweaks
+- Stars: OrbGlass.kt only (the twinkle is drawn live, not in the picture). Brightness per grain was sin^3 (lit ~41 % of the time, peak 1.0); now only the top of each wave counts (floor 0.35, power 4, gain 0.6): lit ~30 % of the time, peak 0.6. Rate 1.3, turn speed and 5 fps untouched. Constants: TwinkleRate/Floor/Gain.
+- Home: new `medieval/HomePressed.kt` (shared flow + `Listen` composable). One-line upstream edit in `SharedLauncherActivity.onNewIntent` forwards the intent; only ACTION_MAIN + CATEGORY_HOME emits. Shields picker and CommandOverlay call `HomePressed.Listen`; the overlay's close() also clears its text. Ignored when the activity is not RESUMED (Home pressed from another app, so the SUMMON text survives).
+- Commits: feature, upstream hook, twinkle, docs. Compiles (`:app:ui:compileDebugKotlin --offline`).
+- NOT verified: all on the phone. Assumption: singleTask launcher gets onNewIntent for Home while on top (manifest says singleTask), and that the Home swipe gesture sends the same intent. If the picker still stays, Samsung may not deliver onNewIntent; then fall back to ON_PAUSE.
