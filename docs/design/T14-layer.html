@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T14 typing layer: before typing, three arrangements</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf");font-style:normal}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf");font-style:italic}
+body{margin:0;background:#050403;width:1250px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+.row{display:flex;gap:20px;padding:0 10px 16px}
+.col{width:390px}
+.label{font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.2em;color:#6b5a38;text-transform:uppercase;padding:14px 4px 6px}
+.frame{position:relative;width:390px;height:720px;overflow:hidden;background:radial-gradient(90% 70% at 50% 30%,#26211a 0%,#0d0c09 90%),#0a0907}
+.bar{position:absolute;left:16px;right:16px;top:40px;height:44px;box-sizing:border-box;border:1px solid #6b5430;border-radius:22px;background:linear-gradient(178deg,#1d1a14,#12100c);box-shadow:inset 0 0 18px rgba(0,0,0,.6);display:flex;align-items:center;padding:0 8px 0 14px}
+.bar .ph{flex:1;font-style:italic;color:#7d6e50;font-size:14px;margin-left:8px}
+.bar .sm{font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.2em;color:#f0e2bd;background:linear-gradient(#6a1d16,#481510);border:1px solid #c9a55a;border-radius:14px;padding:7px 11px}
+.sec{position:absolute;left:16px;right:16px}
+.ribbon{height:17px;padding:0 17px 0 11px;display:inline-flex;align-items:center;background:linear-gradient(#6a1d16,#481510);border-top:1px solid #c9a55a;color:#f0e2bd;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;clip-path:polygon(0 0,100% 0,calc(100% - 7px) 50%,100% 100%,0 100%)}
+.rule{height:1px;background:linear-gradient(90deg,#6b5430,rgba(107,84,48,0));margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);row-gap:14px}
+.app{display:flex;flex-direction:column;align-items:center;gap:5px}
+.app span{font-family:Cinzel,serif;font-size:8px;font-weight:700;letter-spacing:.14em;color:#bfae86;text-transform:uppercase}
+.ppl{display:flex;justify-content:space-between}
+.pp{display:flex;flex-direction:column;align-items:center;gap:5px;width:56px}
+.pp span{font-size:11px;font-style:italic;color:#a8987a}
+.av{width:44px;height:44px;border-radius:50%;border:1.5px solid #8c6d3a;background:radial-gradient(circle at 35% 30%,#2e2619,#14110b);display:flex;align-items:center;justify-content:center;font-family:Cinzel,serif;font-weight:700;font-size:15px;color:#c9a55a}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;align-items:center;gap:7px;height:32px;box-sizing:border-box;padding:0 13px 0 9px;border:1px solid #6b5430;border-radius:16px;background:linear-gradient(178deg,#1d1a14,#12100c);font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.14em;color:#d9ccaa;text-transform:uppercase}
+.hint{font-size:11px;font-style:italic;color:#6b5a38;margin-top:8px}
+.panel{box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);box-shadow:inset 0 0 22px rgba(0,0,0,.6);padding:18px 12px 12px;position:relative}
+.panel .ribbon{position:absolute;top:-8px;left:12px}
+.note{position:absolute;left:16px;right:16px;bottom:14px;font-size:11px;font-style:italic;color:#6b5a38;line-height:1.35}
+</style>
+</head>
+<body>
+<div class="label" style="padding:16px 14px 0">T14: the typing layer before anything is typed (keyboard hidden; it rises from the bottom the moment the bar is tapped)</div>
+<div class="row" id="row"></div>
+<script>
+var G='#c9a55a', GD='#8c6d3a';
+function svg(w,h,vb,inner){return '<svg width="'+w+'" height="'+h+'" viewBox="'+vb+'" fill="none" stroke="'+G+'" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg>';}
+/* emblem paths copied from ShieldEmblems.kt (24x24); switch glyphs are new */
+var E={
+ raven:'<path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/><path d="M10 13c2 0 4 1 5 3"/><circle cx="14.2" cy="9.6" r=".7" fill="'+G+'"/>',
+ scroll:'<path d="M6 6.5h12v11H6z"/><path d="M3.6 6.2a1.4 1.4 0 0 1 2.8 0v11.6a1.4 1.4 0 0 1-2.8 0zM17.6 6.2a1.4 1.4 0 0 1 2.8 0v11.6a1.4 1.4 0 0 1-2.8 0z"/><path d="M10.6 9.6l4 2.4-4 2.4z" fill="'+G+'"/>',
+ letter:'<path d="M3.5 6h17v12h-17z"/><path d="M3.5 6.5l8.5 6.2 8.5-6.2"/><circle cx="12" cy="13" r="2.6" fill="#a8352b"/>',
+ compass:'<circle cx="12" cy="12" r="9"/><path d="M12 5.2l1.8 5 5 1.8-5 1.8-1.8 5-1.8-5-5-1.8 5-1.8z"/>',
+ portrait:'<path d="M3.5 4.5h17v15h-17z"/><path d="M6 7h12v10H6z"/><path d="M6 17l4.2-5 3 3.4 2-2L18 17"/>',
+ lute:'<circle cx="9" cy="15" r="5"/><path d="M12.5 11.5L20 4M18 3l3 3"/>',
+ hour:'<path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/>',
+ eye:'<path d="M2.5 12C5 7.6 8.5 6 12 6s7 1.6 9.5 6c-2.5 4.4-6 6-9.5 6s-7-1.6-9.5-6z"/><circle cx="12" cy="12" r="3"/>',
+ wifi:'<path d="M3 9c5-5 13-5 18 0M6 12.5c3.5-3.5 8.5-3.5 12 0M9 16c1.7-1.7 4.3-1.7 6 0"/><circle cx="12" cy="19" r="1" fill="'+G+'"/>',
+ bt:'<path d="M7 7l10 10-5 4V3l5 4L7 17"/>',
+ moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+ torch:'<path d="M12 3c2.5 3 4 4.5 4 7a4 4 0 0 1-8 0c0-2.5 1.5-4 4-7z"/><path d="M9 16h6M10 19h4"/>'
+};
+function ic(k,s){return svg(s,s,'0 0 24 24',E[k]);}
+/* generic letter shield (T7 fallback) or emblem shield, 26x26 box */
+function shield(letter,size,emb){
+ var sh='<path d="M13 2l9 3v7c0 6-4 10-9 12C8 22 4 18 4 12V5z" fill="#14110b" stroke="'+GD+'" stroke-width="1.4"/><path d="M13 4.6l6.6 2.2v5c0 4.6-3 7.7-6.6 9.3-3.6-1.6-6.6-4.7-6.6-9.3v-5z" stroke="'+GD+'" stroke-opacity=".5" stroke-width=".8"/>';
+ var mid=emb?'<g transform="translate(6.5 6.5) scale(.55)" fill="none" stroke="'+G+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+E[emb]+'</g>':'<text x="13" y="16.4" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="9.5" fill="'+G+'" stroke="none">'+letter+'</text>';
+ return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 26 26">'+sh+mid+'</svg>';
+}
+var apps=[['Messages','letter'],['Camera','portrait'],['Chrome','compass'],['YouTube','scroll'],['Discord','raven'],['Maps','compass'],['Spotify','lute'],['Clock','hour']];
+var ppl=['Anna','Marc','Mum','Dr. Lee','Sam'];
+function ribbon(t){return '<div class="ribbon">'+t+'</div><div class="rule"></div>';}
+function appGrid(list,n,sz){var h='<div class="grid">';list.slice(0,n).forEach(function(a){h+='<div class="app">'+shield(a[0][0],sz,a[1])+'<span>'+a[0]+'</span></div>';});return h+'</div>';}
+function people(n,sz){var h='<div class="ppl">';ppl.slice(0,n).forEach(function(p){h+='<div class="pp"><div class="av" style="width:'+sz+'px;height:'+sz+'px">'+p[0]+'</div><span>'+p+'</span></div>';});return h+'</div>';}
+function chips(list){var h='<div class="chips">';list.forEach(function(c){h+='<div class="chip">'+ic(c[1],16)+c[0]+'</div>';});return h+'</div>';}
+var sw=[['Wi-Fi','wifi'],['Bluetooth','bt'],['Do not disturb','moon'],['Flashlight','torch']];
+function bar(){return '<div class="bar">'+ic('eye',20)+'<div class="ph">Command the Oracle...</div><div class="sm">SUMMON</div></div>';}
+
+var A=bar()+
+'<div class="sec" style="top:106px">'+ribbon('Most used')+appGrid(apps,8,40)+'</div>'+
+'<div class="sec" style="top:300px">'+ribbon('Recent contacts')+people(5,40)+'</div>'+
+'<div class="sec" style="top:420px">'+ribbon('Switches')+chips(sw)+'</div>'+
+'<div class="sec" style="top:588px"><div class="panel"><div class="ribbon">Ask the Oracle</div><div style="font-style:italic;color:#bfae86;font-size:13px;line-height:1.55">&ldquo;What should I cook tonight?&rdquo;<br>&ldquo;Summarise my day.&rdquo;<br>&ldquo;Explain this to me simply.&rdquo;</div></div></div>'+
+'<div class="note" style="bottom:6px">A: three ribbon sections stacked (+ optional Oracle prompts). Clearest; scrolls if the keyboard is up.</div>';
+
+var B=bar()+
+'<div class="sec" style="top:106px">'+ribbon('Most used')+appGrid(apps,4,44)+'</div>'+
+'<div class="sec" style="top:226px">'+ribbon('People')+people(5,38)+'</div>'+
+'<div class="sec" style="top:340px">'+ribbon('Switches')+chips(sw)+'</div>'+
+'<div class="note" style="bottom:6px">B: compact. One row each, fits above the keyboard with no scrolling. Fewer apps (4).</div>';
+
+var C=bar()+
+'<div class="sec" style="top:106px">'+ribbon('Most used')+appGrid(apps,8,40)+'</div>'+
+'<div class="sec" style="top:306px"><div class="panel" style="padding-top:22px"><div class="ribbon">People and switches</div>'+people(5,36)+'<div style="height:1px;background:#3a2f1c;margin:12px 0"></div>'+chips(sw)+'</div></div>'+
+'<div class="note" style="bottom:6px">C: apps get the room; people and switches share one framed panel like the Home panels.</div>';
+
+document.getElementById('row').innerHTML='<div class="col"><div class="label">Variant A: stacked ribbons</div><div class="frame">'+A+'</div></div><div class="col"><div class="label">Variant B: compact</div><div class="frame">'+B+'</div></div><div class="col"><div class="label">Variant C: apps + one shared panel</div><div class="frame">'+C+'</div></div>';
+</script>
+</body>
+</html>

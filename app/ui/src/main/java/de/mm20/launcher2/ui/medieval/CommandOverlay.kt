@@ -153,6 +153,8 @@ internal fun CommandOverlay(onClose: () -> Unit) {
                 ),
                 onHideKeyboard = { keyboard?.hide() },
             )
+        } else {
+            CommandLayerContent(Modifier.fillMaxSize().padding(top = 56.dp, bottom = bottomInsets.calculateBottomPadding()))
         }
     }
 }
