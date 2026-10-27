@@ -200,6 +200,7 @@ private fun Modifier.panelLook(): Modifier = this
 internal fun launchSafely(context: Context, intent: Intent, what: String) {
     try {
         context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        (intent.component?.packageName ?: intent.`package`)?.let { UsageCounter.bump(context, it) }
     } catch (e: Exception) {
         Log.e("medieval", "Could not open $what", e)
         Toast.makeText(context, "Could not open $what", Toast.LENGTH_SHORT).show()
