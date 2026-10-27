@@ -54,14 +54,14 @@ private class ShieldSlot(
     val y: Float,
     val labelX: Float,
     val labelY: Float,
-    val defaultPackage: String,
+    val defaultPackages: List<String>,
 )
 
 private val Slots = listOf(
-    ShieldSlot(0, 18f, 136f, 7f, 212f, "com.twitter.android"),
-    ShieldSlot(1, 281f, 136f, 270f, 212f, "com.discord"),
-    ShieldSlot(2, 18f, 232f, 7f, 308f, "com.google.android.youtube"),
-    ShieldSlot(3, 281f, 232f, 270f, 308f, "com.samsung.android.messaging"),
+    ShieldSlot(0, 18f, 136f, 7f, 212f, listOf("com.twitter.android")),
+    ShieldSlot(1, 281f, 136f, 270f, 212f, listOf("com.discord")),
+    ShieldSlot(2, 18f, 232f, 7f, 308f, listOf("com.google.android.youtube")),
+    ShieldSlot(3, 281f, 232f, 270f, 308f, listOf("com.google.android.apps.messaging", "com.samsung.android.messaging")),
 )
 
 internal class AppEntry(val packageName: String, val label: String)
@@ -74,7 +74,7 @@ private fun slotPackage(context: Context, slot: ShieldSlot): String? {
     val picked = context.getSharedPreferences(PrefsName, Context.MODE_PRIVATE)
         .getString("shield_${slot.index}", null)
     if (picked != null && isInstalled(context, picked)) return picked
-    return slot.defaultPackage.takeIf { isInstalled(context, it) }
+    return slot.defaultPackages.firstOrNull { isInstalled(context, it) }
 }
 
 private fun appLabel(context: Context, packageName: String): String? = try {

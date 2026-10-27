@@ -4,7 +4,7 @@ Install the new APK from the GitHub Actions run for branch `claude/T7-shields` (
 
 ## A. The four shields on Home
 1. Press the Home button. Look at the four shields around the round Claude button.
-   You should see: each shield has a small gold line drawing: X = a raven (bird), Discord = a goblet, YouTube = a scroll with a play mark, Messages = a letter with a red wax seal.
+   You should see: each shield has a small gold line drawing: X = a raven (bird), Discord = a goblet, YouTube = a scroll with a play mark, Messages (Google Messages if installed, else Samsung Messages) = a letter with a red wax seal.
    You should NOT see: a coloured app logo on any shield.
 2. Look at the wax-seal dock at the very bottom.
    You should see: it looks exactly as before (Herald, Portrait, Road, Smithy). Nothing changed there.

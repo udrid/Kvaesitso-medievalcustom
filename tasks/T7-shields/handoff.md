@@ -4,3 +4,4 @@ What changed: every Home shield now shows a gold line emblem or, for apps withou
 How it was checked: `./gradlew :app:ui:compileDebugKotlin --offline` succeeds.
 NOT verified: how it looks on the phone (thin strokes of lute, trumpet, quill at 26 px); that the package names in the lookup match the S20 FE (written from memory: dialer, camera, gallery, clock, calendar, Messages); an unlisted package simply shows the letter shield.
 Next stage needs: owner phone test (`testlist.md`); to add an emblem for a missed package, add its name to `byPackage` in `ShieldEmblems.kt`.
+Also: the bottom-right shield now defaults to Google Messages (`com.google.android.apps.messaging`), falling back to Samsung Messages; saved picks win over both. Owner request 2026-10-26.
