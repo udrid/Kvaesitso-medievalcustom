@@ -47,22 +47,21 @@ import androidx.compose.ui.window.Dialog
 
 private const val PrefsName = "medieval_home"
 
-/** One heater shield: where it sits, its default app and its C5 line glyph. */
+/** One heater shield: where it sits and its default app. */
 private class ShieldSlot(
     val index: Int,
     val x: Float,
     val y: Float,
     val labelX: Float,
     val labelY: Float,
-    val defaultPackage: String,
-    val glyph: List<String>,
+    val defaultPackages: List<String>,
 )
 
 private val Slots = listOf(
-    ShieldSlot(0, 18f, 136f, 7f, 212f, "com.twitter.android", MedievalIcons.Bird),
-    ShieldSlot(1, 281f, 136f, 270f, 212f, "com.discord", MedievalIcons.Mug),
-    ShieldSlot(2, 18f, 232f, 7f, 308f, "com.google.android.youtube", MedievalIcons.Play),
-    ShieldSlot(3, 281f, 232f, 270f, 308f, "com.samsung.android.messaging", MedievalIcons.Letter),
+    ShieldSlot(0, 18f, 136f, 7f, 212f, listOf("com.twitter.android")),
+    ShieldSlot(1, 281f, 136f, 270f, 212f, listOf("com.discord")),
+    ShieldSlot(2, 18f, 232f, 7f, 308f, listOf("com.google.android.youtube")),
+    ShieldSlot(3, 281f, 232f, 270f, 308f, listOf("com.google.android.apps.messaging", "com.samsung.android.messaging")),
 )
 
 internal class AppEntry(val packageName: String, val label: String)
@@ -75,7 +74,7 @@ private fun slotPackage(context: Context, slot: ShieldSlot): String? {
     val picked = context.getSharedPreferences(PrefsName, Context.MODE_PRIVATE)
         .getString("shield_${slot.index}", null)
     if (picked != null && isInstalled(context, picked)) return picked
-    return slot.defaultPackage.takeIf { isInstalled(context, it) }
+    return slot.defaultPackages.firstOrNull { isInstalled(context, it) }
 }
 
 private fun appLabel(context: Context, packageName: String): String? = try {
@@ -151,14 +150,6 @@ private fun Shield(slot: ShieldSlot, refresh: Int, notifications: List<Notificat
     val context = LocalContext.current
     val pkg = remember(refresh) { slotPackage(context, slot) }
     val label = remember(pkg) { pkg?.let { appLabel(context, it) } ?: "Empty" }
-    val icon = remember(pkg) {
-        if (pkg == null || pkg == slot.defaultPackage) null else try {
-            drawableToBitmap(context.packageManager.getApplicationIcon(pkg), 96).asImageBitmap()
-        } catch (e: Exception) {
-            Log.e("medieval", "No icon for $pkg", e)
-            null
-        }
-    }
 
     Box(
         Modifier
@@ -183,9 +174,8 @@ private fun Shield(slot: ShieldSlot, refresh: Int, notifications: List<Notificat
         }
         Box(Modifier.fillMaxWidth().padding(top = 22.dp), contentAlignment = Alignment.TopCenter) {
             when {
-                icon != null -> Image(icon, null, Modifier.size(26.dp))
                 pkg == null -> MText("+", 22f, Medieval.TextFaint)
-                else -> SvgIcon(slot.glyph, 26f, Medieval.Text)
+                else -> ShieldEmblem(pkg, label)
             }
         }
     }

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T7 shield emblems</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap">
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf");font-style:normal}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf");font-style:italic}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:390px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8;padding-bottom:18px}
+.label{font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.2em;color:#6b5a38;text-transform:uppercase;padding:18px 22px 4px}
+.note{font-size:12px;font-style:italic;color:#a8987a;padding:0 22px 6px;line-height:1.35}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);row-gap:6px;padding:10px 12px 0}
+.cell{display:flex;flex-direction:column;align-items:center}
+.node{position:relative;width:62px;height:72px}
+.node svg.shield{position:absolute;inset:0}
+.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.badge{position:absolute;top:-5px;right:-3px;min-width:18px;height:18px;box-sizing:border-box;border-radius:9px;background:#6e1a14;border:1.5px solid #c9a55a;color:#f2e6c8;font-family:Cinzel,serif;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;z-index:2}
+.lbl{margin-top:4px;width:84px;text-align:center;font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#bfae86}
+.sub{width:84px;text-align:center;font-size:10px;font-style:italic;color:#7d6f52;line-height:1.1;margin-top:2px;min-height:22px}
+.letter{font-family:UnifrakturCook,'UnifrakturMaguntia',serif;font-weight:700;font-size:20px;line-height:1;color:#15120d;position:absolute;left:0;right:0;top:0;text-align:center}
+.rule{margin:10px 22px 0;padding:10px 12px;border:1px solid #4a3a20;background:linear-gradient(178deg,#1d1a14,#12100c);font-size:12.5px;line-height:1.4;color:#d9ccaa}
+.rule b{font-family:Cinzel,serif;font-size:9px;letter-spacing:.18em;color:#c9a55a;text-transform:uppercase}
+.bad{opacity:.9}
+</style>
+</head>
+<body>
+<div class="label">Emblems (shown at real size, 26 px)</div>
+<div class="note">Gold line-art on the charcoal field, same 1.6 stroke as the C5 glyphs. Red wax and gold sand are the only fills.</div>
+<div class="grid" id="g1"></div>
+
+<div class="label" style="padding-top:26px">Any app with no emblem</div>
+<div class="note">Never the coloured app icon. A small gold shield with the app's first letter in blackletter.</div>
+<div class="grid" id="g2"></div>
+<div class="rule"><b>The rule</b><br>Known app (list above) = its own emblem. Any other app the owner picks = gold shield + first letter, in the app's name. Empty slot stays a faint +. The app label under the shield is unchanged.</div>
+
+<div class="label" style="padding-top:26px">With a badge</div>
+<div class="note">Oxblood count, gold rim, top right. Works on every emblem and on the letter shield.</div>
+<div class="grid" id="g3"></div>
+
+<script>
+var G='#c9a55a', RD='#8a2a20';
+var NS='http://www.w3.org/2000/svg';
+var SHIELD='<svg class="shield" viewBox="0 0 62 72" aria-hidden="true"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/></svg>';
+function svg(inner){return '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="'+G+'" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">'+inner+'</svg>';}
+var E={
+ x:['X','raven',svg('<path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/><path d="M10 13c2 0 4 1 5 3"/><circle cx="14.2" cy="9.6" r=".7" fill="'+G+'" stroke="none"/>')],
+ discord:['Discord','goblet',svg('<path d="M6.5 4h11c0 5.5-1.5 8.5-5.5 9.5C8 12.5 6.5 9.5 6.5 4z"/><path d="M6.8 7.5h10.4"/><path d="M12 13.5V19"/><path d="M8 20.5h8"/>')],
+ youtube:['YouTube','scroll',svg('<rect x="6" y="6.5" width="12" height="11" rx=".5"/><rect x="3.6" y="4.8" width="2.8" height="14.4" rx="1.4"/><rect x="17.6" y="4.8" width="2.8" height="14.4" rx="1.4"/><path d="M10.6 9.6l4 2.4-4 2.4z" fill="'+G+'"/>')],
+ messages:['Messages','sealed letter',svg('<path d="M3.5 6h17v12h-17z"/><path d="M3.5 6.5l8.5 6.2 8.5-6.2"/><circle cx="12" cy="13" r="2.6" fill="'+RD+'"/>')],
+ maps:['Maps','compass',svg('<circle cx="12" cy="12" r="9"/><path d="M12 5.2l1.8 5 5 1.8-5 1.8-1.8 5-1.8-5-5-1.8 5-1.8z"/><path d="M12 1.6v2.2"/>')],
+ phone:['Phone','bell',svg('<path d="M12 4c-3 0-5 2.5-5 6v4l-2 3h14l-2-3v-4c0-3.5-2-6-5-6z"/><path d="M10 19a2 2 0 0 0 4 0"/><path d="M12 2.4V4"/>')],
+ camera:['Camera','watching eye',svg('<path d="M2.5 12C5 7.6 8.5 6 12 6s7 1.6 9.5 6c-2.5 4.4-6 6-9.5 6s-7-1.6-9.5-6z"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r=".9" fill="'+G+'" stroke="none"/>')],
+ browser:['Browser','orb and cross',svg('<circle cx="12" cy="14.5" r="7"/><path d="M5 14.5h14"/><ellipse cx="12" cy="14.5" rx="3.2" ry="7"/><path d="M12 1.8v4M10.2 3.6h3.6"/>')],
+ gallery:['Gallery','framed portrait',svg('<path d="M3.5 4.5h17v15h-17z"/><path d="M6 7h12v10H6z"/><path d="M6 17l4.2-5 3 3.4 2-2L18 17"/><circle cx="15.4" cy="9.8" r="1.1"/>')],
+ settings:['Settings','ship\'s wheel',svg('<circle cx="12" cy="12" r="6.8"/><circle cx="12" cy="12" r="2"/><path d="M12 1.8v8.2M12 14v8.2M1.8 12h8.2M14 12h8.2"/><path d="M13.4 10.6l5.8-5.8M10.6 10.6L4.8 4.8M13.4 13.4l5.8 5.8M10.6 13.4l-5.8 5.8"/>')],
+ clock:['Clock','hourglass',svg('<path d="M6.5 3h11M6.5 21h11"/><path d="M8 3v3.5l4 5.5-4 5.5V21M16 3v3.5l-4 5.5 4 5.5V21"/><path d="M9.8 19.2h4.4L12 16z" fill="'+G+'"/>')],
+ calendar:['Calendar','book of days',svg('<path d="M5 4.5a2 2 0 0 1 2-2h11.5v16.8H7a2 2 0 0 0-2 2z"/><path d="M5 19.3a2 2 0 0 1 2-2h11.5"/><path d="M14.5 2.5v6l1.6-1.3 1.6 1.3v-6" fill="'+RD+'"/>')],
+ spotify:['Spotify','lute',svg('<ellipse cx="8.6" cy="15.4" rx="5.2" ry="5.4" transform="rotate(-40 8.6 15.4)"/><circle cx="8.6" cy="15.4" r="1.5"/><path d="M12.3 11.7L19 5"/><path d="M17.6 3.6l2.8 2.8"/>')],
+ whatsapp:['WhatsApp','herald\'s trumpet',svg('<path d="M3 10.8h11.5M3 13.2h11.5"/><path d="M14.5 10.8L21 7.2v9.6l-6.5-3.6"/><path d="M3 10.2v3.6"/><path d="M7.5 13.2v6l2-1.3 2 1.3v-6" fill="'+RD+'"/>')],
+ gmail:['Gmail','quill',svg('<path d="M20 4C12 4.2 7 9 6.4 16.5L4.2 20l3.4-2.2C15 17.2 19.800 12.200 20 4z"/><path d="M7 17.2L15.200 8.800"/>')]
+};
+function cell(inner,label,sub,badge){
+  return '<div class="cell"><div class="node">'+(badge?'<span class="badge">'+badge+'</span>':'')+SHIELD+'<span class="glyph">'+inner+'</span></div><div class="lbl">'+label+'</div><div class="sub">'+(sub||'')+'</div></div>';
+}
+var h='';
+for(var k in E){h+=cell(E[k][2],E[k][0],E[k][1]);}
+document.getElementById('g1').innerHTML=h;
+
+function gen(letter){
+  return '<svg width="26" height="30" viewBox="0 0 26 30" aria-hidden="true"><defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3cf9c"/><stop offset=".55" stop-color="#c9a55a"/><stop offset="1" stop-color="#8c6d3a"/></linearGradient></defs><path d="M13 1L24 5V14C24 21 19 26 13 28.500C7 26 2 21 2 14V5Z" fill="url(#gg)" stroke="#e3cf9c" stroke-width="1" stroke-linejoin="round"/><path d="M13 3.600L21.800 6.700V14C21.800 19.800 17.800 23.800 13 26C8.200 23.800 4.200 19.800 4.200 14V6.700Z" fill="none" stroke="#6b5430" stroke-width=".7"/><text x="13" y="20.200" text-anchor="middle" font-family="UnifrakturCook, UnifrakturMaguntia, serif" font-weight="700" font-size="17" fill="#15120d">'+letter+'</text></svg>';
+}
+var apps=[['Fortnite','F'],['Notion','N'],['Reddit','R'],['Banking','B'],['Outlook','O'],['Duolingo','D'],['Tinder','T'],['Zoom','Z']];
+h='';
+apps.forEach(function(a){h+=cell(gen(a[1]),a[0],'first letter');});
+document.getElementById('g2').innerHTML=h;
+
+h='';
+h+=cell(E.discord[2],'Discord','3 waiting',3);
+h+=cell(E.messages[2],'Messages','12 waiting',12);
+h+=cell(gen('R'),'Reddit','letter shield',1);
+h+=cell('<span style="color:#7d6f52;font-size:22px;line-height:26px;font-family:Cinzel">+</span>','Empty','no badge');
+document.getElementById('g3').innerHTML=h;
+</script>
+</body>
+</html>
