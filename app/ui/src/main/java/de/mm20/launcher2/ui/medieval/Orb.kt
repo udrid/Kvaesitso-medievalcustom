@@ -202,16 +202,10 @@ internal fun OracleOrb() {
             .tapReaction(tap)
             .clip(CircleShape)
             .border(2.dp, Medieval.GoldDeep, CircleShape)
-            .clickable(interactionSource = tap.source, indication = null) { openClaude(context) },
+            .clickable(interactionSource = tap.source, indication = null) { tap.open { openClaude(context) } },
     ) {
         OrbGlass(Modifier.matchParentSize())
     }
-
-    MText(
-        "The Oracle", 19f, Medieval.Text,
-        Modifier.at(80f, 296f).width(200.dp),
-        font = Medieval.Blackletter, bold = true, align = TextAlign.Center,
-    )
 }
 
 internal fun openClaude(context: android.content.Context) {

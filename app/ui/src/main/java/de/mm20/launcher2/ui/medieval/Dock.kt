@@ -35,7 +35,7 @@ private fun RowScope.WaxSeal(icon: List<String>, name: String, label: String, in
                 .size(54.dp)
                 // T9: the seal presses in like a stamp
                 .tapReaction(tap, press = true)
-                .clickable(interactionSource = tap.source, indication = null) { launchSafely(context, intent(), name) },
+                .clickable(interactionSource = tap.source, indication = null) { tap.open { launchSafely(context, intent(), name) } },
             contentAlignment = Alignment.Center,
         ) {
             Canvas(Modifier.size(54.dp)) {
