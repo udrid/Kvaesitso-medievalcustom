@@ -471,6 +471,7 @@ abstract class SharedLauncherActivity(
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         isNewIntent = true
+        de.mm20.launcher2.ui.medieval.HomePressed.onNewIntent(intent) // Deliverance T15
     }
 
     override fun onPause() {
