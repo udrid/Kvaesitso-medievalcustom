@@ -248,7 +248,7 @@ abstract class SharedLauncherActivity(
                                 if (mode == LauncherActivityMode.Assistant) {
                                     val searchComponent = SearchComponent(
                                         reverse = reverseSearchResults,
-                                        openKeyboard = searchBarAutofocus,
+                                        openKeyboard = true, // Deliverance: search always opens with the keyboard up
                                     )
                                     val dismissComponent =
                                         DismissComponent(this@SharedLauncherActivity)
@@ -272,7 +272,7 @@ abstract class SharedLauncherActivity(
                                 } else {
                                     val searchComponent = SearchComponent(
                                         reverse = reverseSearchResults,
-                                        openKeyboard = searchBarAutofocus,
+                                        openKeyboard = true, // Deliverance: search always opens with the keyboard up
                                     )
 
                                     fun getScaffoldGesture(
