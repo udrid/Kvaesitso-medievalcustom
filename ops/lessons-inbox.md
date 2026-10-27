@@ -14,3 +14,4 @@
 - T5b-fix: Samsung cutout `boundingRects` may be taller than the hole (pill centred on it sat high); use `cutoutPath` bounds (API 31+). UNVERIFIED on phone.
 - T6-summon: the Home command bar is only a tap target; the real text field is the scaffold's search bar (hidden on Home), whose text is `SearchVM.searchQuery`. Anything that needs the typed text must read that.
 - T6-summon (proposed api-facts line): sending text to the Claude app = `ACTION_SEND text/plain` + `setPackage("com.anthropic.claude")`; UNVERIFIED on the S20 FE (only an outside report, from adb it opened a new chat; from services it sometimes joined the open chat). No route auto-sends.
+- T7-shields: package names of Samsung system apps (dialer, camera, gallery, clock, calendar) in the emblem lookup are from memory and UNVERIFIED on the S20 FE; a miss shows the letter shield, so check which letters appear on the phone.
