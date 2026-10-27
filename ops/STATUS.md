@@ -16,6 +16,7 @@
 | T8-header-size | 1 | READY TO PUSH (compiled locally, not seen on phone) | claude/T8-header-size | Larger clock, weather and scene; scene must not cross the divider |
 | T10-cleanup | 1 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T10-cleanup | Remove pill numbers; planet medallion gap to weather on all 7 days |
 | T7-shields | 1 | FINISHED: READY TO PUSH, needs owner phone test (testlist.md) | claude/T7-shields | Custom emblem on every shield; generic letter shield for unknown apps |
+| T11-command | 1 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T11-command | Home command bar: tap opens keyboard, no all-apps list before typing |
 | T2-treasury | 1 | deferred: owner wants it last (2026-10-25) | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner

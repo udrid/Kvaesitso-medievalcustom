@@ -13,8 +13,9 @@ import de.mm20.launcher2.ui.launcher.scaffold.LauncherScaffoldState
 import kotlinx.coroutines.launch
 
 /**
- * "Command the Oracle..." is the launcher's own search (apps, contacts, calendar, settings, web).
- * SUMMON hands the search text to the Claude app (see Summon.kt); with no text it only shows a hint.
+ * "Command the Oracle..." opens the launcher's search page with the keyboard up and the cursor
+ * in the box (apps, contacts, calendar, settings, web). SUMMON hands the search text to the Claude
+ * app (see Summon.kt); with no text it opens the search so a question can be typed, plus a hint.
  */
 @Composable
 internal fun CommandBar(state: LauncherScaffoldState) {
@@ -23,7 +24,9 @@ internal fun CommandBar(state: LauncherScaffoldState) {
     val searchVM: SearchVM = viewModel()
     Panel(top = 404f, height = 44f, onClick = { scope.launch { state.onSearchBarTap() } }) {
         SummonButton(Modifier.align(Alignment.TopEnd).padding(top = 7.dp, end = 8.dp)) {
-            summonToClaude(context, searchVM.searchQuery.value)
+            val text = searchVM.searchQuery.value
+            summonToClaude(context, text)
+            if (text.isBlank()) scope.launch { state.onSearchBarTap() }
         }
         SvgIcon(MedievalIcons.Quill, 20f, Medieval.Gold, Modifier.at(16f, 12f))
         MText(
