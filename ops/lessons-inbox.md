@@ -17,3 +17,6 @@
 - T5c-pill-position: an OEM cutout path is often a box from the screen's top edge down past the hole, so cutoutPath == boundingRect and its centre is above the hole; for a punch hole use bottom - width/2. UNVERIFIED on the S20 FE until the on-screen numbers come back.
 - T5c-pill-position: when only the phone can test, ship on-screen numbers (screenshot-readable) in the first fix build instead of a guessed offset.
 - T8-header-size: Compose line boxes are taller than the glyphs; a column offset plus natural line heights hid ~10 units of overflow past the header block. Set explicit lineHeight when stacking text above a fixed line.
+- T9-vibe: the app's browser pane runs no JavaScript on local files and refuses pages over about 500 KB; for previews ship a frozen `.view.html` (scripts stripped, fonts dropped if needed) next to the live page, and a PNG.
+- T9-vibe: a glass orb looks real from the glass, not the contents (bright rim, dark band inside it, a window-shaped highlight, a caustic on the far side). Pre-render it in layers (turning contents, fixed additive reflections, setting) instead of computing it live on the phone.
+- T9-vibe: older Home code animates or polls with no gate (weather stop-motion at ~12 fps; `rememberNow()` every 5 s even when stopped). New motion should read `LocalMotion` so Battery Saver and the Animations setting stop it.
