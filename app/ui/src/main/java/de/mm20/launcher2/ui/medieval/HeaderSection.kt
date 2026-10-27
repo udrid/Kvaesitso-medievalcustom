@@ -125,7 +125,7 @@ internal fun HeaderSection(
             }
         }
         VectorCanvas(
-            medallionParts, 88f, Modifier.offset(204.dp, 2.dp).size(88.dp, 70.dp),
+            medallionParts, 88f, Modifier.offset(185.dp, 2.dp).size(88.dp, 70.dp),
             originX = -44f, originY = -35f,
         )
         Column(

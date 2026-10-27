@@ -148,8 +148,6 @@ internal fun MedievalPill(notifications: List<Notification>, hasNotificationAcce
     var hole by remember { mutableStateOf(Hole(0f, 14f * density.density, 12f * density.density, 12f * density.density)) }
     var originX by remember { mutableFloatStateOf(0f) }
     var originY by remember { mutableFloatStateOf(0f) }
-    var pillTop by remember { mutableFloatStateOf(0f) }
-    var pillH by remember { mutableFloatStateOf(0f) }
 
     Box(
         Modifier
@@ -174,17 +172,6 @@ internal fun MedievalPill(notifications: List<Notification>, hasNotificationAcce
                 .offset { IntOffset(0, topPx.toInt()) },
             left = { NotificationIcons(notifications, hasNotificationAccess) },
             right = { StatusIcons(status) },
-            onPlaced = { y, h -> pillTop = y; pillH = h },
-        )
-        // TEMPORARY (T5c-pill-position) diagnostic, see PillDiagnostic.kt
-        val loc = IntArray(2).also { view.getLocationOnScreen(it) }
-        val o = hole.outline
-        PillDiagnosticText(
-            "${hole.method} hole y ${hole.cy.toInt()} pill y ${(pillTop + pillH / 2f).toInt()} d ${hole.w.toInt()}\n" +
-                "box ${o?.let { "${it.left.toInt()},${it.top.toInt()},${it.right.toInt()},${it.bottom.toInt()}" } ?: "-"} " +
-                "view ${loc[1]} bar $statusBarPx dpi ${density.density}\n" +
-                "sys ${remember { systemCutoutSpec() }}",
-            topPx = (topPx + with(density) { pillHeight.toPx() } + 2f * density.density).toInt(),
         )
     }
 }
@@ -196,10 +183,9 @@ private fun Pill(
     modifier: Modifier,
     left: @Composable () -> Unit,
     right: @Composable () -> Unit,
-    onPlaced: (y: Float, h: Float) -> Unit = { _, _ -> },
 ) {
     Layout(
-        modifier = modifier.onGloballyPositioned { onPlaced(it.positionInWindow().y, it.size.height.toFloat()) },
+        modifier = modifier,
         content = {
             Box(
                 Modifier
