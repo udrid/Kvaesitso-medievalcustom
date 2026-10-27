@@ -20,3 +20,4 @@
 - T10-cleanup: header widths can be measured on this PC with System.Drawing PrivateFontCollection on the res/font TTFs (PowerShell, no Python); family index order is alphabetical, not load order. Stroke miter at sharp tips adds up to 4x half the stroke width to ornament reach.
 - T10-cleanup: a fresh git worktree has no `local.properties` (git-ignored); copy it from the main folder before compiling.
 - T7-shields: package names of Samsung system apps (dialer, camera, gallery, clock, calendar) in the emblem lookup are from memory and UNVERIFIED on the S20 FE; a miss shows the letter shield, so check which letters appear on the phone.
+- Upstream search-page behaviour (keyboard, all-apps list) is controlled by user settings (autofocus, allApps), not code; forcing them in code makes the settings switches dead.
