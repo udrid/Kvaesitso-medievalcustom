@@ -110,3 +110,9 @@ var T9 = (function () {
 
   return { orb: orb, ready: function (cb) { Promise.all(['700 13px Cinzel', '14px UnifrakturMaguntia', '13px "IM Fell English"'].map(function (f) { return document.fonts.load(f); })).then(cb, cb); } };
 })();
+
+/* ring only (176 box), for the orb concept sheet */
+T9.ringOnly = function (style, id) {
+  var tmp = document.createElement('div'); tmp.innerHTML = T9.orb(style, id);
+  return tmp.querySelector('.ringsvg').outerHTML;
+};
