@@ -39,6 +39,10 @@ private const val OrbFps = 5
 private const val KindleMs = 1100L
 private const val ChargePulseSec = 4.5f
 private val Heart = Color(0xFFFFA060)
+/** T15: fewer grains lit at once (only the top of each sine counts) and a gentler peak. */
+private const val TwinkleRate = 1.3f
+private const val TwinkleFloor = 0.35f
+private const val TwinkleGain = 0.6f
 private val Twinkle = Color(0xFFFFF0C0)
 
 /** A gold dust grain that twinkles: position in orb radii (turns with the smoke) and its own phase. */
@@ -73,8 +77,8 @@ internal fun OrbGlass(modifier: Modifier = Modifier) {
         rotate(t * SmokeDegPerSec % 360f) {
             drawImage(smoke, IntOffset.Zero, IntSize(smoke.width, smoke.height), IntOffset.Zero, dst, filterQuality = FilterQuality.Medium)
             for (g in grains) {
-                val v = max(0f, sin(t * 1.3f + g.phase))
-                val a = v * v * v
+                val v = max(0f, sin(t * TwinkleRate + g.phase) - TwinkleFloor) / (1f - TwinkleFloor)
+                val a = TwinkleGain * v * v * v * v
                 if (a > 0.02f) {
                     val c = Offset(center.x + g.x * r, center.y + g.y * r)
                     drawCircle(Twinkle.copy(alpha = 0.3f * a), radius = 0.022f * w * g.size, center = c)

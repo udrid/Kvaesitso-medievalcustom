@@ -19,6 +19,7 @@
 | T11-command | 1 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T11-command | Home command bar: tap opens keyboard, no all-apps list before typing |
 | T9-vibe | 2 | active: Part 2 built, READY TO PUSH (awaiting owner OK); new-day shimmer waits for T10 | claude/T9-vibe | Ring text style and subtle battery-friendly animations |
 | T13-command-field | 1 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T13-command-field | Home bar opens a real typing box (bar rises to top, results below); SUMMON sends the typed text |
+| T15-tweaks | 1 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T15-tweaks | Stars twinkle less; Home closes shield picker and typing layer |
 | T2-treasury | 1 | deferred: owner wants it last (2026-10-25) | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner
