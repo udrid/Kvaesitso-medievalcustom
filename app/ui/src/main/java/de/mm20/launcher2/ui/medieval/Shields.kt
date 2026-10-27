@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.zIndex
 import de.mm20.launcher2.notifications.Notification
@@ -39,6 +40,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -126,9 +128,16 @@ private fun ShieldBody() {
 
 /** Oxblood count badge with a gold rim (".badge" in C5.html). */
 @Composable
-private fun Badge(count: Int, modifier: Modifier = Modifier) {
+private fun Badge(count: Int, swell: State<Float>, modifier: Modifier = Modifier) {
+    // T9: when the count goes up, the badge swells once (two beats, 1.8 s); [swell] is that one-shot
     Box(
         modifier
+            .graphicsLayer {
+                val p = swell.value
+                val s = 1f + 0.35f * bump(p, 0f, 0.55f) + 0.15f * bump(p, 0.55f, 1f)
+                scaleX = s
+                scaleY = s
+            }
             .defaultMinSize(minWidth = 18.dp)
             .height(18.dp)
             .zIndex(2f)
@@ -151,11 +160,18 @@ private fun Shield(slot: ShieldSlot, refresh: Int, notifications: List<Notificat
     val pkg = remember(refresh) { slotPackage(context, slot) }
     val label = remember(pkg) { pkg?.let { appLabel(context, it) } ?: "Empty" }
 
+    val tap = rememberTapReaction()
+    val count = if (pkg == null) 0 else notifications.count { it.packageName == pkg }
+    // tracked here, not in the badge, so the first notification (badge appearing) also swells
+    val swell = rememberOneShot(rememberRises(count.toLong()), 1_800L, LocalMotion.current.ambient)
     Box(
         Modifier
             .at(slot.x, slot.y)
             .size(62.dp, 72.dp)
+            .tapReaction(tap)
             .combinedClickable(
+                interactionSource = tap.source,
+                indication = null,
                 onClick = {
                     if (pkg == null) {
                         onPick()
@@ -168,10 +184,7 @@ private fun Shield(slot: ShieldSlot, refresh: Int, notifications: List<Notificat
             )
     ) {
         ShieldBody()
-        if (pkg != null) {
-            val count = notifications.count { it.packageName == pkg }
-            if (count > 0) Badge(count, Modifier.align(Alignment.TopEnd).offset(3.dp, (-5).dp))
-        }
+        if (count > 0) Badge(count, swell, Modifier.align(Alignment.TopEnd).offset(3.dp, (-5).dp))
         Box(Modifier.fillMaxWidth().padding(top = 22.dp), contentAlignment = Alignment.TopCenter) {
             when {
                 pkg == null -> MText("+", 22f, Medieval.TextFaint)

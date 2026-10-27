@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T9 fantasy glass orbs</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf")}
+@font-face{font-family:"IM Fell English";font-style:italic;src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf")}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:830px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+.grid{display:grid;grid-template-columns:390px 390px;gap:22px 20px;padding:10px}
+.lab{font-family:Cinzel,serif;font-size:11px;font-weight:700;letter-spacing:.16em;color:#c9a55a;text-transform:uppercase;padding:4px 2px 2px}
+.desc{font-size:12.5px;font-style:italic;color:#a8987a;padding:0 2px 6px;line-height:1.25;min-height:48px}
+.cost{font-size:12px;color:#8c7a52;padding:6px 2px 0;line-height:1.28}
+.cost b{color:#c9a55a;font-family:Cinzel,serif;font-size:10px;letter-spacing:.1em}
+.stage{position:relative;width:390px;height:372px;overflow:hidden;background:radial-gradient(90% 55% at 50% 50%,#26211a 0%,#0d0c09 82%),#0a0907}
+.inner{position:absolute;left:0;top:-48px;width:361px;height:560px;transform:scale(1.0803);transform-origin:0 0}
+.abs{position:absolute}
+.panel{position:absolute;left:16px;right:16px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);opacity:.38}
+.node{position:absolute;width:62px;height:72px;color:#e6d9b8;opacity:.8}
+.node svg.shield{position:absolute;inset:0}.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bfae86;opacity:.8}
+.pen{position:absolute;top:64px;width:58px;height:62px;opacity:.35}
+.pen svg{position:absolute;inset:0}
+.orbwrap{position:absolute;border-radius:50%;overflow:hidden;border:2px solid #8c6d3a;box-shadow:0 0 0 3px #0a0907,inset 0 0 30px rgba(0,0,0,.85)}
+.orbglow{position:absolute;border-radius:50%}
+.guide{position:absolute;border:1px dashed rgba(240,120,100,.7);pointer-events:none}
+</style>
+</head>
+<body>
+<div style="padding:8px 12px;font-size:12.5px;color:#8c7a52;font-style:italic">Six fantasy glass-orb looks for the Oracle orb, at real size in the Home layout (numbers from the C5 mock; the Treasury and Ledger are dimmed here so the orb is the star). The ring text is the "as built" one in every cell: the ring style is chosen separately. Stills only; the cost notes say what would move.</div>
+<div class="grid" id="g"></div>
+<script src="T9-orb.js"></script>
+<script>
+var G='#c9a55a',GD='#8c6d3a',GL='#e3cf9c',RD='#a8352b';
+/* everything in a 120 x 120 viewBox (-60..60), clipped to the circle */
+var SPH='<defs><radialGradient id="shr" cx=".5" cy=".5"><stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".78"/></radialGradient><linearGradient id="shg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>';
+function shell(tint){return SPH+'<circle r="60" fill="url(#shr)"/><path d="M-36 -26C-28 -42 -8 -52 10 -50C-8 -45 -28 -34 -36 -26Z" fill="url(#shg)"/><ellipse cx="-34" cy="-22" rx="8" ry="4" fill="#fff" opacity=".32" transform="rotate(-40 -34 -22)"/><path d="M26 42C36 36 44 26 48 14" stroke="'+(tint||'#ffd9a0')+'" stroke-opacity=".3" stroke-width="2.2" fill="none" stroke-linecap="round"/>'}
+function rnd(seed){var x=seed;return function(){x=(x*9301+49297)%233280;return x/233280}}
+function dots(c,n,seed,r0,r1,big){var R=rnd(seed),s='';for(var i=0;i<n;i++){var a=R()*6.283,r=r0+R()*(r1-r0);s+='<circle cx="'+(r*Math.cos(a)).toFixed(1)+'" cy="'+(r*Math.sin(a)).toFixed(1)+'" r="'+(R()<.2?big:big*.5).toFixed(2)+'" fill="'+c+'" opacity="'+(.4+R()*.6).toFixed(2)+'"/>';}return s}
+var BLUR='<filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter><filter id="b5" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter><filter id="b9" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter><filter id="b1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.1"/></filter>';
+function star4(x,y,r,c){return '<path d="M'+x+' '+(y-r)+'Q'+x+' '+y+' '+(x+r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y+r)+'Q'+x+' '+y+' '+(x-r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y-r)+'Z" fill="'+c+'"/>'}
+/* eight rune-like glyphs, about 2*sz tall, centred on 0,0 */
+function glyph(k,z){return ['M0 -'+z+'V'+z+'M0 -'+(z*.3)+'L'+(z*.6)+' -'+z,
+ 'M-'+(z*.5)+' -'+z+'L0 0L-'+(z*.5)+' '+z+'M0 0H'+(z*.5),
+ 'M0 -'+z+'V'+z+'M-'+(z*.5)+' -'+(z*.4)+'H'+(z*.5),
+ 'M-'+(z*.5)+' '+z+'L0 -'+z+'L'+(z*.5)+' '+z+'M-'+(z*.3)+' '+(z*.2)+'H'+(z*.3),
+ 'M-'+(z*.5)+' -'+z+'L'+(z*.5)+' 0L-'+(z*.5)+' '+z,
+ 'M0 -'+z+'L'+(z*.6)+' 0L0 '+z+'L-'+(z*.6)+' 0Z',
+ 'M-'+(z*.5)+' -'+z+'V'+z+'M'+(z*.5)+' -'+z+'V'+z+'M-'+(z*.5)+' 0H'+(z*.5),
+ 'M-'+(z*.6)+' -'+(z*.6)+'L'+(z*.6)+' '+(z*.6)+'M'+(z*.6)+' -'+(z*.6)+'L-'+(z*.6)+' '+(z*.6)+'M0 -'+z+'V'+z][k%8]}
+function ring(n,r,z,rot,col,w,off){var t='';for(var i=0;i<n;i++){t+='<path transform="rotate('+(i*360/n+rot)+') translate(0 -'+r+')" d="'+glyph(i+(off||0),z)+'" stroke="'+col+'" stroke-width="'+w+'" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';}return t}
+function rnd(seed){var x=seed;return function(){x=(x*9301+49297)%233280;return x/233280}}
+var FX='<filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter><filter id="b5" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter><filter id="b9" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter><filter id="b1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".9"/></filter>'+
+ '<filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.1 -.35"/></filter>'+
+ '<filter id="gr2" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".05 .09" numOctaves="3" seed="8"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .22  0 0 0 0 .08  0 0 0 1.5 -.62"/></filter>';
+/* dirt: fine dark grain everywhere plus blotchy rust stains; drawn once, no cost */
+function grit(a,r){return '<rect x="-60" y="-60" width="120" height="120" filter="url(#gr)" opacity="'+(a||.55)+'"/><rect x="-60" y="-60" width="120" height="120" filter="url(#gr2)" opacity="'+(r||.55)+'"/>'}
+function vig(){return '<defs><radialGradient id="vg" cx=".5" cy=".5"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".85"/></radialGradient></defs><circle r="60" fill="url(#vg)"/>'}
+function glint(o){return '<path d="M-34 -28C-26 -42 -8 -50 8 -48C-8 -43 -26 -34 -34 -28Z" fill="#fff" opacity="'+(o||.22)+'"/>'}
+var IRON='#2b2723',IRONH='#6a6258';
+function rivet(x,y){return '<circle cx="'+x+'" cy="'+y+'" r="2.2" fill="#3a352f" stroke="#0c0a08" stroke-width=".6"/><circle cx="'+(x-.6)+'" cy="'+(y-.7)+'" r=".8" fill="#8a8072"/>'}
+function flame(sc){return '<g transform="scale('+sc+')"><path d="M0 -34C4 -20 14 -14 14 0C14 12 8 20 0 20C-8 20 -14 12 -14 0C-14 -8 -10 -12 -8 -16C-7 -9 -3 -7 -2 -9C-4 -20 -1 -28 0 -34Z" fill="#c8481c"/><path d="M0 -22C3 -12 10 -8 10 1C10 10 5 16 0 16C-5 16 -10 10 -10 1C-10 -4 -7 -7 -5 -9C-4 -4 -1 -3 0 -5C-1 -12 0 -18 0 -22Z" fill="#f0a050"/><path d="M0 -8C2 -4 5 -1 5 4C5 9 3 13 0 13C-3 13 -5 9 -5 4C-5 -1 -2 -4 0 -8Z" fill="#ffd58a"/><ellipse cy="7" rx="2.2" ry="5" fill="#fff4cc"/></g>'}
+function cloud(x,y,rx,ry,c,o,rot){return '<ellipse cx="'+x+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" fill="'+c+'" opacity="'+o+'" transform="rotate('+(rot||0)+' '+x+' '+y+')"/>'}
+function bolt(seed,len,x0,y0,dx,dy){var R=rnd(seed),x=x0,y=y0,p='M'+x+' '+y,br='';for(var i=0;i<len;i++){x+=dx*(.6+R()*.8)+(R()-.5)*9;y+=dy*(.6+R()*.8);p+='L'+x.toFixed(1)+' '+y.toFixed(1);if(i%2==1)br+='M'+x.toFixed(1)+' '+y.toFixed(1)+'l'+((R()-.5)*24).toFixed(1)+' '+(6+R()*8).toFixed(1);}return p+br}
+function wing(sd,c1,c2){var s='';for(var i=0;i<5;i++){var a=-70+i*22;s+='<g transform="scale('+sd+' 1) rotate('+a+')"><path d="M0 0C6 -10 8 -26 0 -'+(40-i*3)+'C-6 -26 -6 -10 0 0Z" fill="'+(i%2?c1:c2)+'" opacity=".92"/></g>';}return s}
+var LOOKS=[
+ {id:'storm',name:'1. Tempest orb',glow:'rgba(200,130,60,.28)',
+  desc:'A storm trapped in glass: heavy bruise-purple thunderheads boiling around a branching bolt of gold lightning, with warm light under the clouds and a few streaks of rain. A wizard\'s weather in a jar.',
+  cost:'<b>LOW</b>. Clouds are one blurred picture drifting slowly (8 fps); the bolt is redrawn only 2 or 3 times a second in short flashes, nothing in between. Still version: none.',
+  svg:function(){return '<defs>'+FX+'<radialGradient id="t1" cx=".5" cy=".4"><stop offset="0" stop-color="#3a2a48"/><stop offset=".7" stop-color="#150e1c"/><stop offset="1" stop-color="#050308"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#t1)"/>'+
+   '<g filter="url(#b9)">'+cloud(-18,-28,34,14,'#5a4262',.9,-8)+cloud(22,-20,30,13,'#4a3652',.85,10)+cloud(0,-6,36,12,'#6a4a5a',.7,0)+cloud(-6,30,42,12,'#c8782a',.5,4)+cloud(26,18,22,9,'#7a3a2a',.6,-12)+'</g>'+
+   '<g filter="url(#b2)">'+cloud(-24,-6,18,6,'#2a1e34',.9,-10)+cloud(20,-2,16,6,'#2a1e34',.9,14)+'</g>'+
+   '<path d="'+bolt(6,6,4,-38,2,13)+'" stroke="#ffb54a" stroke-width="4.5" fill="none" filter="url(#b2)" stroke-linejoin="round"/><path d="'+bolt(6,6,4,-38,2,13)+'" stroke="#fff6dc" stroke-width="1.4" fill="none" stroke-linejoin="round"/>'+
+   '<g stroke="#c8d0e0" stroke-width=".5" opacity=".3"><path d="M-34 -4l-4 10M-24 8l-4 10M30 -6l-4 10M38 8l-4 10M16 20l-4 10M-14 24l-4 10"/></g>'+shell()+grit(.18,.1)}},
+ {id:'dragon',name:'2. Dragon in the glass',glow:'rgba(230,100,40,.36)',
+  desc:'A small coiled dragon, black against a furnace-red glow, wings half open, one amber eye awake and a thread of fire at its jaws. It looks like something a wizard caught and keeps.',
+  cost:'<b>LOW</b>. The dragon is a still silhouette; only the glow behind it and the tiny fire at its mouth flicker (one small layer, about 10 fps). Still version: none.',
+  svg:function(){return '<defs>'+FX+'<radialGradient id="d1" cx=".5" cy=".55"><stop offset="0" stop-color="#f0a050"/><stop offset=".3" stop-color="#b8401a"/><stop offset=".7" stop-color="#3a0e08"/><stop offset="1" stop-color="#080302"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#d1)"/>'+
+   '<g filter="url(#b9)" opacity=".6">'+cloud(-14,22,32,8,'#ffb54a',.7)+cloud(18,-18,24,8,'#e86a28',.6)+'</g>'+
+   '<g fill="#0a0504" stroke="#0a0504" stroke-linejoin="round"><path d="M-6 -2C-26 -34 -44 -26 -48 -8C-38 -18 -30 -14 -26 -6C-30 -4 -24 0 -20 -2C-24 4 -18 6 -14 2C-14 8 -8 8 -6 4Z"/><path d="M8 -2C28 -34 46 -26 50 -8C40 -18 32 -14 28 -6C32 -4 26 0 22 -2C26 4 20 6 16 2C16 8 10 8 8 4Z"/>'+
+   '<path d="M-22 34C-34 26 -28 10 -10 12C6 14 18 8 14 -6C10 -16 -4 -18 -10 -10" fill="none" stroke-width="9" stroke-linecap="round"/><path d="M-22 34L-30 40L-20 38Z"/><path d="M-4 -10C0 -22 14 -24 22 -18L34 -22L26 -12C28 -6 20 -2 12 -4Z"/><path d="M8 -20L4 -30L12 -22M18 -20L18 -30L24 -20" /></g>'+
+   '<g fill="#0a0504"><path d="M-12 18L-10 10L-6 18M2 22L4 14L8 18M-26 2L-22 -4L-20 4"/></g>'+
+   '<ellipse cx="22" cy="-15" rx="3" ry="1.8" fill="#ffd25a" transform="rotate(-20 22 -15)"/><circle cx="22.4" cy="-15" r=".8" fill="#000"/>'+
+   '<path d="M33 -20C40 -24 46 -20 50 -26C46 -14 40 -16 33 -14Z" fill="#ffb54a" filter="url(#b1)"/><path d="M34 -18C40 -20 44 -18 47 -21" stroke="#fff4cc" stroke-width="1" fill="none"/>'+dots('#ffd58a',14,6,10,52,1.1)+shell('#ffb070')+grit(.2,.15)}},
+ {id:'kingdom',name:'3. Kingdom under a blood moon',glow:'rgba(180,40,40,.34)',
+  desc:'A whole tiny kingdom inside the glass: a castle with lit windows on a jagged peak, a huge blood-red moon behind it, a dragon crossing the moon, sparks of ash drifting down. The most story of any of them.',
+  cost:'<b>LOW</b>. The scene is a still picture; the dragon crosses slowly (a few px a second, one tiny layer) and the windows flicker. Ash falls on a second small layer. Still version: none.',
+  svg:function(){return '<defs>'+FX+'<linearGradient id="k1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0a1c"/><stop offset=".55" stop-color="#5a1a1c"/><stop offset="1" stop-color="#2a0c0c"/></linearGradient><radialGradient id="k2" cx=".4" cy=".35"><stop offset="0" stop-color="#e86a4a"/><stop offset="1" stop-color="#8a1a14"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#k1)"/>'+
+   '<circle cx="8" cy="-14" r="30" fill="#d84a30" opacity=".35" filter="url(#b9)"/><circle cx="8" cy="-14" r="24" fill="url(#k2)"/><g fill="#6a1410" opacity=".5"><circle cx="0" cy="-20" r="5"/><circle cx="16" cy="-8" r="3.4"/><circle cx="6" cy="-6" r="2.2"/></g>'+
+   '<path d="M-6 -18c4 -4 8 -5 14 -3c4 -6 9 -7 13 -2l-5 3c-3 -2 -6 -1 -9 2c-3 -2 -9 -1 -13 0Z" fill="#0a0408"/>'+
+   '<path d="M-60 32L-44 8L-34 18L-24 -6L-14 6L-4 -14L8 8L20 -4L32 16L44 4L60 30V60H-60Z" fill="#0c060a"/>'+
+   '<g fill="#050204"><rect x="-10" y="-30" width="9" height="30"/><rect x="2" y="-38" width="8" height="38"/><rect x="14" y="-26" width="9" height="26"/><path d="M-11 -30L-5.5 -42L0 -30Z"/><path d="M1 -38L6 -52L11 -38Z"/><path d="M13 -26L18.5 -38L24 -26Z"/><rect x="-14" y="-10" width="42" height="12"/></g>'+
+   '<g fill="#ffb54a"><rect x="4" y="-30" width="2.4" height="4"/><rect x="-7" y="-20" width="2" height="3.4"/><rect x="17" y="-17" width="2" height="3.4"/><rect x="-2" y="-6" width="2.4" height="3"/><rect x="10" y="-6" width="2.4" height="3"/></g>'+
+   '<g filter="url(#b5)"><ellipse cx="0" cy="38" rx="50" ry="7" fill="#c86a5a" opacity=".45"/></g>'+dots('#f0b090',16,5,6,52,1)+shell('#ff9a8a')+grit(.25,.2)}},
+ {id:'spirits',name:'4. Captured spirits',glow:'rgba(150,190,170,.22)',
+  desc:'Three pale, trailing spirits circle slowly inside a smoky glass, each with two dark eyes and a long ragged tail, among gold motes. Ghostly and old; a bottled haunting.',
+  cost:'<b>LOW</b>. The three spirits are one blurred layer turning very slowly (8 fps); eyes are static. Still version: none. It uses a pale green-grey tint, a step outside the gold / ember palette.',
+  svg:function(){function sp(a,c,s,x,y){return '<g transform="translate('+x+' '+y+') rotate('+a+') scale('+s+')"><path d="M0 -34C-8 -34 -11 -26 -9 -20C-7 -14 -11 -8 -16 -2C-24 8 -30 6 -40 14C-26 14 -22 22 -8 16C0 12 6 6 8 -4C10 -14 12 -24 8 -30C6 -33 3 -34 0 -34Z" fill="'+c+'" opacity=".85"/><circle cx="-3" cy="-26" r="1.8" fill="#0a1010"/><circle cx="3" cy="-26" r="1.8" fill="#0a1010"/><ellipse cx="0" cy="-20" rx="2" ry="3" fill="#0a1010"/></g>'}
+   return '<defs>'+FX+'<radialGradient id="p1" cx=".45" cy=".4"><stop offset="0" stop-color="#1e2a28"/><stop offset=".7" stop-color="#0a1110"/><stop offset="1" stop-color="#030505"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#p1)"/>'+
+   '<g filter="url(#b9)" opacity=".6">'+cloud(-10,8,34,12,'#5a8a7a',.7,-30)+cloud(14,-10,28,10,'#c9a55a',.4,30)+'</g>'+
+   '<g filter="url(#b1)">'+sp(-12,'#dcead8',.8,2,14)+sp(100,'#c8dcc8',.62,-18,-4)+sp(215,'#e8e0c0',.66,22,-2)+'</g>'+dots('#f3dfa0',20,9,8,52,1.1)+shell('#c8e8d8')+grit(.22,.1)}},
+ {id:'yinyang',name:'5. Fire and frost',glow:'rgba(180,130,100,.28)',
+  desc:'A glass sphere split by a flowing S-curve into a half of roaring ember and a half of pale frost, each with a sparkle of the other inside it. Elemental, balanced and obviously magic. Uses a cool ice half (outside the palette).',
+  cost:'<b>LOW</b>. One picture that turns very slowly (6 to 8 fps, one layer), with an ember flicker on the fire half only. Still version: none.',
+  svg:function(){return '<defs>'+FX+'<radialGradient id="y1" cx=".35" cy=".5"><stop offset="0" stop-color="#ffd25a"/><stop offset=".4" stop-color="#e8702a"/><stop offset="1" stop-color="#6a1410"/></radialGradient><radialGradient id="y2" cx=".65" cy=".5"><stop offset="0" stop-color="#f0fbff"/><stop offset=".4" stop-color="#8ac8e0"/><stop offset="1" stop-color="#1e3a5a"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="#0a0808"/>'+
+   '<g transform="rotate(-30)"><circle r="46" fill="url(#y2)"/><path d="M0 -46A46 46 0 0 0 0 46A23 23 0 0 1 0 0A23 23 0 0 0 0 -46Z" fill="url(#y1)"/><circle cx="0" cy="-23" r="6" fill="#bfe6f0"/><circle cx="0" cy="23" r="6" fill="#ffb54a"/><circle cx="0" cy="-23" r="2" fill="#fff"/><circle cx="0" cy="23" r="2" fill="#fff4cc"/><circle r="46" fill="none" stroke="#e3cf9c" stroke-width="1"/></g>'+
+   '<g filter="url(#b9)" opacity=".5"><circle cx="-20" cy="10" r="18" fill="#ff8a30"/><circle cx="20" cy="-10" r="18" fill="#a8e0f0"/></g>'+dots('#ffe9c0',16,13,10,50,1)+shell('#fff')+grit(.2,.1)}},
+ {id:'phoenix',name:'6. Phoenix ember',glow:'rgba(240,140,40,.4)',
+  desc:'A phoenix made of layered flame, wings fanned and tail trailing, hanging motionless in a pale-gold glow inside the glass. The brightest, most heroic of the six.',
+  cost:'<b>LOW</b>. The bird is one still picture; the glow behind it and a few rising sparks flicker on one small layer (about 10 fps). Still version: none.',
+  svg:function(){return '<defs>'+FX+'<radialGradient id="h1" cx=".5" cy=".55"><stop offset="0" stop-color="#ffe9a0"/><stop offset=".35" stop-color="#e8902a"/><stop offset=".75" stop-color="#5a1a0c"/><stop offset="1" stop-color="#0c0403"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#h1)"/>'+
+   '<g transform="translate(0 6)"><g transform="translate(-6 4)">'+wing(-1,'#ffb54a','#e8702a')+'</g><g transform="translate(6 4)">'+wing(1,'#ffb54a','#e8702a')+'</g>'+
+   '<path d="M0 8C-8 20 -16 34 -10 48C-4 38 0 36 0 30C0 36 4 38 10 48C16 34 8 20 0 8Z" fill="#e8702a"/><path d="M0 12C-4 22 -8 32 -4 42C-1 36 0 34 0 30C0 34 1 36 4 42C8 32 4 22 0 12Z" fill="#ffd25a"/>'+
+   '<path d="M0 -14C6 -14 8 -8 6 -2C8 6 6 12 0 14C-6 12 -8 6 -6 -2C-8 -8 -6 -14 0 -14Z" fill="#ffd25a"/><path d="M0 -12C4 -12 5 -8 4 -3C5 4 4 10 0 11C-4 10 -5 4 -4 -3C-5 -8 -4 -12 0 -12Z" fill="#fff4cc"/>'+
+   '<path d="M-2 -20C-4 -26 -2 -30 2 -28L9 -22L2 -20Z" fill="#ffd25a"/><path d="M2 -28L10 -20L4 -19Z" fill="#c8481c"/><circle cx="1" cy="-24" r="1.2" fill="#6a1410"/><path d="M-4 -26C-10 -30 -12 -36 -8 -38C-8 -34 -4 -32 -2 -30Z" fill="#e8702a"/></g>'+
+   dots('#fff0c0',18,2,8,52,1.2)+shell('#ffe0a0')+grit(.18,.1)}}
+];
+var GS='<path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/>';
+function shield(top,left,label,lt){return '<div class="node" style="top:'+top+'px;left:'+left+'px"><svg class="shield" viewBox="0 0 62 72">'+GS+'</svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/></svg></span></div><div class="lbl" style="top:'+lt+'px;left:'+(left-11)+'px">'+label+'</div>';}
+function pen(lf){return '<div class="pen" style="left:'+lf+'px"><svg viewBox="0 0 58 62" fill="none"><path d="M2 1H56V52L29 42L2 52Z" fill="#2a2216" stroke="#8c6d3a" stroke-width="1.5"/></svg></div>';}
+
+/* stage coords (361 wide, y from the top of the Treasury panel): ring box 92,118 size 176; orb 124 at 118,144 */
+function cell(look,i,big){
+ var ringBox=big?{s:176*1.09,l:180-88*1.09,t:206-88*1.09}:{s:176,l:92,t:118};
+ var d=big?136:124, ol=180-d/2, ot=206-d/2;
+ var h='<div class="inner">'+
+  '<div class="panel" style="top:0;height:56px"></div>'+pen(18)+pen(99)+pen(180)+pen(261)+
+  shield(136,18,'X',212)+shield(136,281,'Discord',212)+shield(232,18,'YouTube',308)+shield(232,281,'Messages',308)+
+  '<div class="orbglow" style="left:'+(ol-26)+'px;top:'+(ot-26)+'px;width:'+(d+52)+'px;height:'+(d+52)+'px;background:radial-gradient(circle,'+look.glow+' 40%,rgba(0,0,0,0) 70%)"></div>'+
+  '<div class="abs" style="left:'+ringBox.l+'px;top:'+ringBox.t+'px;width:'+ringBox.s+'px;height:'+ringBox.s+'px">'+
+   '<div style="transform:scale('+(ringBox.s/176)+');transform-origin:0 0;width:176px;height:176px">'+T9.ringOnly('built','r'+i+(big?'b':''))+'</div></div>'+
+  '<div class="orbwrap" style="left:'+ol+'px;top:'+ot+'px;width:'+d+'px;height:'+d+'px;box-sizing:border-box"><svg width="'+(d-4)+'" height="'+(d-4)+'" viewBox="-60 -60 120 120">'+look.svg()+'</svg></div>'+
+  '<div class="abs" style="top:'+(big?312:296)+'px;left:80px;width:200px;text-align:center;font-family:UnifrakturCook,serif;font-size:19px;color:#e6d9b8">The Oracle</div>'+
+  '<div class="panel" style="top:'+(big?350:334)+'px;height:68px"></div></div>';
+ return h;
+}
+var out='';
+LOOKS.forEach(function(L,i){out+='<div><div class="lab">'+L.name+'</div><div class="desc">'+L.desc+'</div><div class="stage" id="c'+i+'"></div><div class="cost">Battery: '+L.cost+'</div></div>';});
+out+='<div><div class="lab">G. Slightly larger orb (shown with look 6)</div><div class="desc">The orb grows about 10% (124 to 136 px). To keep a clear gap to the ring text the ring grows with it by the same amount (176 to 192 px). Compare with the normal size above.</div><div class="stage" id="cB"></div><div class="cost"><b>ROOM IT TAKES</b> (C5 numbers; not checked on the real Home): about 8 px more on every side of the ring. Sideways it keeps a gap of about 13 px to the shields (22 px now), so no overlap. Upwards it eats into the gap under the Treasury gauges, so the ring is better moved down by 8 px: then "The Oracle", the Ledger and everything below slide down about 16 px in all. Battery: no change.</div></div>';
+document.getElementById('g').innerHTML=out;
+T9.ready(function(){
+ LOOKS.forEach(function(L,i){document.getElementById('c'+i).innerHTML=cell(L,i,false);});
+ document.getElementById('cB').innerHTML=cell(LOOKS[5],9,true);
+});
+</script>
+</body>
+</html>

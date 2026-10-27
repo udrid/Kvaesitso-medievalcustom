@@ -21,3 +21,6 @@
 - T10-cleanup: a fresh git worktree has no `local.properties` (git-ignored); copy it from the main folder before compiling.
 - T7-shields: package names of Samsung system apps (dialer, camera, gallery, clock, calendar) in the emblem lookup are from memory and UNVERIFIED on the S20 FE; a miss shows the letter shield, so check which letters appear on the phone.
 - Upstream search-page behaviour (keyboard, all-apps list) is controlled by user settings (autofocus, allApps), not code; forcing them in code makes the settings switches dead.
+- T9-vibe: the app's browser pane runs no JavaScript on local files and refuses pages over about 500 KB; for previews ship a frozen `.view.html` (scripts stripped, fonts dropped if needed) next to the live page, and a PNG.
+- T9-vibe: a glass orb looks real from the glass, not the contents (bright rim, dark band inside it, a window-shaped highlight, a caustic on the far side). Pre-render it in layers (turning contents, fixed additive reflections, setting) instead of computing it live on the phone.
+- T9-vibe: older Home code animates or polls with no gate (weather stop-motion at ~12 fps; `rememberNow()` every 5 s even when stopped). New motion should read `LocalMotion` so Battery Saver and the Animations setting stop it.

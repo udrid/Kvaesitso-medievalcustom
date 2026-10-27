@@ -13,6 +13,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameMillis
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.graphicsLayer
+import kotlinx.coroutines.delay
+import kotlin.math.PI
+import kotlin.math.sin
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +54,9 @@ private const val RingPhraseDeg = 120f - RingCrossGapDeg
 private const val RingOuter = 86f
 private const val RingInner = 57f
 
+/** Halo round the orb: the oxblood-ember glow of the picked orb (was a flame orange). */
+private val OrbHalo = Color(0x6BBE3C1E)
+
 /**
  * Draws [text] letter by letter on the circle of [radius] around [cx], [cy], centered on [centerDeg]
  * (screen angle, 0 = right, clockwise) and spread evenly over [spanDeg]. Phrases in the lower half run
@@ -74,11 +87,11 @@ private fun drawSpreadArcText(
     }
 }
 
-/** Small cross pattée centered on the band at [deg]; [s] is its half size. */
-private fun DrawScope.ringCross(cx: Float, cy: Float, radius: Float, deg: Float, s: Float) {
+/** Small cross pattée centered on the band at [deg]; [s] is its half size, [dy] a vertical shift, drawn in [color]. */
+private fun DrawScope.ringCross(cx: Float, cy: Float, radius: Float, deg: Float, s: Float, color: Color, dy: Float = 0f) {
     val a = Math.toRadians(deg.toDouble())
     val x = cx + radius * Math.cos(a).toFloat()
-    val y = cy + radius * Math.sin(a).toFloat()
+    val y = cy + radius * Math.sin(a).toFloat() + dy
     val w = s * 0.42f
     val p = Path().apply {
         // four flared arms meeting in the middle
@@ -87,8 +100,20 @@ private fun DrawScope.ringCross(cx: Float, cy: Float, radius: Float, deg: Float,
         moveTo(x, y); lineTo(x - s, y - w); lineTo(x - s, y + w); close()
         moveTo(x, y); lineTo(x + s, y - w); lineTo(x + s, y + w); close()
     }
-    drawPath(p, Medieval.GoldDeep)
+    drawPath(p, color)
 }
+
+/*
+ * Engraved metal (owner's pick T9, docs/design/T9-ring.html style 2): every letter and cross is drawn
+ * three times, a light edge just below, a dark lip just above and the darker metal of the cut on top,
+ * then a thin dark line inside the cut. Offsets are in ring units, straight down the screen.
+ */
+private val EngraveLight = Color(0x80E3CF9C)
+private val EngraveDark = Color(0xD9000000)
+private val EngraveCut = Color(0xFF5E4A26)
+private val EngraveLine = Color(0x73000000)
+private const val EngraveLightDy = 0.65f
+private const val EngraveDarkDy = -0.45f
 
 
 /** The Oracle: ring with inscription, glowing orb, label. Tap opens the Claude app. */
@@ -113,7 +138,6 @@ internal fun OracleOrb() {
         val c = size.width / 2f
         drawIntoCanvas { canvas ->
             val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Medieval.GoldDeep.toArgb()
                 textSize = RingTextSize * k
                 textAlign = Paint.Align.CENTER
                 if (ringFace != null) typeface = ringFace
@@ -127,16 +151,38 @@ internal fun OracleOrb() {
             val bounds = android.graphics.Rect()
             paint.getTextBounds("H", 0, 1, bounds)
             val capHeight = bounds.height().toFloat()
-            RingPhrases.forEachIndexed { i, phrase ->
-                val phraseDeg = -90f + 120f * i
-                drawSpreadArcText(canvas.nativeCanvas, paint, phrase, c, c, bandMiddle, phraseDeg, RingPhraseDeg, capHeight)
+            val native = canvas.nativeCanvas
+            fun phrases(color: Color, dy: Float) {
+                paint.color = color.toArgb()
+                native.save()
+                native.translate(0f, dy * k)
+                RingPhrases.forEachIndexed { i, phrase ->
+                    val phraseDeg = -90f + 120f * i
+                    drawSpreadArcText(native, paint, phrase, c, c, bandMiddle, phraseDeg, RingPhraseDeg, capHeight)
+                }
+                native.restore()
             }
+            phrases(EngraveLight, EngraveLightDy)
+            phrases(EngraveDark, EngraveDarkDy)
+            phrases(EngraveCut, 0f)
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 0.5f * k
+            phrases(EngraveLine, 0f)
         }
-        // a small cross in the middle of each gap
-        for (i in 0 until 3) ringCross(c, c, bandMiddle, -30f + 120f * i, 3.6f * k)
+        // a small cross in the middle of each gap, engraved the same way
+        for (i in 0 until 3) {
+            val deg = -30f + 120f * i
+            ringCross(c, c, bandMiddle, deg, 3.6f * k, EngraveLight, EngraveLightDy * k)
+            ringCross(c, c, bandMiddle, deg, 3.6f * k, EngraveDark, EngraveDarkDy * k)
+            ringCross(c, c, bandMiddle, deg, 3.6f * k, EngraveCut)
+        }
     }
 
-    // orb (124 at 133, 284)
+    // T9: a faint warm glint walks once round the ring every 20 s (Animations: Full only)
+    RingLight(Modifier.at(92f, 118f).size(176.dp), (RingOuter + RingInner) / 2f, RingOuter - RingInner)
+
+    // orb (124 at 133, 284): the glass orb of T9 (oxblood smoke with gold dust in a gold setting)
+    val tap = rememberTapReaction()
     Box(
         Modifier
             .at(118f, 144f)
@@ -144,7 +190,7 @@ internal fun OracleOrb() {
             .drawBehind {
                 drawCircle(
                     Brush.radialGradient(
-                        0.6f to Color(0x42E58A3C),
+                        0.6f to OrbHalo,
                         1f to Color.Transparent,
                         center = center,
                         radius = size.width * 0.75f,
@@ -152,20 +198,13 @@ internal fun OracleOrb() {
                     radius = size.width * 0.75f,
                 )
             }
+            // after the halo, so the flash's layer does not cut the halo square
+            .tapReaction(tap)
             .clip(CircleShape)
-            .background(
-                Brush.radialGradient(
-                    0f to Color(0xFF4A2D14),
-                    0.72f to Color(0xFF0F0904),
-                    center = Offset(62f * 3f, 47f * 3f),
-                    radius = 124f * 3f,
-                )
-            )
             .border(2.dp, Medieval.GoldDeep, CircleShape)
-            .clickable { openClaude(context) },
-        contentAlignment = Alignment.Center,
+            .clickable(interactionSource = tap.source, indication = null) { openClaude(context) },
     ) {
-        SvgIcon(MedievalIcons.Flame, 54f, Medieval.Ember, strokeWidth = 1.4f)
+        OrbGlass(Modifier.matchParentSize())
     }
 
     MText(
@@ -183,4 +222,58 @@ internal fun openClaude(context: android.content.Context) {
         return
     }
     launchSafely(context, intent, "the Claude app")
+}
+
+/** Duration of one sweep of the ring light, and the rest before the next (20 s in all). */
+private const val RingSweepMs = 7_000L
+private const val RingRestMs = 13_000L
+
+/**
+ * The ring light (T9, Animations: Full): a warm glint walks once round the inscription band
+ * ([bandMiddle], [bandWidth] in ring units of 176), then rests. It only redraws while it is visible.
+ */
+@Composable
+private fun RingLight(modifier: Modifier, bandMiddle: Float, bandWidth: Float) {
+    val motion = LocalMotion.current
+    val sweep = remember { mutableFloatStateOf(-1f) }
+    LaunchedEffect(motion.ringLight) {
+        sweep.floatValue = -1f
+        if (!motion.ringLight) return@LaunchedEffect
+        try {
+            while (true) {
+                delay(RingRestMs)
+                val start = withFrameMillis { it }
+                while (true) {
+                    val e = withFrameMillis { it } - start
+                    if (e >= RingSweepMs) break
+                    sweep.floatValue = e.toFloat() / RingSweepMs
+                    delay(1000L / AmbientFps)
+                }
+                sweep.floatValue = -1f
+            }
+        } finally {
+            sweep.floatValue = -1f
+        }
+    }
+    Canvas(modifier.graphicsLayer()) {
+        val p = sweep.floatValue
+        if (p < 0f) return@Canvas
+        val k = size.width / 176f
+        val fade = sin(PI.toFloat() * p)
+        val glint = Color(0xFFFFE2A0)
+        rotate(-30f + 360f * p) {
+            drawCircle(
+                Brush.sweepGradient(
+                    0f to glint.copy(alpha = 0f),
+                    0.06f to glint.copy(alpha = 0.34f * fade),
+                    0.14f to glint.copy(alpha = 0f),
+                    1f to glint.copy(alpha = 0f),
+                    center = center,
+                ),
+                radius = bandMiddle * k,
+                style = Stroke(bandWidth * k),
+                blendMode = BlendMode.Plus,
+            )
+        }
+    }
 }

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T9 wizard orb concepts</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf")}
+@font-face{font-family:"IM Fell English";font-style:italic;src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf")}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:830px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+.grid{display:grid;grid-template-columns:390px 390px;gap:22px 20px;padding:10px}
+.lab{font-family:Cinzel,serif;font-size:11px;font-weight:700;letter-spacing:.16em;color:#c9a55a;text-transform:uppercase;padding:4px 2px 2px}
+.desc{font-size:12.5px;font-style:italic;color:#a8987a;padding:0 2px 6px;line-height:1.25;min-height:48px}
+.cost{font-size:12px;color:#8c7a52;padding:6px 2px 0;line-height:1.28}
+.cost b{color:#c9a55a;font-family:Cinzel,serif;font-size:10px;letter-spacing:.1em}
+.stage{position:relative;width:390px;height:372px;overflow:hidden;background:radial-gradient(90% 55% at 50% 50%,#26211a 0%,#0d0c09 82%),#0a0907}
+.inner{position:absolute;left:0;top:-48px;width:361px;height:560px;transform:scale(1.0803);transform-origin:0 0}
+.abs{position:absolute}
+.panel{position:absolute;left:16px;right:16px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);opacity:.38}
+.node{position:absolute;width:62px;height:72px;color:#e6d9b8;opacity:.8}
+.node svg.shield{position:absolute;inset:0}.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bfae86;opacity:.8}
+.pen{position:absolute;top:64px;width:58px;height:62px;opacity:.35}
+.pen svg{position:absolute;inset:0}
+.orbwrap{position:absolute;border-radius:50%;overflow:hidden;border:2px solid #8c6d3a;box-shadow:0 0 0 3px #0a0907,inset 0 0 30px rgba(0,0,0,.85)}
+.orbglow{position:absolute;border-radius:50%}
+.guide{position:absolute;border:1px dashed rgba(240,120,100,.7);pointer-events:none}
+</style>
+</head>
+<body>
+<div style="padding:8px 12px;font-size:12.5px;color:#8c7a52;font-style:italic">Five wizard-orb looks (seeing-stone, crystal ball) for the Oracle orb, at real size in the Home layout (numbers from the C5 mock; the Treasury and Ledger are dimmed here so the orb is the star). The ring text is the "as built" one in every cell: the ring style is chosen separately. Stills only; the cost notes say what would move.</div>
+<div class="grid" id="g"></div>
+<script src="T9-orb.js"></script>
+<script>
+var G='#c9a55a',GD='#8c6d3a',GL='#e3cf9c',RD='#a8352b';
+/* everything in a 120 x 120 viewBox (-60..60), clipped to the circle */
+var SPH='<defs><radialGradient id="shr" cx=".5" cy=".5"><stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".78"/></radialGradient><linearGradient id="shg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>';
+/* glass shell: dark rim, window glint, lower caustic */
+function shell(tint){return SPH+'<circle r="60" fill="url(#shr)"/><path d="M-36 -26C-28 -42 -8 -52 10 -50C-8 -45 -28 -34 -36 -26Z" fill="url(#shg)"/><ellipse cx="-34" cy="-22" rx="8" ry="4" fill="#fff" opacity=".32" transform="rotate(-40 -34 -22)"/><path d="M26 42C36 36 44 26 48 14" stroke="'+(tint||'#ffd9a0')+'" stroke-opacity=".3" stroke-width="2.2" fill="none" stroke-linecap="round"/>'}
+function mist(cols){return '<filter id="mb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8"/></filter><g filter="url(#mb)">'+cols+'</g>'}
+function sparks(c,n,seed){var s='',x=seed;for(var i=0;i<n;i++){x=(x*9301+49297)%233280;var a=x/233280*6.283;x=(x*9301+49297)%233280;var r=8+x/233280*38;s+='<circle cx="'+(r*Math.cos(a)).toFixed(1)+'" cy="'+(r*Math.sin(a)).toFixed(1)+'" r="'+(i%3?.7:1.3)+'" fill="'+c+'" opacity="'+(i%2?.55:.9)+'"/>';}return s}
+var LOOKS=[
+ {id:'pal',name:'1. The Seeing-Stone (palantir)',glow:'rgba(210,70,30,.34)',
+  desc:'A flawless black glass ball with a living fire deep inside: a slow whirl of oxblood and ember around a hot, almost eye-shaped heart that you can never quite look into. Heavy, ominous, ancient.',
+  cost:'<b>LOW</b>. The fire is one pre-drawn blurred picture turning very slowly (about 8 fps, one layer); the glass shine on top is static. The still version costs nothing.',
+  svg:function(){return '<defs><radialGradient id="pa1" cx=".5" cy=".5"><stop offset="0" stop-color="#1a0806"/><stop offset="1" stop-color="#030101"/></radialGradient><radialGradient id="pa2"><stop offset="0" stop-color="#fff2c8"/><stop offset=".25" stop-color="#ffb54a"/><stop offset=".6" stop-color="#c8401c"/><stop offset="1" stop-color="rgba(120,20,10,0)"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#pa1)"/>'+
+   mist('<ellipse cx="-8" cy="6" rx="34" ry="14" fill="#8a1f16" opacity=".9" transform="rotate(-35)"/><ellipse cx="10" cy="-4" rx="30" ry="12" fill="#c8501e" opacity=".75" transform="rotate(40)"/><ellipse cx="0" cy="2" rx="24" ry="10" fill="#6e1410" opacity=".9" transform="rotate(95)"/>')+
+   '<g fill="none" stroke="#e86a28" stroke-width=".9" opacity=".5"><path d="M-40 6C-26 -20 -4 -26 10 -14C24 -2 16 14 2 16"/><path d="M38 -8C26 20 4 26 -10 14C-24 2 -16 -14 -2 -16"/></g>'+
+   '<ellipse rx="5" ry="15" fill="url(#pa2)"/><ellipse rx="2" ry="9" fill="#fff6d8" opacity=".9"/><circle r="22" fill="url(#pa2)" opacity=".45"/>'+shell()}},
+ {id:'wiz',name:'2. Wizard crystal ball',glow:'rgba(120,170,200,.22)',
+  desc:'A clear crystal ball full of drifting mist and tiny golden sparks, like a seer would use. NOTE: this one adds a cool blue-teal mist, which is outside the gold / ember / oxblood palette. Shown so you can say yes or no to a cold accent.',
+  cost:'<b>LOW</b>. Mist is one slowly drifting blurred layer, sparks are 3 to 4 dots twinkling at 6 to 8 fps. One small layer pair.',
+  svg:function(){return '<defs><radialGradient id="wz1" cx=".45" cy=".4"><stop offset="0" stop-color="#17303a"/><stop offset=".7" stop-color="#0a1318"/><stop offset="1" stop-color="#04080a"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#wz1)"/>'+
+   mist('<ellipse cx="-10" cy="10" rx="32" ry="13" fill="#3a8a9a" opacity=".7" transform="rotate(-25)"/><ellipse cx="14" cy="-8" rx="28" ry="11" fill="#6a5ac0" opacity=".45" transform="rotate(30)"/><ellipse cy="26" rx="22" ry="8" fill="#c9a55a" opacity=".35"/>')+sparks('#f3dfa0',18,7)+shell('#bfe6f0')}},
+ {id:'claw',name:'3. Claw-set sphere',glow:'rgba(229,138,60,.30)',
+  desc:'An ember-mist glass sphere held in a gold bezel with eight little claws gripping it, like a jewel set in a wizard staff. The gold setting makes it feel crafted and ties to the shield frames.',
+  cost:'<b>VERY LOW</b>. The gold claws and sphere are one still picture; only the mist inside drifts slowly (8 fps, one layer). Sparks optional.',
+  svg:function(){var s='<defs><radialGradient id="cl1" cx=".45" cy=".4"><stop offset="0" stop-color="#3a1c0e"/><stop offset=".8" stop-color="#120804"/><stop offset="1" stop-color="#040201"/></radialGradient><linearGradient id="clg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3dfa0"/><stop offset=".6" stop-color="#c9a55a"/><stop offset="1" stop-color="#8c6d3a"/></linearGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#cl1)"/>'+
+   mist('<ellipse cx="-8" cy="8" rx="30" ry="13" fill="#b8481c" opacity=".75" transform="rotate(-30)"/><ellipse cx="12" cy="-6" rx="26" ry="10" fill="#e8a040" opacity=".6" transform="rotate(35)"/>')+sparks('#ffd58a',14,3)+shell();
+   for(var i=0;i<8;i++){s+='<g transform="rotate('+(i*45)+')"><path d="M-5 -61C-4 -50 -2 -44 0 -40C2 -44 4 -50 5 -61Z" fill="url(#clg)" stroke="#5a4520" stroke-width=".8"/></g>';}
+   return s+'<circle r="56" fill="none" stroke="url(#clg)" stroke-width="3"/><circle r="52.5" fill="none" stroke="#2a1c0a" stroke-width="1"/>'}},
+ {id:'rune',name:'4. Rune-stone',glow:'rgba(229,170,70,.26)',
+  desc:'A black obsidian ball with two rings of tiny gold runes floating inside it and one ember spark at the centre. Quiet and learned, the way a wizard artefact feels.',
+  cost:'<b>VERY LOW</b>. Rune rings are two thin layers turning very slowly in opposite directions (6 to 8 fps), or left still with only a gentle glow on the spark.',
+  svg:function(){function rr(n,r,sz,rot){var t='';for(var i=0;i<n;i++){var a=i*360/n+rot,k=i%4;t+='<g transform="rotate('+a+') translate(0 '+(-r)+')" stroke="#e3cf9c" stroke-width="1" fill="none" stroke-linecap="round">'+['<path d="M0 -'+sz+'V'+sz+'M0 -'+(sz/3)+'L'+(sz*.6)+' -'+sz+'"/>','<path d="M-'+(sz*.5)+' -'+sz+'L0 0L-'+(sz*.5)+' '+sz+'M0 0H'+(sz*.5)+'"/>','<path d="M0 -'+sz+'V'+sz+'M-'+(sz*.5)+' -'+(sz*.4)+'H'+(sz*.5)+'"/>','<path d="M-'+(sz*.5)+' '+sz+'L0 -'+sz+'L'+(sz*.5)+' '+sz+'M-'+(sz*.3)+' 0H'+(sz*.3)+'"/>'][k]+'</g>';}return t}
+   return '<defs><radialGradient id="ru1" cx=".4" cy=".35"><stop offset="0" stop-color="#241a1a"/><stop offset=".7" stop-color="#0a0707"/><stop offset="1" stop-color="#020101"/></radialGradient><radialGradient id="ru2"><stop offset="0" stop-color="#fff0c0"/><stop offset=".3" stop-color="#f0a050"/><stop offset="1" stop-color="rgba(240,120,50,0)"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#ru1)"/>'+
+   '<g opacity=".85">'+rr(16,42,4.2,0)+'</g><g opacity=".7">'+rr(10,24,3.6,18)+'</g><circle r="16" fill="url(#ru2)" opacity=".8"/><circle r="3" fill="#fff6d6"/>'+shell()}},
+ {id:'storm',name:'5. Storm in the glass',glow:'rgba(240,150,60,.32)',
+  desc:'Hot ember lightning crawls from a bright centre to the glass wall, like a wizard charged orb. The liveliest of the five: the most "magic" and the most attention-grabbing.',
+  cost:'<b>LOW</b> as an ambient effect: the bolt pattern is re-drawn only 2 to 3 times a second, nothing in between. Honest note: this is the one most likely to catch the eye, so I would only offer it in "Full".',
+  svg:function(){var b='';[[0,-1],[.9,-.5],[.9,.6],[0,1],[-.9,.6],[-.9,-.5]].forEach(function(d,i){var x=0,y=0,p='M0 0';for(var k=1;k<=4;k++){x=d[0]*k*13+((i*7+k*5)%9-4);y=d[1]*k*13+((i*5+k*3)%9-4);p+='L'+x+' '+y;}b+='<path d="'+p+'"/>';});
+   return '<defs><radialGradient id="st1" cx=".5" cy=".5"><stop offset="0" stop-color="#3a1608"/><stop offset=".75" stop-color="#100604"/><stop offset="1" stop-color="#030101"/></radialGradient><radialGradient id="st2"><stop offset="0" stop-color="#fff6d8"/><stop offset=".35" stop-color="#ffb54a"/><stop offset="1" stop-color="rgba(220,80,30,0)"/></radialGradient><filter id="stb"><feGaussianBlur stdDeviation="2"/></filter></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#st1)"/>'+
+   '<g stroke="#e8702a" stroke-width="3" fill="none" filter="url(#stb)" stroke-linejoin="round">'+b+'</g><g stroke="#ffe0a0" stroke-width="1.1" fill="none" stroke-linejoin="round">'+b+'</g><circle r="20" fill="url(#st2)"/><circle r="4.5" fill="#fff"/>'+shell()}}
+];
+var GS='<path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/>';
+function shield(top,left,label,lt){return '<div class="node" style="top:'+top+'px;left:'+left+'px"><svg class="shield" viewBox="0 0 62 72">'+GS+'</svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/></svg></span></div><div class="lbl" style="top:'+lt+'px;left:'+(left-11)+'px">'+label+'</div>';}
+function pen(lf){return '<div class="pen" style="left:'+lf+'px"><svg viewBox="0 0 58 62" fill="none"><path d="M2 1H56V52L29 42L2 52Z" fill="#2a2216" stroke="#8c6d3a" stroke-width="1.5"/></svg></div>';}
+
+/* stage coords (361 wide, y from the top of the Treasury panel): ring box 92,118 size 176; orb 124 at 118,144 */
+function cell(look,i,big){
+ var ringBox=big?{s:176*1.09,l:180-88*1.09,t:206-88*1.09}:{s:176,l:92,t:118};
+ var d=big?136:124, ol=180-d/2, ot=206-d/2;
+ var h='<div class="inner">'+
+  '<div class="panel" style="top:0;height:56px"></div>'+pen(18)+pen(99)+pen(180)+pen(261)+
+  shield(136,18,'X',212)+shield(136,281,'Discord',212)+shield(232,18,'YouTube',308)+shield(232,281,'Messages',308)+
+  '<div class="orbglow" style="left:'+(ol-26)+'px;top:'+(ot-26)+'px;width:'+(d+52)+'px;height:'+(d+52)+'px;background:radial-gradient(circle,'+look.glow+' 40%,rgba(0,0,0,0) 70%)"></div>'+
+  '<div class="abs" style="left:'+ringBox.l+'px;top:'+ringBox.t+'px;width:'+ringBox.s+'px;height:'+ringBox.s+'px">'+
+   '<div style="transform:scale('+(ringBox.s/176)+');transform-origin:0 0;width:176px;height:176px">'+T9.ringOnly('built','r'+i+(big?'b':''))+'</div></div>'+
+  '<div class="orbwrap" style="left:'+ol+'px;top:'+ot+'px;width:'+d+'px;height:'+d+'px;box-sizing:border-box"><svg width="'+(d-4)+'" height="'+(d-4)+'" viewBox="-60 -60 120 120">'+look.svg()+'</svg></div>'+
+  '<div class="abs" style="top:'+(big?312:296)+'px;left:80px;width:200px;text-align:center;font-family:UnifrakturCook,serif;font-size:19px;color:#e6d9b8">The Oracle</div>'+
+  '<div class="panel" style="top:'+(big?350:334)+'px;height:68px"></div></div>';
+ return h;
+}
+var out='';
+LOOKS.forEach(function(L,i){out+='<div><div class="lab">'+L.name+'</div><div class="desc">'+L.desc+'</div><div class="stage" id="c'+i+'"></div><div class="cost">Battery: '+L.cost+'</div></div>';});
+out+='<div><div class="lab">G. Slightly larger orb (shown with look 1)</div><div class="desc">The orb grows about 10% (124 to 136 px). To keep a clear gap to the ring text the ring grows with it by the same amount (176 to 192 px). Compare with the normal size above.</div><div class="stage" id="cB"></div><div class="cost"><b>ROOM IT TAKES</b> (C5 numbers; not checked on the real Home): about 8 px more on every side of the ring. Sideways it keeps a gap of about 13 px to the shields (22 px now), so no overlap. Upwards it eats into the gap under the Treasury gauges, so the ring is better moved down by 8 px: then "The Oracle", the Ledger and everything below slide down about 16 px in all. Battery: no change.</div></div>';
+document.getElementById('g').innerHTML=out;
+T9.ready(function(){
+ LOOKS.forEach(function(L,i){document.getElementById('c'+i).innerHTML=cell(L,i,false);});
+ document.getElementById('cB').innerHTML=cell(LOOKS[0],9,true);
+});
+</script>
+</body>
+</html>

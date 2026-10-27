@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T9 orb variants</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf")}
+@font-face{font-family:"IM Fell English";font-style:italic;src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf")}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:830px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+.grid{display:grid;grid-template-columns:390px 390px;gap:22px 20px;padding:10px}
+.lab{font-family:Cinzel,serif;font-size:11px;font-weight:700;letter-spacing:.16em;color:#c9a55a;text-transform:uppercase;padding:4px 2px 2px}
+.desc{font-size:12.5px;font-style:italic;color:#a8987a;padding:0 2px 6px;line-height:1.25;min-height:48px}
+.cost{font-size:12px;color:#8c7a52;padding:6px 2px 0;line-height:1.28}
+.cost b{color:#c9a55a;font-family:Cinzel,serif;font-size:10px;letter-spacing:.1em}
+.stage{position:relative;width:390px;height:372px;overflow:hidden;background:radial-gradient(90% 55% at 50% 50%,#26211a 0%,#0d0c09 82%),#0a0907}
+.inner{position:absolute;left:0;top:-48px;width:361px;height:560px;transform:scale(1.0803);transform-origin:0 0}
+.abs{position:absolute}
+.panel{position:absolute;left:16px;right:16px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);opacity:.38}
+.node{position:absolute;width:62px;height:72px;color:#e6d9b8;opacity:.8}
+.node svg.shield{position:absolute;inset:0}.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bfae86;opacity:.8}
+.pen{position:absolute;top:64px;width:58px;height:62px;opacity:.35}
+.pen svg{position:absolute;inset:0}
+.orbwrap{position:absolute;border-radius:50%;overflow:hidden;border:2px solid #8c6d3a;box-shadow:0 0 0 3px #0a0907,inset 0 0 30px rgba(0,0,0,.85)}
+.orbglow{position:absolute;border-radius:50%}
+.guide{position:absolute;border:1px dashed rgba(240,120,100,.7);pointer-events:none}
+</style>
+</head>
+<body>
+<div style="padding:8px 12px;font-size:12.5px;color:#8c7a52;font-style:italic">Six richer variants of your two picks (2 crystal ball, 4 rune-stone) for the Oracle orb, at real size in the Home layout (numbers from the C5 mock; the Treasury and Ledger are dimmed here so the orb is the star). The ring text is the "as built" one in every cell: the ring style is chosen separately. Stills only; the cost notes say what would move.</div>
+<div class="grid" id="g"></div>
+<script src="T9-orb.js"></script>
+<script>
+var G='#c9a55a',GD='#8c6d3a',GL='#e3cf9c',RD='#a8352b';
+/* everything in a 120 x 120 viewBox (-60..60), clipped to the circle */
+var SPH='<defs><radialGradient id="shr" cx=".5" cy=".5"><stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".78"/></radialGradient><linearGradient id="shg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>';
+function shell(tint){return SPH+'<circle r="60" fill="url(#shr)"/><path d="M-36 -26C-28 -42 -8 -52 10 -50C-8 -45 -28 -34 -36 -26Z" fill="url(#shg)"/><ellipse cx="-34" cy="-22" rx="8" ry="4" fill="#fff" opacity=".32" transform="rotate(-40 -34 -22)"/><path d="M26 42C36 36 44 26 48 14" stroke="'+(tint||'#ffd9a0')+'" stroke-opacity=".3" stroke-width="2.2" fill="none" stroke-linecap="round"/>'}
+function rnd(seed){var x=seed;return function(){x=(x*9301+49297)%233280;return x/233280}}
+function dots(c,n,seed,r0,r1,big){var R=rnd(seed),s='';for(var i=0;i<n;i++){var a=R()*6.283,r=r0+R()*(r1-r0);s+='<circle cx="'+(r*Math.cos(a)).toFixed(1)+'" cy="'+(r*Math.sin(a)).toFixed(1)+'" r="'+(R()<.2?big:big*.5).toFixed(2)+'" fill="'+c+'" opacity="'+(.4+R()*.6).toFixed(2)+'"/>';}return s}
+var BLUR='<filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter><filter id="b5" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter><filter id="b9" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter><filter id="b1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.1"/></filter>';
+function star4(x,y,r,c){return '<path d="M'+x+' '+(y-r)+'Q'+x+' '+y+' '+(x+r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y+r)+'Q'+x+' '+y+' '+(x-r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y-r)+'Z" fill="'+c+'"/>'}
+/* eight rune-like glyphs, about 2*sz tall, centred on 0,0 */
+function glyph(k,z){return ['M0 -'+z+'V'+z+'M0 -'+(z*.3)+'L'+(z*.6)+' -'+z,
+ 'M-'+(z*.5)+' -'+z+'L0 0L-'+(z*.5)+' '+z+'M0 0H'+(z*.5),
+ 'M0 -'+z+'V'+z+'M-'+(z*.5)+' -'+(z*.4)+'H'+(z*.5),
+ 'M-'+(z*.5)+' '+z+'L0 -'+z+'L'+(z*.5)+' '+z+'M-'+(z*.3)+' '+(z*.2)+'H'+(z*.3),
+ 'M-'+(z*.5)+' -'+z+'L'+(z*.5)+' 0L-'+(z*.5)+' '+z,
+ 'M0 -'+z+'L'+(z*.6)+' 0L0 '+z+'L-'+(z*.6)+' 0Z',
+ 'M-'+(z*.5)+' -'+z+'V'+z+'M'+(z*.5)+' -'+z+'V'+z+'M-'+(z*.5)+' 0H'+(z*.5),
+ 'M-'+(z*.6)+' -'+(z*.6)+'L'+(z*.6)+' '+(z*.6)+'M'+(z*.6)+' -'+(z*.6)+'L-'+(z*.6)+' '+(z*.6)+'M0 -'+z+'V'+z][k%8]}
+function ring(n,r,z,rot,col,w,off){var t='';for(var i=0;i<n;i++){t+='<path transform="rotate('+(i*360/n+rot)+') translate(0 -'+r+')" d="'+glyph(i+(off||0),z)+'" stroke="'+col+'" stroke-width="'+w+'" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';}return t}
+var LOOKS=[
+ {id:'a',name:'2a. Aurora ball',glow:'rgba(110,160,190,.26)',
+  desc:'Ribbons of teal, violet and gold light ripple through the glass like northern lights, with a little constellation joined by thin lines and a tiny crescent moon drifting through.',
+  cost:'<b>LOW</b>. The ribbons are one blurred layer sliding slowly (8 fps), the stars twinkle on a second small layer. Constellation and moon are static. Still version: none.',
+  svg:function(){var rb=function(c,w,y,o,f){return '<path d="M-56 '+(y+14)+'C-34 '+(y-22)+' -8 '+(y+26)+' 18 '+(y-8)+'S46 '+(y-6)+' 58 '+(y-26)+'" stroke="'+c+'" stroke-width="'+w+'" fill="none" opacity="'+o+'" stroke-linecap="round" filter="url(#'+f+')"/>'};
+   var con=[[-30,-34],[-12,-26],[4,-36],[18,-24],[30,-30]];var cl='';con.forEach(function(p,i){if(i)cl+='<path d="M'+con[i-1][0]+' '+con[i-1][1]+'L'+p[0]+' '+p[1]+'" stroke="#e3cf9c" stroke-width=".5" opacity=".6"/>';});con.forEach(function(p){cl+=star4(p[0],p[1],2.6,'#fff3c8')});
+   return '<defs><radialGradient id="au1" cx=".45" cy=".4"><stop offset="0" stop-color="#14262e"/><stop offset=".7" stop-color="#091016"/><stop offset="1" stop-color="#03060a"/></radialGradient>'+BLUR+'</defs><rect x="-60" y="-60" width="120" height="120" fill="url(#au1)"/>'+
+   rb('#2fd0a8',16,6,.55,'b9')+rb('#8a6ae0',14,18,.5,'b9')+rb('#c9a55a',9,-8,.4,'b5')+rb('#7ff0d0',2,6,.9,'b1')+rb('#c8b0ff',1.6,18,.8,'b1')+
+   dots('#f3dfa0',26,5,6,48,1.1)+cl+'<path d="M24 24A7 7 0 1 0 31 33A5.4 5.4 0 1 1 24 24Z" fill="#f3dfa0" opacity=".9"/>'+shell('#bfe6f0')}},
+ {id:'b',name:'2b. Vision ball',glow:'rgba(120,150,190,.22)',
+  desc:'A seer\'s vision inside the glass: a lonely tower on a hill under a crescent moon and stars, one gold window lit, mist rolling along the ground. Most story, most to look at.',
+  cost:'<b>LOW</b>. The scene is a still picture; only the mist band drifts slowly and one window flickers, 6 to 8 fps, two tiny layers.',
+  svg:function(){return '<defs><linearGradient id="vi1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1830"/><stop offset=".6" stop-color="#2a2a4a"/><stop offset="1" stop-color="#4a3046"/></linearGradient>'+BLUR+'</defs><rect x="-60" y="-60" width="120" height="120" fill="url(#vi1)"/>'+
+   dots('#fff3d0',34,11,10,52,1.1).replace(/cy="(-?[\d.]+)"/g,function(m,v){return 'cy="'+(Math.min(parseFloat(v),6)-8).toFixed(1)+'"'})+
+   '<path d="M-26 -30A12 12 0 1 0 -14 -18A9.4 9.4 0 1 1 -26 -30Z" fill="#f6e6b0"/>'+
+   '<ellipse cx="-4" cy="40" rx="62" ry="24" fill="#0b0912"/><ellipse cx="26" cy="46" rx="40" ry="16" fill="#12101a"/>'+
+   '<g fill="#07050c"><rect x="-1" y="-22" width="12" height="46"/><path d="M-4 -22L5 -42L14 -22Z"/><rect x="-5" y="-26" width="20" height="5"/><rect x="-3" y="-30" width="3" height="5"/><rect x="2" y="-30" width="3" height="5"/><rect x="7" y="-30" width="3" height="5"/></g><rect x="3" y="-10" width="3.4" height="6" fill="#ffd58a"/><rect x="3" y="-10" width="3.4" height="6" fill="#ffb54a" filter="url(#b2)"/><rect x="3" y="6" width="3" height="5" fill="#ffd58a" opacity=".7"/>'+
+   '<g filter="url(#b5)"><ellipse cx="-14" cy="26" rx="34" ry="5" fill="#c8c0d8" opacity=".5"/><ellipse cx="22" cy="34" rx="30" ry="4.5" fill="#b8b0cc" opacity=".45"/></g>'+shell('#c8d8f0')}},
+ {id:'c',name:'2c. Galaxy and sigil (warm)',glow:'rgba(229,150,60,.28)',
+  desc:'A small spiral galaxy of golden dust with a bright core, and a thin arcane circle with a triangle floating across it at a tilt, as if cast by a spell. Stays inside the gold / ember palette, no cold blue.',
+  cost:'<b>LOW</b>. The galaxy is one pre-drawn picture turning very slowly (8 fps, one layer); the sigil is a second layer counter-turning. Still: none.',
+  svg:function(){var R=rnd(21),g='';for(var arm=0;arm<2;arm++)for(var i=0;i<90;i++){var t=i/90,r=4+t*46,a=arm*Math.PI+t*5.2+(R()-.5)*.5,rr=r+(R()-.5)*6;g+='<circle cx="'+(rr*Math.cos(a)).toFixed(1)+'" cy="'+(rr*Math.sin(a)).toFixed(1)+'" r="'+(.4+(1-t)*1.1*R()+(R()<.07?.8:0)).toFixed(2)+'" fill="'+(t<.4?'#ffd58a':t<.7?'#e8a040':'#b8481c')+'" opacity="'+(.9-t*.45).toFixed(2)+'"/>';}
+   return '<defs><radialGradient id="ga1" cx=".5" cy=".5"><stop offset="0" stop-color="#2a1208"/><stop offset=".8" stop-color="#0c0503"/><stop offset="1" stop-color="#020101"/></radialGradient><radialGradient id="ga2"><stop offset="0" stop-color="#fff6d8"/><stop offset=".3" stop-color="#ffb54a"/><stop offset="1" stop-color="rgba(200,70,20,0)"/></radialGradient>'+BLUR+'</defs><rect x="-60" y="-60" width="120" height="120" fill="url(#ga1)"/>'+
+   '<g filter="url(#b5)" opacity=".55"><path d="M-40 0C-20 -30 20 -30 40 0C20 30 -20 30 -40 0Z" fill="#8a2a14"/></g><g transform="rotate(-18) scale(1 .78)">'+g+'</g><circle r="16" fill="url(#ga2)"/>'+
+   '<g transform="rotate(-24) scale(1 .38)" stroke="#e3cf9c" fill="none" stroke-width="1.4" opacity=".9"><circle r="44"/><circle r="39" stroke-dasharray="1.5 3" stroke-width="1"/><path d="M0 -44L38 22H-38Z"/><path d="M0 44L38 -22H-38Z" opacity=".6"/></g>'+
+   dots('#fff0c0',10,2,12,50,1.1)+shell()}},
+ {id:'d',name:'4a. Rune orrery',glow:'rgba(229,170,70,.28)',
+  desc:'Three rings of different runes turning at different speeds like a tiny brass orrery, with ruby gems on the rings, fine tick marks, thin gold arcs between them and a bright eight-point ember star in the middle.',
+  cost:'<b>LOW</b>. Three thin ring layers turning slowly (6 to 8 fps; the outer ring almost still). Still: none. Heaviest of the rune looks, but still small areas.',
+  svg:function(){var tk='';for(var i=0;i<72;i++){var a=i*Math.PI/36,l=i%6?1.8:4;tk+='<path d="M'+(56*Math.cos(a)).toFixed(1)+' '+(56*Math.sin(a)).toFixed(1)+'L'+((56-l)*Math.cos(a)).toFixed(1)+' '+((56-l)*Math.sin(a)).toFixed(1)+'"/>';}
+   var gem='';[0,90,180,270].forEach(function(d){gem+='<g transform="rotate('+(d+40)+') translate(0 -35)"><circle r="2.6" fill="#a8352b" stroke="#e3cf9c" stroke-width=".8"/></g>'});
+   var arcs='<path d="M-46 0A46 46 0 0 1 0 -46" stroke-width=".8" opacity=".6"/><path d="M46 0A46 46 0 0 1 0 46" stroke-width=".8" opacity=".6"/><path d="M-30 0A30 30 0 0 0 0 30" stroke-width=".8" opacity=".6"/><path d="M30 0A30 30 0 0 0 0 -30" stroke-width=".8" opacity=".6"/>';
+   return '<defs><radialGradient id="rn1" cx=".4" cy=".35"><stop offset="0" stop-color="#2a1e18"/><stop offset=".7" stop-color="#0a0707"/><stop offset="1" stop-color="#020101"/></radialGradient><radialGradient id="rn2"><stop offset="0" stop-color="#fff0c0"/><stop offset=".3" stop-color="#f0a050"/><stop offset="1" stop-color="rgba(240,120,50,0)"/></radialGradient>'+BLUR+'</defs><rect x="-60" y="-60" width="120" height="120" fill="url(#rn1)"/>'+
+   '<g stroke="#8c6d3a" stroke-width=".7" opacity=".9">'+tk+'</g><g fill="none" stroke="#c9a55a" stroke-width=".7"><circle r="52"/><circle r="40" stroke-dasharray="1 2.4"/><circle r="29" stroke-dasharray="1 2.4"/><circle r="17"/>'+arcs+'</g>'+
+   ring(22,46,3.4,0,'#e3cf9c',1,0)+ring(14,35,4,10,'#f0d890',1.1,3)+ring(8,23,3.6,20,'#ffe9b0',1.2,5)+gem+
+   '<circle r="17" fill="url(#rn2)" opacity=".85"/><path d="M0 -17L2.2 -2.2L17 0L2.2 2.2L0 17L-2.2 2.2L-17 0L-2.2 -2.2Z" fill="#fff0c0"/><g transform="rotate(45)"><path d="M0 -11L1.4 -1.4L11 0L1.4 1.4L0 11L-1.4 1.4L-11 0L-1.4 -1.4Z" fill="#ffd58a"/></g>'+shell()}},
+ {id:'e',name:'4b. Sigil stone',glow:'rgba(229,170,70,.26)',
+  desc:'One great glowing sigil floats in the black glass: a six-pointed star inside two circles, a rune at every point, tiny motes circling it and a hot ember heart. Like a ward being held in place.',
+  cost:'<b>LOW</b> to <b>VERY LOW</b>. The sigil is one picture that pulses its glow gently (8 fps, one layer) and turns very slowly; motes are optional. Still: none.',
+  svg:function(){var P=function(r,a){return (r*Math.cos(a)).toFixed(1)+' '+(r*Math.sin(a)).toFixed(1)},t1='',t2='';for(var i=0;i<3;i++){t1+=(i?'L':'M')+P(36,-Math.PI/2+i*2*Math.PI/3);t2+=(i?'L':'M')+P(36,Math.PI/2+i*2*Math.PI/3);}
+   var rn='';for(var j=0;j<6;j++){var a=-Math.PI/2+j*Math.PI/3;rn+='<g transform="translate('+P(48,a)+') rotate('+(j*60)+')"><path d="'+glyph(j+1,3.4)+'" stroke="#ffe9b0" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>';}
+   var sig='<path d="'+t1+'Z"/><path d="'+t2+'Z"/><circle r="42"/><circle r="30" stroke-dasharray="1.6 2.6"/><circle r="12"/>';
+   return '<defs><radialGradient id="sg1" cx=".4" cy=".35"><stop offset="0" stop-color="#1e1612"/><stop offset=".7" stop-color="#090606"/><stop offset="1" stop-color="#020101"/></radialGradient><radialGradient id="sg2"><stop offset="0" stop-color="#fff0c0"/><stop offset=".3" stop-color="#f0a050"/><stop offset="1" stop-color="rgba(240,120,50,0)"/></radialGradient>'+BLUR+'</defs><rect x="-60" y="-60" width="120" height="120" fill="url(#sg1)"/>'+
+   '<g fill="none" stroke="#e8902a" stroke-width="3" opacity=".7" filter="url(#b2)">'+sig+'</g><g fill="none" stroke="#f3dfa0" stroke-width="1.1" stroke-linejoin="round">'+sig+'</g>'+rn+dots('#ffd58a',22,9,14,52,1.2)+
+   '<circle r="15" fill="url(#sg2)"/><circle r="3.4" fill="#fff6d6"/>'+shell()}},
+ {id:'f',name:'4c. Ember-rune stone',glow:'rgba(230,100,40,.36)',
+  desc:'Obsidian with runes burning red-hot as if carved with fire, sparks rising from them like from a forge, a deep orange glow under the surface. The warmest and angriest of the rune looks.',
+  cost:'<b>LOW</b>. Runes are one still picture; the glow under them breathes (8 fps, one layer) and 8 to 10 sparks rise slowly on a second small layer. Still: none.',
+  svg:function(){var R=rnd(5),sp='';for(var i=0;i<16;i++){var x=-34+R()*68,y=-40+R()*80;sp+='<path d="M'+x.toFixed(1)+' '+y.toFixed(1)+'l'+((R()-.5)*3).toFixed(1)+' -'+(2+R()*4).toFixed(1)+'" stroke="'+(i%3?'#ffb54a':'#fff0c0')+'" stroke-width="'+(.6+R()*.8).toFixed(1)+'" stroke-linecap="round" opacity="'+(.5+R()*.5).toFixed(2)+'"/>';}
+   var rr=ring(18,44,3.6,0,'#ff7a30',1.3,0)+ring(10,29,4,18,'#ff9a40',1.4,2)+ring(6,15,3.4,0,'#ffc070',1.5,5);
+   return '<defs><radialGradient id="er1" cx=".5" cy=".62"><stop offset="0" stop-color="#4a1608"/><stop offset=".6" stop-color="#150604"/><stop offset="1" stop-color="#030101"/></radialGradient><radialGradient id="er2"><stop offset="0" stop-color="#fff0c0"/><stop offset=".3" stop-color="#ff8a30"/><stop offset="1" stop-color="rgba(200,50,10,0)"/></radialGradient>'+BLUR+'</defs><rect x="-60" y="-60" width="120" height="120" fill="url(#er1)"/>'+
+   '<g filter="url(#b5)" opacity=".8">'+rr+'<circle r="44" fill="none" stroke="#ff6a20" stroke-width="2"/></g><g filter="url(#b1)">'+rr+'</g><g fill="none" stroke="#ff8a40" stroke-width=".8"><circle r="49" opacity=".7"/><circle r="36" opacity=".5"/><circle r="22" opacity=".5"/></g>'+sp+
+   '<circle r="11" fill="url(#er2)"/><circle r="2.6" fill="#fff"/>'+shell('#ffb070')}}
+];
+var GS='<path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/>';
+function shield(top,left,label,lt){return '<div class="node" style="top:'+top+'px;left:'+left+'px"><svg class="shield" viewBox="0 0 62 72">'+GS+'</svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/></svg></span></div><div class="lbl" style="top:'+lt+'px;left:'+(left-11)+'px">'+label+'</div>';}
+function pen(lf){return '<div class="pen" style="left:'+lf+'px"><svg viewBox="0 0 58 62" fill="none"><path d="M2 1H56V52L29 42L2 52Z" fill="#2a2216" stroke="#8c6d3a" stroke-width="1.5"/></svg></div>';}
+
+/* stage coords (361 wide, y from the top of the Treasury panel): ring box 92,118 size 176; orb 124 at 118,144 */
+function cell(look,i,big){
+ var ringBox=big?{s:176*1.09,l:180-88*1.09,t:206-88*1.09}:{s:176,l:92,t:118};
+ var d=big?136:124, ol=180-d/2, ot=206-d/2;
+ var h='<div class="inner">'+
+  '<div class="panel" style="top:0;height:56px"></div>'+pen(18)+pen(99)+pen(180)+pen(261)+
+  shield(136,18,'X',212)+shield(136,281,'Discord',212)+shield(232,18,'YouTube',308)+shield(232,281,'Messages',308)+
+  '<div class="orbglow" style="left:'+(ol-26)+'px;top:'+(ot-26)+'px;width:'+(d+52)+'px;height:'+(d+52)+'px;background:radial-gradient(circle,'+look.glow+' 40%,rgba(0,0,0,0) 70%)"></div>'+
+  '<div class="abs" style="left:'+ringBox.l+'px;top:'+ringBox.t+'px;width:'+ringBox.s+'px;height:'+ringBox.s+'px">'+
+   '<div style="transform:scale('+(ringBox.s/176)+');transform-origin:0 0;width:176px;height:176px">'+T9.ringOnly('built','r'+i+(big?'b':''))+'</div></div>'+
+  '<div class="orbwrap" style="left:'+ol+'px;top:'+ot+'px;width:'+d+'px;height:'+d+'px;box-sizing:border-box"><svg width="'+(d-4)+'" height="'+(d-4)+'" viewBox="-60 -60 120 120">'+look.svg()+'</svg></div>'+
+  '<div class="abs" style="top:'+(big?312:296)+'px;left:80px;width:200px;text-align:center;font-family:UnifrakturCook,serif;font-size:19px;color:#e6d9b8">The Oracle</div>'+
+  '<div class="panel" style="top:'+(big?350:334)+'px;height:68px"></div></div>';
+ return h;
+}
+var out='';
+LOOKS.forEach(function(L,i){out+='<div><div class="lab">'+L.name+'</div><div class="desc">'+L.desc+'</div><div class="stage" id="c'+i+'"></div><div class="cost">Battery: '+L.cost+'</div></div>';});
+out+='<div><div class="lab">G. Slightly larger orb (shown with look 2a)</div><div class="desc">The orb grows about 10% (124 to 136 px). To keep a clear gap to the ring text the ring grows with it by the same amount (176 to 192 px). Compare with the normal size above.</div><div class="stage" id="cB"></div><div class="cost"><b>ROOM IT TAKES</b> (C5 numbers; not checked on the real Home): about 8 px more on every side of the ring. Sideways it keeps a gap of about 13 px to the shields (22 px now), so no overlap. Upwards it eats into the gap under the Treasury gauges, so the ring is better moved down by 8 px: then "The Oracle", the Ledger and everything below slide down about 16 px in all. Battery: no change.</div></div>';
+document.getElementById('g').innerHTML=out;
+T9.ready(function(){
+ LOOKS.forEach(function(L,i){document.getElementById('c'+i).innerHTML=cell(L,i,false);});
+ document.getElementById('cB').innerHTML=cell(LOOKS[0],9,true);
+});
+</script>
+</body>
+</html>

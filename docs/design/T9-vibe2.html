@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T9 animation menu 2</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf")}
+@font-face{font-family:"IM Fell English";font-style:italic;src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf")}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:900px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8;display:flex;gap:18px;padding:10px;box-sizing:border-box}
+.stage{position:relative;width:390px;height:760px;flex:none;overflow:hidden;background:radial-gradient(90% 55% at 50% 40%,#26211a 0%,#0d0c09 82%),#0a0907}
+.abs{position:absolute}
+.cap{font-family:Cinzel,serif;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.panel{position:absolute;left:16px;right:16px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);box-shadow:inset 0 0 26px rgba(0,0,0,.6)}
+.ribbon{position:absolute;top:-8px;left:12px;height:17px;padding:0 17px 0 11px;background:linear-gradient(#6a1d16,#481510);border-top:1px solid #c9a55a;color:#f0e2bd;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;display:flex;align-items:center;clip-path:polygon(0 0,100% 0,calc(100% - 7px) 50%,100% 100%,0 100%)}
+.node{position:absolute;width:62px;height:72px;background:none;border:0;padding:0;color:#e6d9b8;cursor:pointer}
+.node svg.shield{position:absolute;inset:0}.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.badge{position:absolute;top:-5px;right:-3px;min-width:18px;height:18px;box-sizing:border-box;border-radius:9px;background:#6e1a14;border:1.5px solid #c9a55a;color:#f2e6c8;font-family:Cinzel,serif;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;z-index:2}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bfae86}
+.seal{position:relative;width:54px;height:54px;background:none;border:0;padding:0;cursor:pointer}
+.seal svg.wax{position:absolute;inset:0}.seal .ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.dockcol{display:flex;flex-direction:column;align-items:center;gap:7px;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.2em;color:#a8884c}
+/* one-shot reactions */
+.tap{animation:tap .25s ease-out}
+@keyframes tap{0%{transform:scale(1);filter:none}30%{transform:scale(1.045);filter:brightness(1.5) drop-shadow(0 0 6px rgba(240,200,110,.7))}100%{transform:scale(1);filter:none}}
+.nglow{animation:ng 1.8s ease-in-out 1}
+@keyframes ng{0%,100%{box-shadow:inset 0 0 26px rgba(0,0,0,.6),0 0 0 rgba(201,165,90,0)}40%{box-shadow:inset 0 0 26px rgba(0,0,0,.6),0 0 16px rgba(229,178,90,.45)}}
+.bpulse{animation:bp 1.8s ease-in-out 1}
+@keyframes bp{0%,100%{transform:scale(1)}25%{transform:scale(1.35);box-shadow:0 0 10px rgba(240,190,100,.8)}55%{transform:scale(1)}75%{transform:scale(1.15)}}
+.kindle{animation:kd 1.1s ease-out 1}
+@keyframes kd{0%{filter:brightness(.25) saturate(.6)}100%{filter:none}}
+.shimmer{animation:sh 1.6s ease-in-out 1}
+@keyframes sh{0%,100%{filter:none}45%{filter:brightness(1.7) drop-shadow(0 0 8px rgba(255,210,120,.8))}}
+.rubric{animation:rb 2.2s ease-in-out 1}
+@keyframes rb{0%,100%{transform:scale(1);text-shadow:none}30%{transform:scale(1.5);text-shadow:0 0 8px #ff6a40}60%{transform:scale(1)}80%{transform:scale(1.25)}}
+.coin{animation:cn .7s ease-in-out 1}
+@keyframes cn{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+.seal.press{animation:pr .3s ease-out 1}
+@keyframes pr{0%{transform:scale(1)}35%{transform:scale(.9);filter:brightness(.8)}100%{transform:scale(1)}}
+.ringlight{position:absolute;left:0;top:0;width:176px;height:176px;border-radius:50%;pointer-events:none;mix-blend-mode:screen;
+ -webkit-mask:radial-gradient(circle,transparent 55px,#000 57px,#000 86px,transparent 88px);mask:radial-gradient(circle,transparent 55px,#000 57px,#000 86px,transparent 88px);
+ background:conic-gradient(from var(--a,0deg),rgba(255,226,160,0) 0deg,rgba(255,226,160,.34) 22deg,rgba(255,226,160,0) 50deg,rgba(255,226,160,0) 360deg)}
+/* menu */
+.menu{flex:1;font-size:12.5px}
+h1{font-family:Cinzel,serif;font-size:12px;letter-spacing:.18em;color:#c9a55a;margin:4px 0 4px;text-transform:uppercase}
+h2{font-family:Cinzel,serif;font-size:10.5px;letter-spacing:.16em;color:#a8884c;margin:12px 0 6px;text-transform:uppercase}
+.it{border:1px solid #3a2e18;background:#12100c;padding:7px 10px;margin-bottom:6px}
+.it.picked{border-color:#6b5430}
+.it b{font-family:Cinzel,serif;font-size:10.5px;letter-spacing:.06em;color:#e3cf9c}
+.it .d{color:#a8987a;line-height:1.25;margin-top:2px}
+.it .c{margin-top:3px;color:#8c7a52;line-height:1.25}
+.row{display:flex;gap:8px;align-items:flex-start}
+.tag{display:inline-block;font-family:Cinzel,serif;font-size:8px;font-weight:700;letter-spacing:.12em;padding:1px 5px;border:1px solid #8c6d3a;color:#c9a55a;margin-right:5px;text-transform:uppercase}
+.tag.new{color:#ff9a70;border-color:#a8352b}
+button.sim{font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.12em;color:#f0e2bd;background:#481510;border:1px solid #c9a55a;padding:3px 8px;cursor:pointer;margin-top:4px;white-space:nowrap}
+.budget{border:1px solid #a8352b;background:#1a0c0a;padding:7px 10px;margin:6px 0;color:#e8c8a0;line-height:1.3}
+input[type=range]{width:140px;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+<div class="menu">
+ <h1>Animations and graphics for the Home (tick or press to try)</h1>
+ <div class="budget" id="budget"></div>
+
+ <h2>You picked</h2>
+ <div class="it picked"><label class="row"><input type="checkbox" id="smoke" checked><span><b><span class="tag">ambient 1</span>Orb smoke and gold dust</b><div class="d">The smoke drifts slowly and the gold dust twinkles. Shown here by slowly turning the orb picture; on the phone it would be a pre-drawn loop with the twinkle baked in, so it counts as ONE ambient effect.</div><div class="c">Cost: low (one small loop, 8 fps).</div></span></label></div>
+ <div class="it picked"><label class="row"><input type="checkbox" id="ring" checked><span><b><span class="tag">ambient 2</span>Light drifting round the ring</b><div class="d">A faint warm glint walks once round the engraved ring about every 20 s.</div><div class="c">Cost: low (only while the glint is visible).</div></span></label></div>
+ <div class="it picked"><label class="row"><input type="checkbox" id="tap" checked><span><b><span class="tag">touch</span>Tap reactions</b><div class="d">Shields and the orb flash gold and swell a hair; wax seals press in like a stamp. Tap them on the left.</div><div class="c">Cost: none.</div></span></label></div>
+ <div class="it picked"><div class="row"><span><b><span class="tag">once</span>Notification glow</b><div class="d">Dispatches glows once, the shield badge swells once.</div></span><button class="sim" id="bNotif" type="button">Try</button></div></div>
+
+ <h2>Proposed extras (new, please pick)</h2>
+ <div class="it"><div class="row"><span><b><span class="tag new">once</span>A. The orb kindles on wake</b><div class="d">When you turn the screen on, the orb starts dark and its heart flares up to full glow in about one second, as if it noticed you.</div><div class="c">Cost: none to very low (1 s, once per wake).</div></span><button class="sim" id="bWake" type="button">Wake</button></div></div>
+ <div class="it"><label class="row"><input type="checkbox" id="charge"><span><b><span class="tag new">state</span>B. Charging: the heart burns brighter</b><div class="d">While the phone charges, the orb's heart is hotter and the glow around the orb wider. No new animation, it only changes how bright the existing loop is.</div><div class="c">Cost: none.</div></span></label></div>
+ <div class="it"><div class="row"><span><b><span class="tag new">state</span>C. Orb follows the time of day</b><div class="d">Dawn: more gold. Day: as now. Dusk: redder. Night: darker, deeper oxblood. Changes once an hour, never animated.</div><div class="c">Cost: none. Try: <input type="range" id="hour" min="0" max="23" value="14"> <span id="hourT">14:00</span></div></span></div></div>
+ <div class="it"><label class="row"><input type="checkbox" id="sleep"><span><b><span class="tag new">graphic</span>D. Sleeping orb (Battery Saver, low battery or Animations Off)</b><div class="d">A still, dimmer picture of the orb with the heart down to embers, so you can SEE that animations are paused to save power.</div><div class="c">Cost: none (saves power).</div></span></label></div>
+ <div class="it"><div class="row"><span><b><span class="tag new">once</span>E. New day: the red capital shimmers</b><div class="d">The first time you see the Home each new day, the big red day letter catches the light once, like gold leaf.</div><div class="c">Cost: none (1.5 s, once a day).</div></span><button class="sim" id="bDay" type="button">New day</button></div></div>
+ <div class="it"><div class="row"><span><b><span class="tag new">once</span>F. Ledger: an event is about to start</b><div class="d">15 minutes before an event, its red cross in Today's Ledger pulses twice.</div><div class="c">Cost: none (2 s, once per event).</div></span><button class="sim" id="bLedger" type="button">Try</button></div></div>
+ <div class="it"><div class="row"><span><b><span class="tag new">once</span>G. Treasury coin turns when the total changes</b><div class="d">When you enter a new amount, the gold coin flips once.</div><div class="c">Cost: none (0.7 s).</div></span><button class="sim" id="bCoin" type="button">Try</button></div></div>
+ <div class="it"><label class="row"><input type="checkbox" id="hush"><span><b><span class="tag new">state</span>H. Hushed (Do Not Disturb): the candle goes out</b><div class="d">In Hushed mode the candle glint in the orb disappears and the ring light rests, a quiet sign the phone is silenced. (This preview only stops the ring light; the candle would need a second orb picture.)</div><div class="c">Cost: none (saves a little).</div></span></label></div>
+</div>
+<script src="T9-orb.js"></script>
+<script src="T9-orbrender.js"></script>
+<script>
+function shield(inner,top,left,label,lt,badge){
+ return '<button type="button" class="node react" style="top:'+top+'px;left:'+left+'px">'+(badge?'<span class="badge" '+(badge==3?'id="bdg"':'')+'>'+badge+'</span>':'')+'<svg class="shield" viewBox="0 0 62 72"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/></svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">'+inner+'</svg></span></button><div class="lbl" style="top:'+lt+'px;left:'+(left-11)+'px">'+label+'</div>';
+}
+function seal(ic,lab){
+ return '<div class="dockcol"><button type="button" class="seal"><svg class="wax" viewBox="0 0 54 54"><path d="M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z" fill="#4e1511"/><circle cx="27" cy="27" r="19" fill="none" stroke="#2a0a08" stroke-width="2"/></svg><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e3cf9c" stroke-width="1.6" stroke-linejoin="round">'+ic+'</svg></span></button>'+lab+'</div>';
+}
+var html=
+ /* header: red capital, day name, time */
+ '<div class="abs" id="cap" style="left:22px;top:10px;font-family:UnifrakturMaguntia,serif;font-size:60px;line-height:1;color:#b03a2e;-webkit-text-stroke:1.2px #c9a55a;text-shadow:2px 2px 0 #1c0605">S</div><div class="abs" style="left:66px;top:28px;font-family:UnifrakturMaguntia,serif;font-size:26px;color:#ecdfbf">unday</div><div class="abs" style="right:22px;top:16px;font-size:24px;color:#f2e6c6">10:36</div><div class="abs" style="left:22px;right:22px;top:76px;border-top:1px solid #4a3a20"></div>'+
+ /* treasury with coin */
+ '<div class="panel" style="top:88px;height:48px"><div class="ribbon">Treasury</div><div class="abs" id="coin" style="left:12px;top:7px;width:34px;height:34px;border-radius:50%;box-sizing:border-box;border:2px solid #5a4620;background:radial-gradient(circle at 35% 30%,#e0c070,#8a6a22)"></div><div class="abs" style="left:56px;top:13px;font-family:Cinzel,serif;font-size:14px;font-weight:700;color:#f2e6c6">[YOUR TOTAL]</div></div>'+
+ '<div class="abs" id="orbhost" style="left:100px;top:150px;width:190px;height:190px"></div>'+
+ '<div class="abs" style="top:342px;left:0;right:0;text-align:center;font-family:UnifrakturCook,serif;font-size:19px;color:#e6d9b8">The Oracle</div>'+
+ shield('<path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/>',166,22,'X',242)+
+ shield('<path d="M6 7h9v10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7z"/><path d="M15 9h2a2 2 0 0 1 0 5h-2"/>',166,306,'Discord',242,3)+
+ shield('<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/>',262,22,'YouTube',338)+
+ shield('<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>',262,306,'Messages',338,2)+
+ '<div class="panel" style="top:384px;height:70px"><div class="ribbon">Today\'s Ledger</div><div style="padding:24px 16px 0;font-size:13px;color:#d9ccaa;line-height:1.7"><span id="rub" style="display:inline-block;color:#a8352b">✠</span> <span class="cap" style="font-size:9.5px;color:#c9a55a;letter-spacing:.1em">11:00</span>&nbsp; Council at the Smithy<br><span style="color:#6b5430">✠</span> <span class="cap" style="font-size:9.5px;color:#8c7a52;letter-spacing:.1em">DAY</span>&nbsp; <span style="color:#a89a76">Halloween</span></div></div>'+
+ '<div class="panel" id="disp" style="top:466px;height:90px"><div class="ribbon">Dispatches</div><div style="padding:28px 16px 0;font-size:13.5px;color:#d9ccaa;line-height:1.5"><span style="color:#a8352b">✠</span> <span class="cap" style="font-size:9.5px;color:#c9a55a;letter-spacing:.1em">Now</span>&nbsp; A message from the Smithy</div></div>'+
+ '<div class="abs" style="left:0;right:0;top:648px;display:flex;justify-content:space-around">'+
+ seal('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 4 5a1 1 0 0 1 1-1z"/>','HERALD')+
+ seal('<path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.5"/>','PORTRAIT')+
+ seal('<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>','ROAD')+
+ seal('<path d="M12 3v18M7 8h10M9 21h6"/>','SMITHY')+'</div>';
+document.getElementById('stage').innerHTML=html;
+var on=function(id){return document.getElementById(id).checked};
+
+T9.ready(function(){
+ /* the picked orb (2a-3) with the engraved ring; orb picture is LOOKS id 'd' from T9-orbrender.js */
+ var pick=LOOKS.filter(function(L){return L.id=='d'})[0];
+ var host=document.getElementById('orbhost');
+ host.innerHTML='<div style="position:absolute;left:0;top:0;width:176px;height:176px;transform:scale(1.0803);transform-origin:0 0">'+T9.ringOnly('engraved','ve')+
+  '<div id="orbglow" style="position:absolute;left:0;top:0;width:176px;height:176px;border-radius:50%;background:radial-gradient(circle,'+pick.glow+' 40%,rgba(0,0,0,0) 70%);transition:transform 1s,opacity 1s"></div>'+
+  '<div class="react" id="orbcore" style="position:absolute;left:26px;top:26px;width:124px;height:124px;border-radius:50%;overflow:hidden;border:2px solid #8c6d3a;box-sizing:border-box;box-shadow:0 0 0 3px #0a0907;cursor:pointer"><svg width="120" height="120" viewBox="-60 -60 120 120"><g id="smokeg">'+pick.svg()+'</g></svg>'+
+  '<div id="tint" style="position:absolute;inset:0;border-radius:50%;mix-blend-mode:soft-light;pointer-events:none"></div></div></div>';
+ var ringHolder=host.firstChild,ringLight=document.createElement('div');ringLight.className='ringlight';ringHolder.insertBefore(ringLight,document.getElementById('orbcore'));
+ var orbcore=document.getElementById('orbcore'),glow=document.getElementById('orbglow'),useEl=host.querySelector('#smokeg use');
+ /* the gold dust twinkles: a few extra sparkle dots fading in and out (drawn on top) */
+ var tw=document.createElementNS('http://www.w3.org/2000/svg','g');host.querySelector('#smokeg').appendChild(tw);
+ var R=rnd(77),pts=[];for(var i=0;i<10;i++){var a=R()*6.283,r=10+R()*38;pts.push([r*Math.cos(a),r*Math.sin(a),R()*6.283,.6+R()*1.2]);}
+ tw.innerHTML=pts.map(function(p){return '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+p[3].toFixed(2)+'" fill="#fff0c0"/>'}).join('');
+ var dots=tw.childNodes;
+
+ function budget(){var amb=(on('smoke')&&!on('sleep')?1:0)+(on('ring')&&!on('hush')&&!on('sleep')?1:0);
+  document.getElementById('budget').innerHTML='<b>Battery rule check:</b> ambient effects running now: <b>'+amb+' of 2</b>. Everything else here is one-shot (plays once) or a state change (no motion). '+(on('sleep')?'The orb is asleep: nothing moves.':'');}
+ ['smoke','ring','charge','sleep','hush'].forEach(function(id){document.getElementById(id).addEventListener('change',budget)});budget();
+
+ function hourTint(h){var t=document.getElementById('tint');document.getElementById('hourT').textContent=(h<10?'0':'')+h+':00';
+  if(h>=5&&h<9)t.style.background='rgba(255,200,90,.55)';else if(h>=9&&h<17)t.style.background='transparent';else if(h>=17&&h<21)t.style.background='rgba(200,40,20,.5)';else t.style.background='rgba(0,0,0,.55)';}
+ document.getElementById('hour').addEventListener('input',function(){hourTint(+this.value)});hourTint(14);
+
+ var t0=performance.now(),last=0;
+ function tick(now){
+  if(now-last>=83){last=now;var t=(now-t0)/1000,sl=on('sleep');
+   /* smoke: the picture turns very slowly (stand-in for the pre-drawn loop) */
+   if(on('smoke')&&!sl){useEl.setAttribute('transform','rotate('+(t*2.2%360).toFixed(2)+')');for(var i=0;i<dots.length;i++){var v=Math.max(0,Math.sin(t*1.3+pts[i][2]));dots[i].setAttribute('opacity',(v*v*v).toFixed(2));}}
+   else{for(var j=0;j<dots.length;j++)dots[j].setAttribute('opacity','0');}
+   if(on('ring')&&!on('hush')&&!sl){var p=(t%20)/20;ringLight.style.opacity=p<.35?'1':'0';ringLight.style.setProperty('--a',(Math.min(1,p/.35)*360-30)+'deg');}else ringLight.style.opacity='0';
+   orbcore.style.filter=sl?'brightness(.45) saturate(.7)':(on('charge')?'brightness(1.25) saturate(1.1)':'');
+   glow.style.transform=on('charge')&&!sl?'scale(1.12)':'scale(1)';glow.style.opacity=sl?'.25':'1';
+  }
+  requestAnimationFrame(tick)}
+ requestAnimationFrame(tick);
+
+ /* one-shots */
+ function once(el,cls){el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls)}
+ document.getElementById('stage').addEventListener('click',function(e){if(!on('tap'))return;var s=e.target.closest('.seal');if(s){once(s,'press');return}var el=e.target.closest('.react');if(el)once(el,'tap')});
+ document.getElementById('bNotif').onclick=function(){once(document.getElementById('disp'),'nglow');once(document.getElementById('bdg'),'bpulse')};
+ document.getElementById('bWake').onclick=function(){once(orbcore,'kindle')};
+ document.getElementById('bDay').onclick=function(){once(document.getElementById('cap'),'shimmer')};
+ document.getElementById('bLedger').onclick=function(){once(document.getElementById('rub'),'rubric')};
+ document.getElementById('bCoin').onclick=function(){once(document.getElementById('coin'),'coin')};
+});
+</script>
+</body>
+</html>

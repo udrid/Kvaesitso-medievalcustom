@@ -26,7 +26,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import kotlin.math.abs
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -69,6 +74,8 @@ private fun appIcon(context: Context, packageName: String): ImageBitmap? = try {
     Log.e("medieval", "No icon for $packageName", e)
     null
 }
+
+private val GlowGold = Color(0xFFE5B25A)
 
 /** Swipe distance (stage px) after which a dispatch is dismissed. */
 private const val DismissDistance = 90f
@@ -137,8 +144,27 @@ internal fun Dispatches(vm: MedievalHomeVM) {
     val hasAccess by vm.hasNotificationAccess.collectAsState()
     val all by vm.notifications.collectAsState()
     val dispatches = remember(all) { all.asDispatches() }
+    // T9: a new dispatch makes the panel glow once (1.8 s), only while Home is on screen
+    val glow = rememberOneShot(
+        rememberRises(dispatches.maxOfOrNull { it.postTime } ?: 0L), 1_800L, LocalMotion.current.ambient,
+    )
 
     Panel(top = 454f, height = 90f, ribbon = "Dispatches") {
+        Box(Modifier.matchParentSize().drawBehind {
+            val k = bump(glow.value, 0f, 1f)
+            if (k <= 0f) return@drawBehind
+            // a soft gold halo just outside the frame, made of fading rings
+            val step = 1.5.dp.toPx()
+            for (i in 1..8) {
+                val o = step * i
+                drawRect(
+                    GlowGold.copy(alpha = 0.45f * k * (1f - i / 9f) / 3f),
+                    topLeft = Offset(-o, -o),
+                    size = Size(size.width + 2 * o, size.height + 2 * o),
+                    style = Stroke(step),
+                )
+            }
+        })
         if (hasAccess != false && dispatches.isNotEmpty()) {
             Cap(
                 "${dispatches.size} unheeded", Modifier.align(Alignment.TopEnd).padding(end = 16.dp, top = 8.dp),

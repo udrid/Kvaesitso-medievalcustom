@@ -28,11 +28,14 @@ private const val WaxPath =
 @Composable
 private fun RowScope.WaxSeal(icon: List<String>, name: String, label: String, intent: () -> Intent) {
     val context = LocalContext.current
+    val tap = rememberTapReaction()
     Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(7.dp)) {
         Box(
             Modifier
                 .size(54.dp)
-                .clickable { launchSafely(context, intent(), name) },
+                // T9: the seal presses in like a stamp
+                .tapReaction(tap, press = true)
+                .clickable(interactionSource = tap.source, indication = null) { launchSafely(context, intent(), name) },
             contentAlignment = Alignment.Center,
         ) {
             Canvas(Modifier.size(54.dp)) {

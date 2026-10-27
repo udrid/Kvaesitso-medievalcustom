@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T9 glass orb set 2</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf")}
+@font-face{font-family:"IM Fell English";font-style:italic;src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf")}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:830px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+.grid{display:grid;grid-template-columns:390px 390px;gap:22px 20px;padding:10px}
+.lab{font-family:Cinzel,serif;font-size:11px;font-weight:700;letter-spacing:.16em;color:#c9a55a;text-transform:uppercase;padding:4px 2px 2px}
+.desc{font-size:12.5px;font-style:italic;color:#a8987a;padding:0 2px 6px;line-height:1.25;min-height:48px}
+.cost{font-size:12px;color:#8c7a52;padding:6px 2px 0;line-height:1.28}
+.cost b{color:#c9a55a;font-family:Cinzel,serif;font-size:10px;letter-spacing:.1em}
+.stage{position:relative;width:390px;height:372px;overflow:hidden;background:radial-gradient(90% 55% at 50% 50%,#26211a 0%,#0d0c09 82%),#0a0907}
+.inner{position:absolute;left:0;top:-48px;width:361px;height:560px;transform:scale(1.0803);transform-origin:0 0}
+.abs{position:absolute}
+.panel{position:absolute;left:16px;right:16px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);opacity:.38}
+.node{position:absolute;width:62px;height:72px;color:#e6d9b8;opacity:.8}
+.node svg.shield{position:absolute;inset:0}.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bfae86;opacity:.8}
+.pen{position:absolute;top:64px;width:58px;height:62px;opacity:.35}
+.pen svg{position:absolute;inset:0}
+.orbwrap{position:absolute;border-radius:50%;overflow:hidden;border:2px solid #8c6d3a;box-shadow:0 0 0 3px #0a0907,inset 0 0 30px rgba(0,0,0,.85)}
+.orbglow{position:absolute;border-radius:50%}
+.guide{position:absolute;border:1px dashed rgba(240,120,100,.7);pointer-events:none}
+</style>
+</head>
+<body>
+<div style="padding:8px 12px;font-size:12.5px;color:#8c7a52;font-style:italic">Eight more true glass-ball looks for the Oracle orb, at real size in the Home layout (numbers from the C5 mock; the Treasury and Ledger are dimmed here so the orb is the star). The ring text is the "as built" one in every cell: the ring style is chosen separately. Stills only; the cost notes say what would move.</div>
+<div class="grid" id="g"></div>
+<script src="T9-orb.js"></script>
+<script>
+var G='#c9a55a',GD='#8c6d3a',GL='#e3cf9c',RD='#a8352b';
+/* everything in a 120 x 120 viewBox (-60..60), clipped to the circle */
+function rnd(seed){var x=seed;return function(){x=(x*9301+49297)%233280;return x/233280}}
+function dots(c,n,seed,r0,r1,big){var R=rnd(seed),s='';for(var i=0;i<n;i++){var a=R()*6.283,r=r0+R()*(r1-r0);s+='<circle cx="'+(r*Math.cos(a)).toFixed(1)+'" cy="'+(r*Math.sin(a)).toFixed(1)+'" r="'+(R()<.2?big:big*.5).toFixed(2)+'" fill="'+c+'" opacity="'+(.4+R()*.6).toFixed(2)+'"/>';}return s}
+/* volumetric fog: fractal noise pushed through a colour ramp. Rendered once to a picture; moving it later = one layer. */
+function fog(id,seed,fx,ramp,op,tx,ty){var t=function(a){return a.join(' ')};
+ return '<filter id="'+id+'" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="'+fx+'" numOctaves="4" seed="'+seed+'"/><feColorMatrix type="matrix" values="1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 1"/><feComponentTransfer><feFuncR type="table" tableValues="'+t(ramp[0])+'"/><feFuncG type="table" tableValues="'+t(ramp[1])+'"/><feFuncB type="table" tableValues="'+t(ramp[2])+'"/></feComponentTransfer></filter><rect x="-70" y="-70" width="140" height="140" filter="url(#'+id+')" opacity="'+op+'"/>'}
+var BL='<filter id="b1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".9"/></filter><filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter><filter id="b5" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter><filter id="b9" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>';
+/* the glass: thick bright rim (fresnel), dark band just inside it, window reflection, hot caustic where light leaves the far side, horizon reflection */
+function glass(rim,hot){return '<defs><radialGradient id="gF" cx=".5" cy=".5"><stop offset=".72" stop-color="#000" stop-opacity="0"/><stop offset=".86" stop-color="#000" stop-opacity=".45"/><stop offset=".95" stop-color="'+rim+'" stop-opacity=".18"/><stop offset="1" stop-color="'+rim+'" stop-opacity=".62"/></radialGradient><linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></linearGradient><radialGradient id="gC" cx=".5" cy=".5"><stop offset="0" stop-color="'+hot+'" stop-opacity=".9"/><stop offset="1" stop-color="'+hot+'" stop-opacity="0"/></radialGradient><linearGradient id="gH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".16"/></linearGradient></defs>'+
+ '<circle r="60" fill="url(#gF)"/><circle r="58.2" fill="none" stroke="'+rim+'" stroke-opacity=".55" stroke-width="1.2" filter="url(#b1)"/><circle r="55" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="2"/>'+
+ '<path d="M-31 -30C-24 -42 -10 -50 4 -50L6 -45C-6 -44 -18 -38 -26 -28Z" fill="url(#gW)"/><path d="M-39 -20C-36 -26 -33 -29 -30 -32L-28 -29C-31 -26 -34 -22 -36 -17Z" fill="#fff" opacity=".45"/><circle cx="-18" cy="-36" r="1.6" fill="#fff" opacity=".9"/>'+
+ '<path d="M28 44C38 38 46 28 50 16C48 30 40 42 28 50Z" fill="#fff" opacity=".55" filter="url(#b1)"/><ellipse cx="30" cy="42" rx="14" ry="9" fill="url(#gC)" transform="rotate(-35 30 42)"/>'+
+ '<path d="M-52 18C-30 26 30 26 52 18C48 34 36 48 0 52C-36 48 -48 34 -52 18Z" fill="url(#gH)"/>'}
+var RA={arc:[[0,0,.08,.5,1],[0,.06,.35,.85,1],[.03,.2,.65,1,1]],vio:[[.02,.1,.4,.9,1],[0,0,.1,.5,1],[.06,.25,.65,1,1]],amb:[[.03,.2,.75,1,1],[0,.03,.25,.8,1],[0,0,.04,.35,1]],bk:[[0,0,0,.05,.9],[0,0,0,.02,.35],[0,0,0,0,.05]]};
+function arcs(c,n,seed,r0,r1){var R=rnd(seed),s='';for(var i=0;i<n;i++){var a=R()*6.283,x=r0*Math.cos(a),y=r0*Math.sin(a),p='M'+x.toFixed(1)+' '+y.toFixed(1),ang=a;for(var k=1;k<=4;k++){ang+=(R()-.5)*.9;var r=r0+(r1-r0)*k/4;p+='L'+(r*Math.cos(ang)).toFixed(1)+' '+(r*Math.sin(ang)).toFixed(1);}s+='<path d="'+p+'"/>';}return '<g fill="none" stroke="'+c+'" stroke-linejoin="round">'+s+'</g>'}
+function glyph(k,z){return ['M0 -'+z+'V'+z+'M0 -'+(z*.3)+'L'+(z*.6)+' -'+z,
+ 'M-'+(z*.5)+' -'+z+'L0 0L-'+(z*.5)+' '+z+'M0 0H'+(z*.5),
+ 'M0 -'+z+'V'+z+'M-'+(z*.5)+' -'+(z*.4)+'H'+(z*.5),
+ 'M-'+(z*.5)+' '+z+'L0 -'+z+'L'+(z*.5)+' '+z+'M-'+(z*.3)+' '+(z*.2)+'H'+(z*.3),
+ 'M-'+(z*.5)+' -'+z+'L'+(z*.5)+' 0L-'+(z*.5)+' '+z,
+ 'M0 -'+z+'L'+(z*.6)+' 0L0 '+z+'L-'+(z*.6)+' 0Z',
+ 'M-'+(z*.5)+' -'+z+'V'+z+'M'+(z*.5)+' -'+z+'V'+z+'M-'+(z*.5)+' 0H'+(z*.5),
+ 'M-'+(z*.6)+' -'+(z*.6)+'L'+(z*.6)+' '+(z*.6)+'M'+(z*.6)+' -'+(z*.6)+'L-'+(z*.6)+' '+(z*.6)+'M0 -'+z+'V'+z][k%8]}
+function tendril(seed,a,r1){var R=rnd(seed),x=0,y=0,p='M0 0',n=6;for(var i=1;i<=n;i++){var r=r1*i/n,ang=a+(i==n?0:(R()-.5)*.55);p+='L'+(r*Math.cos(ang)).toFixed(1)+' '+(r*Math.sin(ang)).toFixed(1);}return p}
+function spiral(k,n,c0,c1,w){var s='';for(var j=0;j<k;j++){var p='';for(var i=0;i<=n;i++){var t=i/n,a=j*6.283/k+t*5.2,r=5+t*48;p+=(i?'L':'M')+(r*Math.cos(a)).toFixed(1)+' '+(r*Math.sin(a)).toFixed(1);}s+='<path d="'+p+'" stroke="'+(j%2?c0:c1)+'" stroke-width="'+w+'" fill="none" stroke-linecap="round"/>';}return s}
+function bg(c){return '<rect x="-60" y="-60" width="120" height="120" fill="'+c+'"/>'}
+var LOOKS=[
+ {id:'plasma',name:'A. Plasma orb',glow:'rgba(170,110,255,.36)',
+  desc:'The lightning-globe of a mad wizard: living filaments of violet-white energy reach from a blazing heart to the glass wall, where they flare into little bright touch-points. Electric, restless.',
+  cost:'<b>LOW</b>. The filament pattern is redrawn only 3 to 4 times a second in short flickers (not a continuous animation); nothing moves in between. Still version: none. Violet is outside the gold / ember palette.',
+  svg:function(){var t='',e='';[0.2,1.1,1.9,2.6,3.5,4.3,5.2,5.8].forEach(function(a,i){t+='<path d="'+tendril(i+3,a,56)+'"/>';e+='<circle cx="'+(56*Math.cos(a)).toFixed(1)+'" cy="'+(56*Math.sin(a)).toFixed(1)+'" r="6"/>';});
+   return '<defs>'+BL+'</defs>'+bg('#06030c')+fog('p1',5,'.018 .022',RA.vio,.55)+'<g fill="#c8a0ff" opacity=".55" filter="url(#b5)">'+e+'</g><g fill="none" stroke="#b890ff" stroke-width="4" opacity=".6" filter="url(#b2)" stroke-linejoin="round">'+t+'</g><g fill="none" stroke="#f4eaff" stroke-width="1" stroke-linejoin="round">'+t+'</g><circle r="22" fill="#e0c8ff" opacity=".45" filter="url(#b9)"/><circle r="8" fill="#fff" filter="url(#b2)"/>'+glass('#d8c0ff','#f0e0ff')}},
+ {id:'galaxy',name:'B. Galaxy in glass',glow:'rgba(100,130,230,.3)',
+  desc:'An entire spiral galaxy turning in the ball: a glowing white-gold core, blue and rose arms of countless stars and a dense scatter of tiny stars behind. Deep, vast and quiet.',
+  cost:'<b>LOW</b>. One pre-drawn picture rotating very slowly (6 to 8 fps, one layer). Stars could twinkle on a second tiny layer. Still version: none. Cool colours are outside the palette.',
+  svg:function(){var R=rnd(14),g='';for(var arm=0;arm<2;arm++)for(var i=0;i<150;i++){var t=i/150,r=5+t*44,a=arm*Math.PI+t*5.6+(R()-.5)*.55,rr=r+(R()-.5)*7;g+='<circle cx="'+(rr*Math.cos(a)).toFixed(1)+'" cy="'+(rr*Math.sin(a)).toFixed(1)+'" r="'+(.35+(1-t)*1.0*R()+(R()<.06?.8:0)).toFixed(2)+'" fill="'+(t<.35?'#fff2d0':t<.65?'#9ab4ff':'#e0a0d8')+'" opacity="'+(.95-t*.5).toFixed(2)+'"/>';}
+   return '<defs>'+BL+'</defs>'+bg('#03040c')+fog('g1',17,'.02 .025',RA.arc,.5)+dots('#fff',60,3,4,56,.9)+'<g transform="rotate(-22) scale(1 .62)"><circle r="46" fill="#5a70d0" opacity=".22" filter="url(#b9)"/>'+g+'</g><circle r="12" fill="#fff0d0" opacity=".55" filter="url(#b5)"/><circle r="4" fill="#fff"/>'+glass('#c0d0ff','#e0e8ff')}},
+ {id:'eye',name:'C. The watching eye',glow:'rgba(230,80,30,.4)',
+  desc:'A slit-pupilled eye of fire, half hidden in thick red-black smoke, as if something far away inside the stone has noticed you. The palantír at its most menacing. Stays in the ember palette.',
+  cost:'<b>LOW</b>. The smoke is one slowly moving layer; the eye only blinks or narrows now and then (a few frames, once a minute). Otherwise still. Still version: none.',
+  svg:function(){return '<defs>'+BL+'<clipPath id="ey"><path d="M-30 0C-16 -17 16 -17 30 0C16 17 -16 17 -30 0Z"/></clipPath><radialGradient id="ei"><stop offset="0" stop-color="#fff0a0"/><stop offset=".45" stop-color="#ff9a30"/><stop offset=".9" stop-color="#b8300c"/><stop offset="1" stop-color="#4a0e06"/></radialGradient></defs>'+bg('#060202')+fog('e1',8,'.017 .022',RA.amb,.55)+'<ellipse rx="34" ry="20" fill="#ff5a18" opacity=".4" filter="url(#b9)"/>'+
+   '<g filter="url(#b1)"><g clip-path="url(#ey)"><rect x="-32" y="-18" width="64" height="36" fill="#ffd890"/><circle r="15" fill="url(#ei)"/><ellipse rx="3" ry="15" fill="#080202"/></g><path d="M-30 0C-16 -17 16 -17 30 0C16 17 -16 17 -30 0Z" fill="none" stroke="#ff7a28" stroke-width="2"/></g><g filter="url(#b5)" opacity=".8"><ellipse cx="-18" cy="-14" rx="26" ry="7" fill="#1a0604"/><ellipse cx="20" cy="15" rx="26" ry="7" fill="#1a0604"/></g>'+dots('#ffb060',16,2,10,52,1)+glass('#a88070','#ffb070')}},
+ {id:'portal',name:'D. Maelstrom portal',glow:'rgba(60,170,190,.34)',
+  desc:'A whirlpool of teal and white light spiralling down into a black eye at the centre ringed by a bright halo, like a door opening inside the ball. Hypnotic.',
+  cost:'<b>LOW</b>. The spiral is one pre-drawn picture rotating slowly (8 fps, one layer); that rotation alone gives the whirling look. Still version: none. Teal is outside the palette.',
+  svg:function(){return '<defs>'+BL+'<radialGradient id="po"><stop offset="0" stop-color="#000"/><stop offset=".55" stop-color="#000"/><stop offset=".72" stop-color="#bff4ff" stop-opacity=".9"/><stop offset="1" stop-color="#20a8c0" stop-opacity="0"/></radialGradient></defs>'+bg('#02070c')+fog('m1',23,'.016 .02',RA.arc,.55)+
+   '<g filter="url(#b2)" opacity=".75">'+spiral(4,40,'#20c8d0','#7ae8ff',7)+'</g>'+spiral(4,40,'#d8fbff','#7ae8ff',1.1)+'<g filter="url(#b1)" opacity=".7">'+spiral(6,34,'#ffffff','#ffd58a',.6)+'</g><circle r="18" fill="url(#po)"/><circle r="7" fill="#000"/><circle r="2" fill="#fff" opacity=".9"/>'+dots('#d8fbff',18,6,8,52,1)+glass('#bff0ff','#d8fbff')}},
+ {id:'frost',name:'E. Frost orb',glow:'rgba(150,200,240,.3)',
+  desc:'A winter crystal: translucent shards of ice leaning through the glass around a glowing frost-flower at the centre, pale blue light and glittering snow-dust. Sharp, clean and cold.',
+  cost:'<b>VERY LOW</b>. Nearly a still picture; only a few sparkles twinkle (one tiny layer, 6 fps). Still version: none. Ice blue is outside the palette.',
+  svg:function(){var sh='';[[-24,-14,-30,18,-14,10],[8,-40,16,-8,26,-24],[26,10,38,36,14,30],[-34,22,-12,44,-8,28],[-6,-26,6,-12,-4,6]].forEach(function(p,i){sh+='<path d="M'+p[0]+' '+p[1]+'L'+p[2]+' '+p[3]+'L'+p[4]+' '+p[5]+'Z" fill="'+(i%2?'#cfeaff':'#9ad0f0')+'" fill-opacity=".18" stroke="#eaf8ff" stroke-width=".8" stroke-opacity=".8"/>';});
+   var f='';for(var i=0;i<6;i++)f+='<g transform="rotate('+(i*60)+')"><path d="M0 0V-17M0 -9L-5 -14M0 -9L5 -14M0 -14L-3 -17M0 -14L3 -17"/></g>';
+   return '<defs>'+BL+'</defs>'+bg('#050c14')+fog('r1',27,'.02 .024',RA.arc,.6)+'<circle r="26" fill="#d8f0ff" opacity=".35" filter="url(#b9)"/>'+sh+'<g stroke="#f4fcff" stroke-width="1.3" fill="none" stroke-linecap="round" filter="url(#b1)">'+f+'</g><g stroke="#fff" stroke-width=".7" fill="none" stroke-linecap="round">'+f+'</g>'+dots('#ffffff',40,4,6,54,1.1)+glass('#d8f0ff','#ffffff')}},
+ {id:'runes',name:'F. Runes in the smoke',glow:'rgba(229,150,60,.36)',
+  desc:'Dark amber smoke with gold runes hanging in it at different depths, some sharp, some hazy, each glowing, with a faint ring of light around the heart. It is the rune-stone you liked, but now inside real glass. In the gold / ember palette.',
+  cost:'<b>LOW</b>. The runes are one picture turning very slowly (6 to 8 fps), the smoke another. Still version: none.',
+  svg:function(){var r='',R=rnd(7);for(var i=0;i<9;i++){var a=i*6.283/9+R()*.4,rad=14+R()*30,sz=3.5+R()*2.5,blur=i%3==0;r+='<g transform="translate('+(rad*Math.cos(a)).toFixed(1)+' '+(rad*Math.sin(a)).toFixed(1)+') rotate('+((R()-.5)*50).toFixed(0)+')" opacity="'+(blur?.55:.95)+'"><path d="'+glyph(i,sz)+'" stroke="#ff9a30" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#b2)"/><path d="'+glyph(i,sz)+'" stroke="#ffeab8" stroke-width="'+(blur?1.2:1.1)+'" fill="none" stroke-linecap="round" stroke-linejoin="round"'+(blur?' filter="url(#b1)"':'')+'/></g>';}
+   return '<defs>'+BL+'</defs>'+bg('#080301')+fog('u1',33,'.016 .021',RA.amb,.7)+'<circle r="24" fill="#ffc060" opacity=".35" filter="url(#b9)"/><circle r="30" fill="none" stroke="#ffd58a" stroke-width=".7" opacity=".5" stroke-dasharray="1.5 3"/>'+r+'<circle r="6" fill="#fff4d0" filter="url(#b2)"/>'+dots('#ffe0a0',22,5,6,52,1.1)+glass('#ffd9a0','#ffe9b8')}},
+ {id:'sun',name:'G. Captured light',glow:'rgba(255,220,140,.42)',
+  desc:'A pure star of white-gold light in the middle of the glass throwing long soft rays and a cross-shaped flare through gentle golden haze. The brightest and simplest; it makes the whole Home feel lit by the orb. In the gold palette.',
+  cost:'<b>VERY LOW</b>. A still picture with the star slowly breathing (one small layer, 8 fps). Rays can turn very slowly. Still version: none.',
+  svg:function(){var ry='';for(var i=0;i<14;i++){var a=i*Math.PI/7+.1,l=i%2?40:56;ry+='<path d="M0 0L'+(l*Math.cos(a-.07)).toFixed(1)+' '+(l*Math.sin(a-.07)).toFixed(1)+'L'+(l*Math.cos(a+.07)).toFixed(1)+' '+(l*Math.sin(a+.07)).toFixed(1)+'Z"/>';}
+   return '<defs>'+BL+'<radialGradient id="sn"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#fff0c0"/><stop offset=".6" stop-color="#e8a840" stop-opacity=".6"/><stop offset="1" stop-color="#8a4a10" stop-opacity="0"/></radialGradient></defs>'+bg('#0c0603')+fog('s1',41,'.015 .02',RA.amb,.6)+'<g fill="#fff0c0" opacity=".38" filter="url(#b2)">'+ry+'</g><path d="M-56 0H56" stroke="#fff4d0" stroke-width="1.6" filter="url(#b1)" opacity=".8"/><path d="M0 -40V40" stroke="#fff4d0" stroke-width="1" filter="url(#b1)" opacity=".5"/><circle r="32" fill="url(#sn)"/><circle r="9" fill="#fff" filter="url(#b1)"/>'+dots('#fff0c0',20,2,8,52,1.1)+glass('#fff0c8','#fff8e0')}},
+ {id:'liquid',name:'H. Orb of light and water',glow:'rgba(60,200,170,.3)',
+  desc:'The ball is half-filled with glowing sea-green and gold liquid with a bright surface line, rising bubbles and little lights suspended in it, the top half clear glass full of faint mist. A potion-seer\'s vessel.',
+  cost:'<b>LOW</b>. The liquid is a picture; the surface gently sways and 5 to 6 bubbles rise on one small layer (8 fps). Still version: none. Green is outside the palette.',
+  svg:function(){var b='',R=rnd(6);for(var i=0;i<14;i++){b+='<circle cx="'+((R()-.5)*70).toFixed(0)+'" cy="'+(2+R()*50).toFixed(0)+'" r="'+(.8+R()*2.4).toFixed(1)+'" fill="none" stroke="#d8fff4" stroke-width=".6" opacity="'+(.4+R()*.5).toFixed(2)+'"/>';}
+   return '<defs>'+BL+'<clipPath id="lq"><rect x="-60" y="2" width="120" height="60"/></clipPath><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4ee8c0"/><stop offset=".5" stop-color="#18a090"/><stop offset="1" stop-color="#083a40"/></linearGradient></defs>'+bg('#040a0c')+fog('q1',50,'.02 .024',RA.arc,.35)+
+   '<g clip-path="url(#lq)"><rect x="-60" y="2" width="120" height="60" fill="url(#lg)"/><ellipse cx="0" cy="40" rx="30" ry="14" fill="#fff4b0" opacity=".45" filter="url(#b9)"/><path d="M-60 12C-30 4 -10 22 10 10S40 8 60 16" stroke="#fff" stroke-opacity=".25" stroke-width="2" fill="none" filter="url(#b1)"/>'+b+'</g>'+
+   '<path d="M-60 4C-40 -2 -24 8 -6 3S30 -1 60 5" stroke="#d8fff0" stroke-width="2" fill="none" filter="url(#b1)"/><path d="M-60 4C-40 -2 -24 8 -6 3S30 -1 60 5" stroke="#fff" stroke-width=".8" fill="none"/>'+dots('#fff0b0',12,4,6,50,1.2)+glass('#d8fff4','#c8fff0')}}
+];
+var GS='<path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/>';
+function shield(top,left,label,lt){return '<div class="node" style="top:'+top+'px;left:'+left+'px"><svg class="shield" viewBox="0 0 62 72">'+GS+'</svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/></svg></span></div><div class="lbl" style="top:'+lt+'px;left:'+(left-11)+'px">'+label+'</div>';}
+function pen(lf){return '<div class="pen" style="left:'+lf+'px"><svg viewBox="0 0 58 62" fill="none"><path d="M2 1H56V52L29 42L2 52Z" fill="#2a2216" stroke="#8c6d3a" stroke-width="1.5"/></svg></div>';}
+
+/* stage coords (361 wide, y from the top of the Treasury panel): ring box 92,118 size 176; orb 124 at 118,144 */
+function cell(look,i,big){
+ var ringBox=big?{s:176*1.09,l:180-88*1.09,t:206-88*1.09}:{s:176,l:92,t:118};
+ var d=big?136:124, ol=180-d/2, ot=206-d/2;
+ var h='<div class="inner">'+
+  '<div class="panel" style="top:0;height:56px"></div>'+pen(18)+pen(99)+pen(180)+pen(261)+
+  shield(136,18,'X',212)+shield(136,281,'Discord',212)+shield(232,18,'YouTube',308)+shield(232,281,'Messages',308)+
+  '<div class="orbglow" style="left:'+(ol-26)+'px;top:'+(ot-26)+'px;width:'+(d+52)+'px;height:'+(d+52)+'px;background:radial-gradient(circle,'+look.glow+' 40%,rgba(0,0,0,0) 70%)"></div>'+
+  '<div class="abs" style="left:'+ringBox.l+'px;top:'+ringBox.t+'px;width:'+ringBox.s+'px;height:'+ringBox.s+'px">'+
+   '<div style="transform:scale('+(ringBox.s/176)+');transform-origin:0 0;width:176px;height:176px">'+T9.ringOnly('built','r'+i+(big?'b':''))+'</div></div>'+
+  '<div class="orbwrap" style="left:'+ol+'px;top:'+ot+'px;width:'+d+'px;height:'+d+'px;box-sizing:border-box"><svg width="'+(d-4)+'" height="'+(d-4)+'" viewBox="-60 -60 120 120">'+look.svg()+'</svg></div>'+
+  '<div class="abs" style="top:'+(big?312:296)+'px;left:80px;width:200px;text-align:center;font-family:UnifrakturCook,serif;font-size:19px;color:#e6d9b8">The Oracle</div>'+
+  '<div class="panel" style="top:'+(big?350:334)+'px;height:68px"></div></div>';
+ return h;
+}
+var out='';
+LOOKS.forEach(function(L,i){out+='<div><div class="lab">'+L.name+'</div><div class="desc">'+L.desc+'</div><div class="stage" id="c'+i+'"></div><div class="cost">Battery: '+L.cost+'</div></div>';});
+out+='<div><div class="lab">G. Slightly larger orb (shown with look A)</div><div class="desc">The orb grows about 10% (124 to 136 px). To keep a clear gap to the ring text the ring grows with it by the same amount (176 to 192 px). Compare with the normal size above.</div><div class="stage" id="cB"></div><div class="cost"><b>ROOM IT TAKES</b> (C5 numbers; not checked on the real Home): about 8 px more on every side of the ring. Sideways it keeps a gap of about 13 px to the shields (22 px now), so no overlap. Upwards it eats into the gap under the Treasury gauges, so the ring is better moved down by 8 px: then "The Oracle", the Ledger and everything below slide down about 16 px in all. Battery: no change.</div></div>';
+document.getElementById('g').innerHTML=out;
+T9.ready(function(){
+ LOOKS.forEach(function(L,i){document.getElementById('c'+i).innerHTML=cell(L,i,false);});
+ document.getElementById('cB').innerHTML=cell(LOOKS[0],9,true);
+});
+</script>
+</body>
+</html>

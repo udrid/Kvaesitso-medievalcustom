@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T9 gritty orb concepts</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf")}
+@font-face{font-family:"IM Fell English";font-style:italic;src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf")}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:830px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+.grid{display:grid;grid-template-columns:390px 390px;gap:22px 20px;padding:10px}
+.lab{font-family:Cinzel,serif;font-size:11px;font-weight:700;letter-spacing:.16em;color:#c9a55a;text-transform:uppercase;padding:4px 2px 2px}
+.desc{font-size:12.5px;font-style:italic;color:#a8987a;padding:0 2px 6px;line-height:1.25;min-height:48px}
+.cost{font-size:12px;color:#8c7a52;padding:6px 2px 0;line-height:1.28}
+.cost b{color:#c9a55a;font-family:Cinzel,serif;font-size:10px;letter-spacing:.1em}
+.stage{position:relative;width:390px;height:372px;overflow:hidden;background:radial-gradient(90% 55% at 50% 50%,#26211a 0%,#0d0c09 82%),#0a0907}
+.inner{position:absolute;left:0;top:-48px;width:361px;height:560px;transform:scale(1.0803);transform-origin:0 0}
+.abs{position:absolute}
+.panel{position:absolute;left:16px;right:16px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);opacity:.38}
+.node{position:absolute;width:62px;height:72px;color:#e6d9b8;opacity:.8}
+.node svg.shield{position:absolute;inset:0}.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#bfae86;opacity:.8}
+.pen{position:absolute;top:64px;width:58px;height:62px;opacity:.35}
+.pen svg{position:absolute;inset:0}
+.orbwrap{position:absolute;border-radius:50%;overflow:hidden;border:2px solid #8c6d3a;box-shadow:0 0 0 3px #0a0907,inset 0 0 30px rgba(0,0,0,.85)}
+.orbglow{position:absolute;border-radius:50%}
+.guide{position:absolute;border:1px dashed rgba(240,120,100,.7);pointer-events:none}
+</style>
+</head>
+<body>
+<div style="padding:8px 12px;font-size:12.5px;color:#8c7a52;font-style:italic">Five gritty medieval-fantasy looks for the Oracle orb, at real size in the Home layout (numbers from the C5 mock; the Treasury and Ledger are dimmed here so the orb is the star). The ring text is the "as built" one in every cell: the ring style is chosen separately. Stills only; the cost notes say what would move.</div>
+<div class="grid" id="g"></div>
+<script src="T9-orb.js"></script>
+<script>
+var G='#c9a55a',GD='#8c6d3a',GL='#e3cf9c',RD='#a8352b';
+/* everything in a 120 x 120 viewBox (-60..60), clipped to the circle */
+function rnd(seed){var x=seed;return function(){x=(x*9301+49297)%233280;return x/233280}}
+var FX='<filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter><filter id="b5" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter><filter id="b9" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter><filter id="b1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".9"/></filter>'+
+ '<filter id="gr" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.1 -.35"/></filter>'+
+ '<filter id="gr2" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".05 .09" numOctaves="3" seed="8"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .22  0 0 0 0 .08  0 0 0 1.5 -.62"/></filter>';
+/* dirt: fine dark grain everywhere plus blotchy rust stains; drawn once, no cost */
+function grit(a,r){return '<rect x="-60" y="-60" width="120" height="120" filter="url(#gr)" opacity="'+(a||.55)+'"/><rect x="-60" y="-60" width="120" height="120" filter="url(#gr2)" opacity="'+(r||.55)+'"/>'}
+function vig(){return '<defs><radialGradient id="vg" cx=".5" cy=".5"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".85"/></radialGradient></defs><circle r="60" fill="url(#vg)"/>'}
+function glint(o){return '<path d="M-34 -28C-26 -42 -8 -50 8 -48C-8 -43 -26 -34 -34 -28Z" fill="#fff" opacity="'+(o||.22)+'"/>'}
+var IRON='#2b2723',IRONH='#6a6258';
+function rivet(x,y){return '<circle cx="'+x+'" cy="'+y+'" r="2.2" fill="#3a352f" stroke="#0c0a08" stroke-width=".6"/><circle cx="'+(x-.6)+'" cy="'+(y-.7)+'" r=".8" fill="#8a8072"/>'}
+function flame(sc){return '<g transform="scale('+sc+')"><path d="M0 -34C4 -20 14 -14 14 0C14 12 8 20 0 20C-8 20 -14 12 -14 0C-14 -8 -10 -12 -8 -16C-7 -9 -3 -7 -2 -9C-4 -20 -1 -28 0 -34Z" fill="#c8481c"/><path d="M0 -22C3 -12 10 -8 10 1C10 10 5 16 0 16C-5 16 -10 10 -10 1C-10 -4 -7 -7 -5 -9C-4 -4 -1 -3 0 -5C-1 -12 0 -18 0 -22Z" fill="#f0a050"/><path d="M0 -8C2 -4 5 -1 5 4C5 9 3 13 0 13C-3 13 -5 9 -5 4C-5 -1 -2 -4 0 -8Z" fill="#ffd58a"/><ellipse cy="7" rx="2.2" ry="5" fill="#fff4cc"/></g>'}
+var LOOKS=[
+ {id:'iron',name:'1. Iron-bound witch orb',glow:'rgba(200,80,30,.28)',
+  desc:'A cracked glass ball bound in rusted iron straps and rivets, with a dim, sickly ember trapped inside. Looks dug out of a ruin; heavy, scarred and dangerous.',
+  cost:'<b>VERY LOW</b>. Iron, crack and grime are one still picture. Only the ember inside breathes (one soft layer, 8 fps). Still version: none.',
+  svg:function(){var R=rnd(4),c='M-6 -10';for(var i=0;i<9;i++)c+='l'+((R()-.4)*13).toFixed(1)+' '+((R()-.3)*11).toFixed(1);
+   return '<defs>'+FX+'<radialGradient id="i1" cx=".45" cy=".45"><stop offset="0" stop-color="#4a1c0c"/><stop offset=".7" stop-color="#150907"/><stop offset="1" stop-color="#050302"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#i1)"/>'+
+   '<g filter="url(#b9)"><ellipse cx="-4" cy="6" rx="26" ry="14" fill="#c8481c" opacity=".6" transform="rotate(-25)"/><ellipse cx="8" cy="-6" rx="18" ry="9" fill="#e8902a" opacity=".5"/></g>'+
+   '<path d="'+c+'" stroke="#e8d8b8" stroke-width=".9" fill="none" opacity=".7"/><path d="M-6 -10l-10 -12l-8 -4M-6 -10l12 -14M-6 -10l-6 14l-12 8" stroke="#e8d8b8" stroke-width=".5" fill="none" opacity=".5"/>'+
+   '<g fill="none" stroke="'+IRON+'" stroke-width="7"><ellipse rx="19" ry="62"/><ellipse rx="19" ry="62" transform="rotate(90)"/><ellipse rx="19" ry="62" transform="rotate(45)" opacity="0"/></g><g fill="none" stroke="'+IRONH+'" stroke-width=".8" opacity=".6"><ellipse rx="17" ry="62"/><ellipse rx="17" ry="62" transform="rotate(90)"/></g>'+
+   rivet(0,-34)+rivet(0,34)+rivet(-34,0)+rivet(34,0)+rivet(0,-12)+rivet(0,12)+rivet(-12,0)+rivet(12,0)+
+   '<circle r="9" fill="'+IRON+'" stroke="#0c0a08" stroke-width="1"/><circle r="4" fill="#3a352f"/>'+
+   '<path d="M-19 -20L-17 -4M19 10L18 26M-6 40L-5 52" stroke="#8a3a14" stroke-width="1.6" opacity=".6"/>'+glint(.18)+grit(.6,.6)+vig()}},
+ {id:'flask',name:'2. Alchemist\'s flask',glow:'rgba(150,30,25,.4)',
+  desc:'A round-bellied glass flask half full of thick oxblood liquid with slow bubbles, a wax-dripped cork and a stained parchment tag on a string. Grimy and hand-made, from a plague-year apothecary.',
+  cost:'<b>LOW</b>. Flask and tag are one still picture; only 4 to 6 bubbles rise, on one small layer (8 fps) and the liquid surface sways a hair. Still version: none.',
+  svg:function(){var bub='';var R=rnd(3);for(var i=0;i<12;i++){bub+='<circle cx="'+((R()-.5)*50).toFixed(0)+'" cy="'+(8+R()*40).toFixed(0)+'" r="'+(1+R()*2.6).toFixed(1)+'" fill="none" stroke="#f0b0a0" stroke-width=".6" opacity="'+(.4+R()*.4).toFixed(2)+'"/>';}
+   return '<defs>'+FX+'<clipPath id="fc"><circle cx="0" cy="12" r="39"/></clipPath><linearGradient id="f1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8261c"/><stop offset=".5" stop-color="#6a1410"/><stop offset="1" stop-color="#2a0806"/></linearGradient><radialGradient id="f2" cx=".5" cy=".3"><stop offset="0" stop-color="#3a2a1e"/><stop offset="1" stop-color="#0c0806"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#f2)"/>'+
+   '<circle cx="0" cy="12" r="39" fill="#1a1210" stroke="#9a8a6a" stroke-width="1.6" opacity=".95"/><g clip-path="url(#fc)"><rect x="-45" y="10" width="90" height="50" fill="url(#f1)"/><ellipse cx="0" cy="10" rx="39" ry="5" fill="#c8402c"/><ellipse cx="0" cy="10" rx="39" ry="5" fill="none" stroke="#f08a70" stroke-width=".8" opacity=".6"/>'+bub+'<ellipse cx="0" cy="40" rx="30" ry="6" fill="#e86a30" opacity=".35" filter="url(#b5)"/></g>'+
+   '<path d="M-8 -26L-8 -48H8L8 -26" fill="#1a1210" stroke="#9a8a6a" stroke-width="1.4"/><path d="M-8 -26L-8 -42H8L8 -26" fill="#6a1410" opacity=".6"/><rect x="-9" y="-56" width="18" height="12" rx="2" fill="#7a5a34" stroke="#2a1a0c"/><path d="M-9 -48C-9 -40 -7 -38 -6 -44C-4 -36 -2 -36 -1 -45C1 -38 3 -36 5 -44C6 -38 8 -38 9 -48Z" fill="#8a1c14"/>'+
+   '<path d="M-4 -46C-16 -30 -26 -16 -30 4" stroke="#b8a070" stroke-width=".8" fill="none"/><g transform="rotate(8 -30 12)"><path d="M-40 4h22l-2 6 3 5-2 6 2 6-23 1z" fill="#cdb98a" stroke="#4a3a1e" stroke-width=".8"/><path d="M-37 11h14M-37 16h10M-37 21h13" stroke="#4a3a1e" stroke-width=".8"/><circle cx="-34" cy="26" r="2.6" fill="#7a1a14"/></g>'+
+   '<path d="M-26 -8C-34 4 -34 20 -22 34" stroke="#fff" stroke-opacity=".28" stroke-width="3" fill="none" stroke-linecap="round"/>'+grit(.5,.45)+vig()}},
+ {id:'skull',name:'3. Candle skull',glow:'rgba(229,138,60,.28)',
+  desc:'A yellowed, cracked human skull with a stub of wax and a small flame on its crown, and a dull ember burning in each eye socket. Grim, tavern-crypt, the kind of thing a hedge-wizard keeps on the table.',
+  cost:'<b>LOW</b>. Skull is a still picture; the crown flame and two eye-embers flicker as one small layer (about 10 fps). Still version: none.',
+  svg:function(){return '<defs>'+FX+'<radialGradient id="s1" cx=".5" cy=".4"><stop offset="0" stop-color="#3a2210"/><stop offset=".7" stop-color="#0e0806"/><stop offset="1" stop-color="#030201"/></radialGradient><radialGradient id="s2" cx=".4" cy=".3"><stop offset="0" stop-color="#d8c898"/><stop offset=".6" stop-color="#a89468"/><stop offset="1" stop-color="#5a4a2a"/></radialGradient><radialGradient id="s3"><stop offset="0" stop-color="#ffb54a"/><stop offset=".5" stop-color="#c8481c"/><stop offset="1" stop-color="rgba(100,20,10,0)"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#s1)"/>'+
+   '<circle cy="-34" r="26" fill="#e8902a" opacity=".3" filter="url(#b5)"/>'+
+   '<path d="M-26 -4C-30 -26 -18 -40 0 -40C18 -40 30 -26 26 -4C26 4 22 8 20 14V24H-20V14C-22 8 -26 4 -26 -4Z" fill="url(#s2)" stroke="#2a1e0c" stroke-width="1.2"/>'+
+   '<ellipse cx="-11" cy="-4" rx="8" ry="9.5" fill="#0a0504"/><ellipse cx="11" cy="-4" rx="8" ry="9.5" fill="#0a0504"/><ellipse cx="-11" cy="-3" rx="4.6" ry="5.4" fill="url(#s3)"/><ellipse cx="11" cy="-3" rx="4.6" ry="5.4" fill="url(#s3)"/><circle cx="-11" cy="-3" r="1.6" fill="#fff0c0"/><circle cx="11" cy="-3" r="1.6" fill="#fff0c0"/>'+
+   '<path d="M0 6L-4 14H4Z" fill="#0a0504"/><path d="M-20 14H20" stroke="#2a1e0c" stroke-width="1"/><path d="M-16 14V24M-8 14V24M0 14V24M8 14V24M16 14V24" stroke="#2a1e0c" stroke-width="1.2"/><path d="M-16 24H16" stroke="#2a1e0c" stroke-width="1"/>'+
+   '<path d="M-2 -40L-5 -26L2 -16L-3 -8" stroke="#3a2a10" stroke-width="1" fill="none"/><path d="M14 -30L8 -22M-20 -18L-14 -14" stroke="#3a2a10" stroke-width=".7" fill="none"/>'+
+   '<path d="M-24 24C-24 36 -10 42 0 42C10 42 24 36 24 24" fill="#8a7650" stroke="#2a1e0c" stroke-width="1"/><path d="M-12 30L-12 38M-4 32V41M4 32V41M12 30V38" stroke="#2a1e0c" stroke-width="1"/>'+
+   '<path d="M-6 -39C-6 -46 6 -46 6 -39Z" fill="#e8dcb8"/><path d="M-6 -40C-5 -36 -4 -35 -3 -40" fill="#e8dcb8"/><g transform="translate(0 -52) scale(.34)">'+flame(1)+'</g>'+grit(.5,.5)+vig()}},
+ {id:'eye',name:'4. Dragon\'s eye',glow:'rgba(230,140,30,.34)',
+  desc:'A great slit-pupilled amber eye in a scaled, cracked stone socket, as if a sleeping thing is watching through a hole in the wall. The most menacing: it looks back at you.',
+  cost:'<b>NONE</b> as a picture. Optional: the pupil narrows and widens very slowly, or the eye blinks once every minute or so (one small layer, 12 fps for a second at a time). Still version: none.',
+  svg:function(){var sc='';for(var y=-6;y<=6;y++)for(var x=-6;x<=6;x++){var px=x*11+(y%2?5.5:0),py=y*9;sc+='<path d="M'+(px-5)+' '+py+'A5.5 5.5 0 0 0 '+(px+5)+' '+py+'" stroke="#000" stroke-width=".9" fill="none" opacity=".55"/>';}
+   var vn='';for(var i=0;i<22;i++){var a=i*Math.PI/11;vn+='<path d="M'+(7*Math.cos(a)).toFixed(1)+' '+(10*Math.sin(a)).toFixed(1)+'L'+(21*Math.cos(a+.1)).toFixed(1)+' '+(24*Math.sin(a+.1)).toFixed(1)+'"/>';}
+   return '<defs>'+FX+'<clipPath id="ec"><path d="M-54 0C-30 -34 30 -34 54 0C30 34 -30 34 -54 0Z"/></clipPath><radialGradient id="e1"><stop offset="0" stop-color="#ffd25a"/><stop offset=".45" stop-color="#e8902a"/><stop offset=".85" stop-color="#8a2a10"/><stop offset="1" stop-color="#2a0c06"/></radialGradient><radialGradient id="e2" cx=".5" cy=".5"><stop offset="0" stop-color="#3a342c"/><stop offset="1" stop-color="#0e0c0a"/></radialGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#e2)"/>'+sc+
+   '<g clip-path="url(#ec)"><rect x="-60" y="-40" width="120" height="80" fill="#f0e0b0"/><rect x="-60" y="-40" width="120" height="80" fill="#c8a050" opacity=".5"/><circle r="27" fill="url(#e1)"/><g stroke="#3a1006" stroke-width=".7" opacity=".7">'+vn+'</g><ellipse rx="4.8" ry="25" fill="#050202"/><ellipse cx="-9" cy="-11" rx="4" ry="2.4" fill="#fff" opacity=".7" transform="rotate(-25 -9 -11)"/><path d="M-60 -40H60V-12C30 -26 -30 -26 -60 -12Z" fill="#000" opacity=".4"/></g>'+
+   '<path d="M-54 0C-30 -34 30 -34 54 0" stroke="#050302" stroke-width="5" fill="none"/><path d="M-54 0C-30 34 30 34 54 0" stroke="#050302" stroke-width="4" fill="none"/><path d="M-50 -4C-30 -30 30 -30 50 -4" stroke="#6a5a44" stroke-width=".8" fill="none" opacity=".7"/>'+
+   '<path d="M-40 -34L-30 -24L-34 -12M38 32L28 24L32 14M46 -22L38 -14" stroke="#050302" stroke-width="1.2" fill="none"/>'+grit(.55,.4)+vig()}},
+ {id:'lantern',name:'5. Iron cage lantern',glow:'rgba(229,138,60,.34)',
+  desc:'A bent iron cage with a stub of tallow candle burning inside, the glass behind it soot-black at the top and the bars scarred with rust. A dungeon-stair light, small and stubborn, glowing in the dark.',
+  cost:'<b>VERY LOW</b>. Cage, soot and rust are a still picture; the flame and the warm light on the bars flicker on one small layer (about 10 fps). Still version: none.',
+  svg:function(){var bars='';for(var i=-3;i<=3;i++){var x=i*14;bars+='<path d="M'+x+' -54C'+(x*1.28)+' -24 '+(x*1.28)+' 24 '+x+' 54" />';}
+   return '<defs>'+FX+'<radialGradient id="l1" cx=".5" cy=".55"><stop offset="0" stop-color="#6a3414"/><stop offset=".5" stop-color="#2a1208"/><stop offset="1" stop-color="#060302"/></radialGradient><linearGradient id="l2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".85"/><stop offset=".6" stop-color="#000" stop-opacity="0"/></linearGradient></defs><rect x="-60" y="-60" width="120" height="120" fill="url(#l1)"/><circle cy="4" r="40" fill="#e8902a" opacity=".3" filter="url(#b9)"/>'+
+   '<rect x="-7" y="22" width="14" height="22" rx="1.5" fill="#d8c8a0"/><path d="M-7 24C-7 30 -5 32 -4 26" fill="#efe0b8"/><rect x="-12" y="42" width="24" height="4" fill="'+IRON+'"/><path d="M0 20V22" stroke="#1a0e08" stroke-width="2"/><g transform="translate(0 4)">'+flame(.62)+'</g>'+
+   '<rect x="-60" y="-60" width="120" height="70" fill="url(#l2)"/>'+
+   '<g stroke="'+IRON+'" stroke-width="3.6" fill="none">'+bars+'</g><g stroke="'+IRONH+'" stroke-width=".7" fill="none" opacity=".5">'+bars+'</g>'+
+   '<ellipse cy="-44" rx="36" ry="7" fill="none" stroke="'+IRON+'" stroke-width="5"/><ellipse cy="46" rx="38" ry="7" fill="none" stroke="'+IRON+'" stroke-width="5"/><ellipse cy="0" rx="45" ry="8" fill="none" stroke="'+IRON+'" stroke-width="3.4"/>'+
+   rivet(-24,-44)+rivet(24,-44)+rivet(0,-37)+rivet(-30,46)+rivet(30,46)+rivet(0,53)+
+   '<path d="M-28 -20L-27 -6M16 8L18 24M30 -34L31 -22" stroke="#8a3a14" stroke-width="1.8" opacity=".65"/>'+grit(.55,.55)+vig()}}
+];
+var GS='<path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/>';
+function shield(top,left,label,lt){return '<div class="node" style="top:'+top+'px;left:'+left+'px"><svg class="shield" viewBox="0 0 62 72">'+GS+'</svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/></svg></span></div><div class="lbl" style="top:'+lt+'px;left:'+(left-11)+'px">'+label+'</div>';}
+function pen(lf){return '<div class="pen" style="left:'+lf+'px"><svg viewBox="0 0 58 62" fill="none"><path d="M2 1H56V52L29 42L2 52Z" fill="#2a2216" stroke="#8c6d3a" stroke-width="1.5"/></svg></div>';}
+
+/* stage coords (361 wide, y from the top of the Treasury panel): ring box 92,118 size 176; orb 124 at 118,144 */
+function cell(look,i,big){
+ var ringBox=big?{s:176*1.09,l:180-88*1.09,t:206-88*1.09}:{s:176,l:92,t:118};
+ var d=big?136:124, ol=180-d/2, ot=206-d/2;
+ var h='<div class="inner">'+
+  '<div class="panel" style="top:0;height:56px"></div>'+pen(18)+pen(99)+pen(180)+pen(261)+
+  shield(136,18,'X',212)+shield(136,281,'Discord',212)+shield(232,18,'YouTube',308)+shield(232,281,'Messages',308)+
+  '<div class="orbglow" style="left:'+(ol-26)+'px;top:'+(ot-26)+'px;width:'+(d+52)+'px;height:'+(d+52)+'px;background:radial-gradient(circle,'+look.glow+' 40%,rgba(0,0,0,0) 70%)"></div>'+
+  '<div class="abs" style="left:'+ringBox.l+'px;top:'+ringBox.t+'px;width:'+ringBox.s+'px;height:'+ringBox.s+'px">'+
+   '<div style="transform:scale('+(ringBox.s/176)+');transform-origin:0 0;width:176px;height:176px">'+T9.ringOnly('built','r'+i+(big?'b':''))+'</div></div>'+
+  '<div class="orbwrap" style="left:'+ol+'px;top:'+ot+'px;width:'+d+'px;height:'+d+'px;box-sizing:border-box"><svg width="'+(d-4)+'" height="'+(d-4)+'" viewBox="-60 -60 120 120">'+look.svg()+'</svg></div>'+
+  '<div class="abs" style="top:'+(big?312:296)+'px;left:80px;width:200px;text-align:center;font-family:UnifrakturCook,serif;font-size:19px;color:#e6d9b8">The Oracle</div>'+
+  '<div class="panel" style="top:'+(big?350:334)+'px;height:68px"></div></div>';
+ return h;
+}
+var out='';
+LOOKS.forEach(function(L,i){out+='<div><div class="lab">'+L.name+'</div><div class="desc">'+L.desc+'</div><div class="stage" id="c'+i+'"></div><div class="cost">Battery: '+L.cost+'</div></div>';});
+out+='<div><div class="lab">G. Slightly larger orb (shown with look 1)</div><div class="desc">The orb grows about 10% (124 to 136 px). To keep a clear gap to the ring text the ring grows with it by the same amount (176 to 192 px). Compare with the normal size above.</div><div class="stage" id="cB"></div><div class="cost"><b>ROOM IT TAKES</b> (C5 numbers; not checked on the real Home): about 8 px more on every side of the ring. Sideways it keeps a gap of about 13 px to the shields (22 px now), so no overlap. Upwards it eats into the gap under the Treasury gauges, so the ring is better moved down by 8 px: then "The Oracle", the Ledger and everything below slide down about 16 px in all. Battery: no change.</div></div>';
+document.getElementById('g').innerHTML=out;
+T9.ready(function(){
+ LOOKS.forEach(function(L,i){document.getElementById('c'+i).innerHTML=cell(L,i,false);});
+ document.getElementById('cB').innerHTML=cell(LOOKS[0],9,true);
+});
+</script>
+</body>
+</html>

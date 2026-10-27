@@ -107,7 +107,9 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
 private fun MedievalStage(state: LauncherScaffoldState) {
     val vm: MedievalHomeVM = viewModel()
     val density = LocalDensity.current
-    CompositionLocalProvider(LocalDensity provides Density(density.density, 1f)) {
+    // T9: what may move (lifecycle, screen, Battery Saver, battery, Android animations, the Animations setting)
+    val motion = rememberMotion()
+    CompositionLocalProvider(LocalDensity provides Density(density.density, 1f), LocalMotion provides motion) {
         HeaderSection(vm.forecast, vm.weatherStatus) {
             vm.permissionsManager.requestPermission(it, PermissionGroup.Location)
         }

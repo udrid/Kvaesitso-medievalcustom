@@ -9,8 +9,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.graphicsLayer
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,14 +46,32 @@ private fun timeLabel(context: android.content.Context, event: CalendarEvent): S
     return zoned.format(DateTimeFormatter.ofPattern(pattern))
 }
 
+/** How long before an event its cross pulses (T9). */
+private const val SoonMs = 15 * 60_000L
+
 @Composable
-private fun LedgerRow(time: String, title: String, first: Boolean, onClick: (() -> Unit)? = null) {
+private fun LedgerRow(
+    time: String,
+    title: String,
+    first: Boolean,
+    onClick: (() -> Unit)? = null,
+    pulse: State<Float>? = null,
+) {
     Row(
         Modifier.let { if (onClick != null) it.clickable(onClick = onClick) else it },
         horizontalArrangement = Arrangement.spacedBy(9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        MText("✠", 12f, if (first) Medieval.Rubric else Medieval.GoldDark)
+        // T9: the red cross pulses twice (2.2 s) when its event is 15 minutes away
+        MText(
+            "✠", 12f, if (first) Medieval.Rubric else Medieval.GoldDark,
+            Modifier.graphicsLayer {
+                val p = pulse?.value ?: 0f
+                val s = 1f + 0.5f * bump(p, 0f, 0.6f) + 0.25f * bump(p, 0.6f, 1f)
+                scaleX = s
+                scaleY = s
+            },
+        )
         MText(
             time, 10f, if (first) Medieval.Gold else Medieval.TextFaint,
             Modifier.width(42.dp), font = Medieval.Cinzel, bold = true,
@@ -61,6 +87,29 @@ internal fun Ledger(vm: MedievalHomeVM) {
     val hasPermission by vm.hasCalendarPermission.collectAsState()
     val now = System.currentTimeMillis()
     val upcoming = vm.events.filter { it.endTime >= now }.take(2)
+
+    // T9: while Home is on screen, check every 30 s for an event starting within 15 minutes; each event pulses once
+    val motion = LocalMotion.current
+    val pulsed = remember { mutableSetOf<String>() }
+    var pulseKey by remember { mutableStateOf<String?>(null) }
+    var pulses by remember { mutableIntStateOf(0) }
+    val pulse = rememberOneShot(pulses, 2_200L, motion.ambient)
+    LaunchedEffect(upcoming.map { it.key }, motion.ambient) {
+        if (!motion.ambient) return@LaunchedEffect
+        while (true) {
+            val t = System.currentTimeMillis()
+            val due = upcoming.firstOrNull { e ->
+                val start = e.startTime
+                !e.allDay && start != null && start - t in 0..SoonMs && e.key !in pulsed
+            }
+            if (due != null) {
+                pulsed += due.key
+                pulseKey = due.key
+                pulses++
+            }
+            delay(30_000L)
+        }
+    }
 
     Panel(top = 330f, height = 68f, ribbon = "Today's Ledger") {
         Column(
@@ -79,7 +128,10 @@ internal fun Ledger(vm: MedievalHomeVM) {
 
                 upcoming.isEmpty() -> LedgerRow("", "No tidings", first = false)
                 else -> upcoming.forEachIndexed { i, e ->
-                    LedgerRow(timeLabel(context, e), e.label, first = i == 0)
+                    LedgerRow(
+                        timeLabel(context, e), e.label, first = i == 0,
+                        pulse = if (e.key == pulseKey) pulse else null,
+                    )
                 }
             }
         }

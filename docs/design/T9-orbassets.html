@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>T9 orb asset maker</title></head>
+<body style="background:#111;color:#ccc;font:12px sans-serif">
+<!-- Makes the three orb pictures used by OrbGlass.kt (owner's pick 2a-3, heavy gold dust):
+     smoke (turned slowly on the phone), glass (fixed reflections, drawn additively), setting (gold ring, transparent).
+     Run in headless Edge with --dump-dom; the data URLs land in the three text areas. -->
+<textarea id="smoke"></textarea><textarea id="glass"></textarea><textarea id="setting"></textarea>
+<div id="show"></div>
+<script src="T9-orbrender.js"></script>
+<script>
+var PX=400, PICK={wm:'soft',dust:.017*Math.pow(300/PX,2),seed:23.1,S:PX}; /* dust is per 2x2 px block, so scale it to keep the 300 px look */
+function svgImage(svg){return new Promise(function(ok,bad){var im=new Image();im.onload=function(){ok(im)};im.onerror=bad;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)})}
+function urlImage(u){return new Promise(function(ok,bad){var im=new Image();im.onload=function(){ok(im)};im.onerror=bad;im.src=u})}
+function frame(inner){return '<svg xmlns="http://www.w3.org/2000/svg" width="'+PX+'" height="'+PX+'" viewBox="-60 -60 120 120"><defs>'+BL+'</defs>'+inner+'</svg>'}
+function canvasOf(){var c=document.createElement('canvas');c.width=c.height=PX;return c}
+(async function(){
+ /* smoke: volume + heart + gold dust, plus the 18 drifting gold sparks of the pick */
+ var c1=canvasOf(),x1=c1.getContext('2d');
+ x1.drawImage(await urlImage(renderOrb(X(Object.assign({layer:'smoke'},PICK)))),0,0);
+ x1.drawImage(await svgImage(frame(sparks('#ffd890',18,11,8,50))),0,0);
+ document.getElementById('smoke').textContent=c1.toDataURL('image/webp',.86);
+ /* glass: reflections only, on black */
+ var c2=canvasOf(),x2=c2.getContext('2d');
+ x2.drawImage(await urlImage(renderOrb(X(Object.assign({layer:'glass'},PICK)))),0,0);
+ document.getElementById('glass').textContent=c2.toDataURL('image/webp',.9);
+ /* setting: the gold ring with rubies, transparent elsewhere */
+ var c3=canvasOf(),x3=c3.getContext('2d');
+ x3.drawImage(await svgImage(frame(bez('studs'))),0,0);
+ document.getElementById('setting').textContent=c3.toDataURL('image/webp',.92);
+ document.getElementById('show').innerHTML='<img src="'+c1.toDataURL()+'"><img src="'+c2.toDataURL()+'"><img src="'+c3.toDataURL()+'">';
+ document.body.setAttribute('data-done','1');
+})();
+</script>
+</body>
+</html>
