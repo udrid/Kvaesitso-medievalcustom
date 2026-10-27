@@ -14,6 +14,7 @@
 | T6-summon | 1 | FINISHED: READY TO PUSH, needs owner phone test (testlist.md) | claude/T6-summon | SUMMON button hands typed text to the Claude app |
 | T5c-pill-position | 1 | FINISHED: READY TO PUSH (with T6), needs owner phone test + screenshot of the numbers (testlist.md); diagnostic commit 2e718ce8e to revert after | claude/T5c-pill-position | Pill still too high after two fixes. Goes into the T6 push |
 | T8-header-size | 1 | READY TO PUSH (compiled locally, not seen on phone) | claude/T8-header-size | Larger clock, weather and scene; scene must not cross the divider |
+| T9-vibe | 1 | active (Part 1: previews, owner picks) | claude/T9-vibe | Ring text style and subtle battery-friendly animations |
 | T2-treasury | 1 | deferred: owner wants it last (2026-10-25) | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
 ## Open questions for the owner
