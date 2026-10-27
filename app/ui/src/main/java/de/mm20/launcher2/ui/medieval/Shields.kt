@@ -176,8 +176,10 @@ private fun Shield(slot: ShieldSlot, refresh: Int, notifications: List<Notificat
                     if (pkg == null) {
                         onPick()
                     } else {
-                        val intent = context.packageManager.getLaunchIntentForPackage(pkg)
-                        if (intent != null) launchSafely(context, intent, label) else onPick()
+                        tap.open {
+                            val intent = context.packageManager.getLaunchIntentForPackage(pkg)
+                            if (intent != null) launchSafely(context, intent, label) else onPick()
+                        }
                     }
                 },
                 onLongClick = onPick,

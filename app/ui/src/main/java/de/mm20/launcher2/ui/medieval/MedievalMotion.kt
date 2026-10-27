@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -36,8 +38,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 private const val Tag = "medieval"
 private const val PrefsName = "medieval_home"
@@ -199,14 +205,14 @@ private fun watchPower(
 
 /** Milliseconds since [running] became true, advanced at most [AmbientFps] times a second; frozen otherwise. */
 @Composable
-internal fun rememberAmbientClock(running: Boolean): State<Long> {
+internal fun rememberAmbientClock(running: Boolean, fps: Int = AmbientFps): State<Long> {
     val time = remember { mutableLongStateOf(0L) }
     if (running) {
         LaunchedEffect(Unit) {
             val start = withFrameMillis { it } - time.longValue
             while (true) {
                 withFrameMillis { time.longValue = it - start }
-                delay(AmbientFrameMs)
+                delay(1000L / fps)
             }
         }
     }
@@ -241,36 +247,82 @@ internal fun rememberOneShot(trigger: Any?, durationMs: Long, enabled: Boolean):
     return progress
 }
 
-/** Interaction source + reaction for a tap target; pass both to clickable(). */
-internal class TapReaction(val source: MutableInteractionSource, internal val amount: Animatable<Float, AnimationVector1D>)
+/** Delay between the press and opening the app, so the reaction can be seen (only while motion is allowed). */
+private const val LaunchDelayMs = 120L
 
-/**
- * A touch reaction (under 300 ms, so it may run at full frame rate): [press] = false for a gold flash
- * and a 4.5 % swell (shields, orb), true for a wax seal pressing in. Nothing moves when motion is not allowed.
- */
-@Composable
-internal fun rememberTapReaction(): TapReaction {
-    val motion = LocalMotion.current
-    val source = remember { MutableInteractionSource() }
-    val amount = remember { Animatable(0f) }
-    LaunchedEffect(source, motion.ambient) {
-        if (!motion.ambient) return@LaunchedEffect
-        source.interactions.collect {
-            if (it is PressInteraction.Release) {
-                amount.snapTo(0f)
-                amount.animateTo(1f, tween(250))
+/** A held press shows its glow at most this long. */
+private const val MaxHoldMs = 1500L
+
+/** Interaction source + reaction for a tap target; pass the source to clickable() and open apps via [open]. */
+internal class TapReaction(
+    val source: MutableInteractionSource,
+    internal val amount: Animatable<Float, AnimationVector1D>,
+    private val allowed: () -> Boolean,
+    private val scope: CoroutineScope,
+) {
+    private var pending = false
+
+    /** Runs [action] at once, or after [LaunchDelayMs] while animations are allowed (a second tap meanwhile is ignored). */
+    fun open(action: () -> Unit) {
+        if (!allowed()) {
+            action()
+            return
+        }
+        if (pending) return
+        pending = true
+        scope.launch {
+            try {
+                delay(LaunchDelayMs)
+                action()
+            } finally {
+                pending = false
+                // the app is opening: leave nothing lit behind for the return to Home
                 amount.snapTo(0f)
             }
         }
     }
-    return remember(source, amount) { TapReaction(source, amount) }
 }
 
-/** Draws the reaction: swell + gold flash (or press-in + shade for seals). Peak at 30 % of the 250 ms. */
+/**
+ * A touch reaction: [press] = false for a gold flash and a 4.5 % swell (shields, orb), true for a wax seal
+ * pressing in. It starts on press-down (90 ms in), stays while the finger is held and fades (160 ms) on
+ * release or cancel. Nothing moves when motion is not allowed.
+ * (T12: before, it started on release, in the same instant the app opened, so it was never seen.)
+ */
+@Composable
+internal fun rememberTapReaction(): TapReaction {
+    val motion = LocalMotion.current
+    val allowed = rememberUpdatedState(motion.ambient)
+    val scope = rememberCoroutineScope()
+    val source = remember { MutableInteractionSource() }
+    val amount = remember { Animatable(0f) }
+    LaunchedEffect(source, motion.ambient) {
+        if (!motion.ambient) {
+            amount.snapTo(0f)
+            return@LaunchedEffect
+        }
+        source.interactions.collectLatest {
+            when (it) {
+                is PressInteraction.Press -> {
+                    amount.animateTo(1f, tween(90))
+                    // failsafe: a press whose Release or Cancel never arrives (dialog, lost touch) still fades out
+                    delay(MaxHoldMs)
+                    amount.animateTo(0f, tween(160))
+                }
+                is PressInteraction.Release, is PressInteraction.Cancel -> amount.animateTo(0f, tween(160))
+            }
+        }
+    }
+    // whatever happens to the touch, Home leaving the front or coming back resets the reaction
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) { scope.launch { amount.snapTo(0f) } }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { scope.launch { amount.snapTo(0f) } }
+    return remember(source, amount, scope) { TapReaction(source, amount, { allowed.value }, scope) }
+}
+
+/** Draws the reaction: swell + gold flash (or press-in + shade for seals); amount 0..1. */
 internal fun Modifier.tapReaction(r: TapReaction, press: Boolean = false): Modifier = this
     .graphicsLayer {
-        val a = r.amount.value
-        val k = if (a <= 0f) 0f else if (a < 0.3f) a / 0.3f else (1f - a) / 0.7f
+        val k = r.amount.value.coerceIn(0f, 1f)
         val s = if (press) 1f - 0.08f * k else 1f + 0.045f * k
         scaleX = s
         scaleY = s
@@ -279,8 +331,7 @@ internal fun Modifier.tapReaction(r: TapReaction, press: Boolean = false): Modif
     }
     .drawWithContent {
         drawContent()
-        val a = r.amount.value
-        val k = if (a <= 0f) 0f else if (a < 0.3f) a / 0.3f else (1f - a) / 0.7f
+        val k = r.amount.value.coerceIn(0f, 1f)
         if (k > 0f) {
             if (press) drawRect(Color.Black.copy(alpha = 0.22f * k), blendMode = BlendMode.SrcAtop)
             else drawRect(Color(0xFFF0C86E).copy(alpha = 0.35f * k), blendMode = BlendMode.SrcAtop)

@@ -25,3 +25,4 @@ None.
 
 ## Answered 2026-10-25 (see `ops/decisions.md`)
 App name Deliverance; notification access yes; dock, motto and command bar delegated to Claude.
+| T12-orb-tune | 1 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T12-orb-tune | Orb slower and lower fps, remove "The Oracle" label, visible tap reactions with 120 ms launch delay |

@@ -24,3 +24,6 @@
 - T9-vibe: the app's browser pane runs no JavaScript on local files and refuses pages over about 500 KB; for previews ship a frozen `.view.html` (scripts stripped, fonts dropped if needed) next to the live page, and a PNG.
 - T9-vibe: a glass orb looks real from the glass, not the contents (bright rim, dark band inside it, a window-shaped highlight, a caustic on the far side). Pre-render it in layers (turning contents, fixed additive reflections, setting) instead of computing it live on the phone.
 - T9-vibe: older Home code animates or polls with no gate (weather stop-motion at ~12 fps; `rememberNow()` every 5 s even when stopped). New motion should read `LocalMotion` so Battery Saver and the Animations setting stop it.
+- T12-orb-tune: a reaction triggered on `PressInteraction.Release` is invisible when the same release opens an app; start it on Press and delay the launch about 120 ms (only while animations are allowed).
+- T12-orb-tune: for a slow turn (<1 deg/s) frame rate can be 5 fps; the twinkle period, not the turn, sets the minimum.
+- T12-orb-tune: the weather stop-motion ran ungated at 12 fps; now uses LocalMotion and 5 fps, redrawing only when a frame changes.

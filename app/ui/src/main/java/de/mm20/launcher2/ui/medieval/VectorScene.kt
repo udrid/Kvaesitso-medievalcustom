@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -107,14 +108,26 @@ internal fun VectorCanvas(
     animated: Boolean = false,
 ) {
     val time = remember { mutableLongStateOf(0L) }
-    if (animated) {
+    // T12: runs only while the motion gate is open; otherwise one still frame (frame 0)
+    val running = animated && LocalMotion.current.ambient
+    val current = rememberUpdatedState(parts)
+    if (running) {
         LaunchedEffect(Unit) {
             val start = withFrameMillis { it }
+            var shown = -1L
             while (true) {
-                withFrameMillis { time.longValue = it - start }
-                delay(80L)
+                val t = withFrameMillis { it } - start
+                // redraw only when some part moved to another frame
+                val sig = frameSignature(current.value, t)
+                if (sig != shown) {
+                    shown = sig
+                    time.longValue = t
+                }
+                delay(StopMotionFrameMs)
             }
         }
+    } else if (animated) {
+        time.longValue = 0L
     }
     Canvas(modifier) {
         val k = size.width / viewW
@@ -125,4 +138,18 @@ internal fun VectorCanvas(
             drawParts(parts, time.longValue)
         }
     }
+}
+
+/** Stop-motion step: 5 frames a second is enough for a hand-drawn look and cheap (T12). */
+private const val StopMotionFrameMs = 200L
+
+/** Which frame each part shows at [timeMs], packed into one number (changes only when something moves). */
+private fun frameSignature(parts: List<Part>, timeMs: Long): Long {
+    var sig = 17L
+    for (part in parts) {
+        val n = part.frames.size
+        val i = if (n == 1 || part.periodMs <= 0L) 0 else ((timeMs % part.periodMs) * n / part.periodMs).toInt().coerceIn(0, n - 1)
+        sig = sig * 31 + i
+    }
+    return sig
 }

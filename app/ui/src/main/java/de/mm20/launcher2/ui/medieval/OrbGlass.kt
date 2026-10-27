@@ -32,8 +32,10 @@ import kotlin.random.Random
  * than computing the glass live on the GPU (see tasks/T9-vibe/handoff.md for the numbers).
  */
 
-/** Smoke turn speed: degrees per second (same as the owner's preview, T9-vibe2.html). */
-private const val SmokeDegPerSec = 2.2f
+/** Smoke turn speed: degrees per second (T12: slowed from 2.2 after the owner found it too fast). */
+private const val SmokeDegPerSec = 0.8f
+/** Orb frame rate: 0.8 deg/s is 0.15 deg (about half a pixel at the rim) per frame, the twinkle period is ~4.8 s. */
+private const val OrbFps = 5
 private const val KindleMs = 1100L
 private const val ChargePulseSec = 4.5f
 private val Heart = Color(0xFFFFA060)
@@ -57,7 +59,7 @@ internal fun OrbGlass(modifier: Modifier = Modifier) {
         }
     }
     // smoke turn, twinkle and charging pulse share one clock: one ambient effect
-    val clock = rememberAmbientClock(motion.ambient)
+    val clock = rememberAmbientClock(motion.ambient, OrbFps)
     val kindle = rememberOneShot(motion.wakes, KindleMs, motion.ambient)
     val charging = motion.charging
 
