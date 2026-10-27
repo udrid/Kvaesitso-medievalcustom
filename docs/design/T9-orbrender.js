@@ -60,12 +60,16 @@ function renderOrb(o){var S=o.S||260,cv=document.createElement('canvas');cv.widt
   if(o.dust){var sp=H3(px>>1,py>>1,o.seed|0);if(sp>1-o.dust*dw*(1-r2*.6)){var s=.6+.8*H3(px,py,3);cr+=s*1.0;cg+=s*.78;cb+=s*.4}}
   var edge=.18+.82*sst(0,.6,zf);cr*=edge;cg*=edge;cb*=edge;
   var Rx=2*zf*u,Ry=2*zf*Y,Rz=2*zf*zf-1,ev=env(Rx,Ry,Rz,o),F=.07+.93*Math.pow(1-zf,5),Fs=F*o.refl+o.gloss;
+  /* layer 'smoke' = only what is inside the glass (everything here depends on the radius only, so it can be
+     turned at run time); layer 'glass' = only the reflections on top (drawn additively, never turned) */
+  if(o.layer=='glass'){cr=0;cg=0;cb=0}
+  if(o.layer=='smoke'){cr*=(1-F);cg*=(1-F);cb*=(1-F)}else{
   cr=cr*(1-F)+ev[0]*Fs;cg=cg*(1-F)+ev[1]*Fs;cb=cb*(1-F)+ev[2]*Fs;
   var cdot=rad>0?(u*.72-Y*.69)/rad:0,cau=Math.exp(-Math.pow((rad-.86)/.075,2))*sst(.55,1,cdot)*o.cau;cr+=cau;cg+=cau*.72;cb+=cau*.38;
   var rim=sst(.955,.995,rad)*(1-sst(.995,1,rad))*.35;cr+=rim*o.rimc[0];cg+=rim*o.rimc[1];cb+=rim*o.rimc[2];
-  if(H3(px,py,11)<.0016){var dd=.35*(.4+F*3);cr+=dd;cg+=dd;cb+=dd}
+  if(H3(px,py,11)<.0016){var dd=.35*(.4+F*3);cr+=dd;cg+=dd;cb+=dd}}
   var ex=o.exp,Lm=Math.max(cr,cg,cb,1e-4),sc=(1-Math.exp(-Lm*ex))/Lm;cr*=sc;cg*=sc;cb*=sc;var wl=Math.max(0,Lm*ex-2.2)*.05;cr+=wl;cg+=wl;cb+=wl;var lu=.3*cr+.55*cg+.15*cb,sat=o.sat||1.45;cr=Math.max(0,lu+(cr-lu)*sat);cg=Math.max(0,lu+(cg-lu)*sat);cb=Math.max(0,lu+(cb-lu)*sat);
-  var gr=(H3(px,py,5)-.5)*.035;
+  var gr=o.layer=='glass'?0:(H3(px,py,5)-.5)*.035;
   D[id]=Math.max(0,Math.min(255,Math.pow(cr,1/1.25)*255+gr*255));D[id+1]=Math.max(0,Math.min(255,Math.pow(cg,1/1.25)*255+gr*255));D[id+2]=Math.max(0,Math.min(255,Math.pow(cb,1/1.25)*255+gr*255));
   D[id+3]=Math.round(255*Math.max(0,Math.min(1,(1-rad)*S/2)))}
  cx.putImageData(img,0,0);return cv.toDataURL('image/jpeg',.88)}
