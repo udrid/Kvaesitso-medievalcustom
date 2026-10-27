@@ -54,10 +54,10 @@ private fun star4(x: Float, y: Float, r: Float) = prim(
 private fun feathers(sd: Float): List<Prim> = (0 until 4).map { i ->
     val y = -6f + i * 5
     val x0 = 26f
-    val x1 = 40f - i * 2.2f
+    val x1 = 33f - i * 1.8f
     val y1 = y - 9 + i * 3.2f
     prim(
-        "M${sd * x0} ${y}Q${sd * (x0 + 8)} ${y - 8} ${sd * x1} ${f(y1)}Q${sd * (x1 - 2)} ${f(y1 + 8)} ${sd * x0} ${y + 3}Z",
+        "M${sd * x0} ${y}Q${sd * (x0 + 7)} ${y - 8} ${sd * x1} ${f(y1)}Q${sd * (x1 - 2)} ${f(y1 + 8)} ${sd * x0} ${y + 3}Z",
         fill = Feather, stroke = G, width = 1f,
     )
 }
@@ -66,17 +66,17 @@ private fun ring(r: Float, color: Color, width: Float, dash: FloatArray? = null)
     prim(circlePath(0f, 0f, r), stroke = color, width = width, dash = dash)
 
 private fun ringOrnament(p: Planet): List<Prim> = when (p) {
-    Planet.Sol -> rays(32, 26f, 31f, 35f, GD) + ring(25f, G, 1.2f, floatArrayOf(2f, 2.4f))
+    Planet.Sol -> rays(32, 26f, 31f, 34f, GD) + ring(25f, G, 1.2f, floatArrayOf(2f, 2.4f))
     Planet.Luna -> listOf(ring(27f, GD, 1f, floatArrayOf(1f, 3f))) +
-        listOf(-36f to -20f, 36f to -18f, -34f to 18f, 37f to 17f, 0f to -33f, 0f to 33f)
+        listOf(-31f to -20f, 29.5f to -18f, -30f to 18f, 30.5f to 17f, 0f to -33f, 0f to 33f)
             .zip(listOf(3f, 3.6f, 2.4f, 2.8f, 2.6f, 2.6f)) { (x, y), r -> star4(x, y, r) } +
-        prim("M-30 -5A5 5 0 1 0 -30 5A3.8 3.8 0 1 1 -30 -5Z", fill = G) +
-        prim("M30 -5A5 5 0 1 1 30 5A3.8 3.8 0 1 0 30 -5Z", fill = G)
+        prim("M-30 -5A5 5 0 1 0 -30 5A3.8 3.8 0 1 1 -30 -5Z", fill = G, dx = 1.5f) +
+        prim("M30 -5A5 5 0 1 1 30 5A3.8 3.8 0 1 0 30 -5Z", fill = G, dx = -1.5f)
     Planet.Mars -> (0 until 8).flatMap { i ->
         val rot = i * 45f
-        listOf(prim("M26 0L35 0", stroke = GD, width = 1f, rotate = rot)) +
-            if (i % 2 == 1) prim("M27 -3.5L36 0L27 3.5Z", fill = GD, rotate = rot)
-            else prim("M27 -4.5L40 0L27 4.5L30 0Z", fill = RD, stroke = G, width = 0.9f, rotate = rot)
+        listOf(prim("M26 0L33 0", stroke = GD, width = 1f, rotate = rot)) +
+            if (i % 2 == 1) prim("M27 -3.5L33 0L27 3.5Z", fill = GD, rotate = rot)
+            else prim("M27 -4.5L33.2 0L27 4.5L30 0Z", fill = RD, stroke = G, width = 0.9f, rotate = rot)
     } + ring(25f, G, 1.2f)
     Planet.Mercury -> feathers(1f) + feathers(-1f) + ring(26f, GD, 1f)
     Planet.Jupiter -> listOf(45f, 135f, 225f, 315f).map {
@@ -86,15 +86,15 @@ private fun ringOrnament(p: Planet): List<Prim> = when (p) {
     } + ring(25f, G, 1.2f) + ring(28f, GD, 0.8f, floatArrayOf(1f, 2.6f))
     Planet.Venus -> (0 until 10).map { i ->
         prim(
-            "M25 0C28 -6 34 -6 36 0C34 6 28 6 25 0Z",
+            "M25 0C27 -5 30.5 -5 32 0C30.5 5 27 5 25 0Z",
             fill = if (i % 2 == 1) Feather else PetalRed, stroke = G, width = 0.9f, rotate = i * 36f,
         )
     } + ring(25f, G, 1.2f)
     Planet.Saturn -> listOf(
-        prim("M0 -34L10 -28L28 -22L34 0L28 22L10 28L0 34L-10 28L-28 22L-34 0L-28 -22L-10 -28Z", stroke = GD, width = 1f),
+        prim("M0 -31L9 -25L25 -20L31 0L25 20L9 25L0 31L-9 25L-25 20L-31 0L-25 -20L-9 -25Z", stroke = GD, width = 1f),
     ) + (0 until 12).map { prim("M26 0H31", stroke = G, width = 1.4f, rotate = it * 30f) } +
         listOf(0f, 90f, 180f, 270f).map {
-            prim("M35 -3L40 0L35 3L30 0Z", fill = RD, stroke = G, width = 0.8f, rotate = it)
+            prim("M29 -2.8L33 0L29 2.8L25 0Z", fill = RD, stroke = G, width = 0.8f, rotate = it)
         } + ring(25f, G, 1.2f)
 }
 

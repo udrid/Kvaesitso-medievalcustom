@@ -17,3 +17,5 @@
 - T5c-pill-position: an OEM cutout path is often a box from the screen's top edge down past the hole, so cutoutPath == boundingRect and its centre is above the hole; for a punch hole use bottom - width/2. UNVERIFIED on the S20 FE until the on-screen numbers come back.
 - T5c-pill-position: when only the phone can test, ship on-screen numbers (screenshot-readable) in the first fix build instead of a guessed offset.
 - T8-header-size: Compose line boxes are taller than the glyphs; a column offset plus natural line heights hid ~10 units of overflow past the header block. Set explicit lineHeight when stacking text above a fixed line.
+- T10-cleanup: header widths can be measured on this PC with System.Drawing PrivateFontCollection on the res/font TTFs (PowerShell, no Python); family index order is alphabetical, not load order. Stroke miter at sharp tips adds up to 4x half the stroke width to ornament reach.
+- T10-cleanup: a fresh git worktree has no `local.properties` (git-ignored); copy it from the main folder before compiling.
