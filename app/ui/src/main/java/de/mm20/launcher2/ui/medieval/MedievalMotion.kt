@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -249,6 +250,9 @@ internal fun rememberOneShot(trigger: Any?, durationMs: Long, enabled: Boolean):
 /** Delay between the press and opening the app, so the reaction can be seen (only while motion is allowed). */
 private const val LaunchDelayMs = 120L
 
+/** A held press shows its glow at most this long. */
+private const val MaxHoldMs = 1500L
+
 /** Interaction source + reaction for a tap target; pass the source to clickable() and open apps via [open]. */
 internal class TapReaction(
     val source: MutableInteractionSource,
@@ -272,6 +276,8 @@ internal class TapReaction(
                 action()
             } finally {
                 pending = false
+                // the app is opening: leave nothing lit behind for the return to Home
+                amount.snapTo(0f)
             }
         }
     }
@@ -297,11 +303,19 @@ internal fun rememberTapReaction(): TapReaction {
         }
         source.interactions.collectLatest {
             when (it) {
-                is PressInteraction.Press -> amount.animateTo(1f, tween(90))
+                is PressInteraction.Press -> {
+                    amount.animateTo(1f, tween(90))
+                    // failsafe: a press whose Release or Cancel never arrives (dialog, lost touch) still fades out
+                    delay(MaxHoldMs)
+                    amount.animateTo(0f, tween(160))
+                }
                 is PressInteraction.Release, is PressInteraction.Cancel -> amount.animateTo(0f, tween(160))
             }
         }
     }
+    // whatever happens to the touch, Home leaving the front or coming back resets the reaction
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) { scope.launch { amount.snapTo(0f) } }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { scope.launch { amount.snapTo(0f) } }
     return remember(source, amount, scope) { TapReaction(source, amount, { allowed.value }, scope) }
 }
 

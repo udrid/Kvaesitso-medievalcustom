@@ -32,3 +32,11 @@ Follow-ups left alone (out of scope): weather stop-motion ungated and the new-da
 - Update for the owner's worry: Minimal now has two ambient effects, orb (5 fps) + weather (up to 5 fps, in practice fewer redraws). Weather scene is 74 x 30 dp, about 207 x 84 px = 0.017 Mpx, about 20-40 small paths per frame, CPU well under 1 ms. Added fill: 0.017 x 5 = 0.09 Mpx/s, negligible; the cost is again the display wakes. Estimate for orb + weather together: **about 0.5-1.2 % per hour of screen-on time on Home** (the weather adds a little only when it changes a frame; it shares the orb's wakes at 5 fps). Estimate, not measured. Previous state: weather alone ran at ~12 fps always, even with Battery Saver.
 - NOT verified: that 5 fps still reads as stop-motion (choppy is intended); that the still frame looks right.
 - Still a follow-up: new-day shimmer of the red capital.
+
+## Addendum 2: the glow can no longer stick (owner report: "glow gets stuck")
+Likely cause in the old build: the reaction ran as a 250 ms animation started on Release and the app launched at the same time; Home paused mid-animation, the animation state survived, and Home came back showing it half-played. New rules in `MedievalMotion.kt` (`rememberTapReaction`), same for orb, shields and seals:
+- Release or Cancel (including sliding the finger off) fades to 0 in 160 ms.
+- Failsafe: a Press with no Release/Cancel fades out after 1.5 s at most.
+- When the app is opened through `open()`, the reaction is set to 0 right after the launch call.
+- ON_PAUSE and ON_RESUME of Home both reset it to 0 (`LifecycleEventEffect`), and the gate closing (Battery Saver, screen off, setting Off) resets it too.
+- NOT verified on the phone. Compiles.

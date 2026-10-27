@@ -50,3 +50,11 @@ Install the new APK (after the build is green and you said yes to the push). Go 
 3. You should see the weather picture stand still (one calm frame, no lightning stuck on it) and the orb smoke and dust stop moving.
 4. Turn Battery Saver off: both start moving again. Setting Animations to Off should freeze them the same way.
 5. Should NOT happen: the weather picture still moving with Battery Saver on.
+
+## 9. The glow never sticks
+1. Tap the orb. The Claude app opens. Press Back (or swipe back) to return to Home.
+2. You should see the orb looking normal: no glow, not swollen.
+3. Press and HOLD the orb, then slide your finger away from it and let go. The glow should fade out within a moment and the Claude app should NOT open.
+4. Press and hold the orb for several seconds without moving: the glow fades by itself after about a second and a half.
+5. Do steps 1 and 3 on one shield and one wax seal too.
+6. Should NOT happen: any glow, swelling or darkening left on the orb, a shield or a seal when you are back on Home.
