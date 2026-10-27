@@ -84,9 +84,9 @@ fun SearchColumn(
     val favoritesVM: SearchFavoritesVM = viewModel()
     val favorites by favoritesVM.favorites.collectAsState(emptyList())
 
-    val hideFavs by viewModel.hideFavorites
+    val hideFavs = viewModel.hideFavorites.value || viewModel.isSearchEmpty.value // Deliverance: nothing before typing
     val favoritesEnabled by viewModel.favoritesEnabled.collectAsState(false)
-    val allAppsEnabled by viewModel.allAppsEnabled.collectAsState(false)
+    val allAppsEnabled = false // Deliverance: no all-apps list before typing
 
     val apps = viewModel.appResults
     val workApps = viewModel.workAppResults
