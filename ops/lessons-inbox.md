@@ -40,3 +40,5 @@
 - R1: this PC cannot run the Android emulator (cloud VM, no nested virtualization); render Compose with the Robolectric screenshot test instead (`ops/emulator.md`) before asking the owner for a build.
 - S2: the Material theme editors (colours/shapes/typography pickers) no longer change anything because LauncherTheme fixes the Deliverance look; an HTML preview must paint ribbons after inner frame lines or the gold line crosses the ribbon (CSS ::after is painted last).
 - Colour switch: making Medieval.X getters over a Compose-state palette recoloured 110 uses with no edits; only top-level 'private val X = Color(...)' constants (frozen at load) needed converting to getters.
+- S3: Kvaesitso icon packs need the EXACT package and activity per item (IconDao matches activityName only when equal or null, and appfilter cannot make a null); a pack cannot draw letters, only wrap the real icon via iconback and scale.
+- S3: a standalone iconpack/ Gradle build compiles with the repo wrapper (-p iconpack) but not with --offline (its Kotlin plugin is not cached); PowerShell script files are blocked here, so run their commands inline.
