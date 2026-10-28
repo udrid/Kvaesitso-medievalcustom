@@ -150,7 +150,7 @@ class MedievalShots {
     }
 
     /** Hands out fakes instead of the real view models (they need Koin and the phone's repositories). */
-    private class FakeOwner : ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
+    internal class FakeOwner : ViewModelStoreOwner, HasDefaultViewModelProviderFactory {
         override val viewModelStore = ViewModelStore()
         override val defaultViewModelProviderFactory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -169,7 +169,7 @@ class MedievalShots {
     }
 }
 
-private fun fakeHome(): MedievalHomeVM = mockk<MedievalHomeVM>(relaxed = true).also { vm ->
+internal fun fakeHome(): MedievalHomeVM = mockk<MedievalHomeVM>(relaxed = true).also { vm ->
     val year = Calendar.getInstance().get(Calendar.YEAR) + 1
     fun day(m: Int, d: Int) = Calendar.getInstance().apply { set(year, m, d, 0, 0, 0) }.timeInMillis
     fun event(key: String, label: String, start: Long) = mockk<CalendarEvent>(relaxed = true).also {
