@@ -21,6 +21,7 @@
 | T13-command-field | 1 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T13-command-field | Home bar opens a real typing box (bar rises to top, results below); SUMMON sends the typed text |
 | T15-tweaks | 1 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T15-tweaks | Stars twinkle less; Home closes shield picker and typing layer |
 | T16-polish | 1 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T16-polish | Divider clear of weather, tighter gap, contacts hints, calmer stars |
+| T17-small | 1 | active | claude/T17-small | New-day shimmer on the red capital, weather line fits, pollers stop when Home is hidden |
 | T14-layer-content | 2 | READY TO PUSH (compiled locally, not seen on phone); see testlist.md | claude/T14-layer-content | Typing layer filled: most used apps, starred contacts, 7 quick switches (variant C) |
 | T2-treasury | 1 | deferred: owner wants it last (2026-10-25) | - | Treasury via SimpleFIN Bridge (decisions.md). Verify the API with api-scout first |
 
