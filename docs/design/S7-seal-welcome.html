@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>S7 Breaking the seal: welcome after unlock</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0a0907;color:#e6d9b8;font-family:'IM Fell English',Georgia,serif;padding:26px 30px 60px;width:1000px}
+h1{font-family:UnifrakturCook,serif;font-size:34px;font-weight:700;color:#ecdfbf;margin:0 0 4px}
+h2{font-family:Cinzel,serif;font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:#c9a55a;margin:30px 0 8px;border-top:1px solid #4a3a20;padding-top:14px}
+h3{font-family:Cinzel,serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#a8884c;margin:10px 0 4px}
+p,li,td,th{font-size:14.5px;line-height:1.35;color:#d9ccaa}
+p,li{margin:4px 0}
+ol,ul{margin:4px 0;padding-left:22px}
+.note{color:#a89a76;font-style:italic;font-size:13px}
+code{font-family:Consolas,monospace;font-size:12.5px;color:#e0c98f}
+table{border-collapse:collapse;width:100%;margin:6px 0}
+td,th{border:1px solid #3a2e18;padding:4px 8px;text-align:left;vertical-align:top}
+th{font-family:Cinzel,serif;font-size:11px;letter-spacing:.12em;color:#c9a55a;background:#16130d}
+.row{display:flex;gap:10px;margin:6px 0 2px}
+.fr{width:158px;flex:none}
+.fr .cap{font-family:Cinzel,serif;font-size:9px;letter-spacing:.14em;color:#a8884c;margin-top:3px;text-align:center}
+.scaler{width:158px;height:352px;position:relative;overflow:hidden;border:1px solid #3a2e18}
+.scaler .stage{transform:scale(.3844);transform-origin:0 0}
+.tag{font-family:Cinzel,serif;font-size:11px;letter-spacing:.16em;color:#f0a050;margin:8px 0 0}
+.live{display:flex;gap:18px;align-items:flex-start}
+button{font-family:Cinzel,serif;font-size:12px;letter-spacing:.12em;background:#481510;color:#f0e2bd;border:1px solid #c9a55a;padding:6px 14px;margin:2px 4px 2px 0;cursor:pointer}
+button.on{background:#6a1d16}
+
+/* ===== phone stage 411 x 914 dp ===== */
+.stage{position:relative;width:411px;height:914px;overflow:hidden;background:radial-gradient(90% 60% at 50% 40%,var(--bgMid) 0%,var(--bgEdge) 85%),var(--ink);font-family:'IM Fell English',serif;color:var(--text)}
+.stage .a{position:absolute}
+.vig{position:absolute;inset:0;background:radial-gradient(120% 100% at 50% 50%,transparent 55%,rgba(0,0,0,.65) 100%);pointer-events:none;z-index:60}
+.panel{position:absolute;border:1px solid var(--goldDark);background:linear-gradient(178deg,var(--panelTop),var(--panelBottom));box-shadow:inset 0 0 14px rgba(0,0,0,.6)}
+.panel::before{content:"";position:absolute;inset:2px;border:1px solid var(--goldLine)}
+.rib{position:absolute;top:-6px;left:8px;height:13px;padding:0 12px 0 8px;background:linear-gradient(var(--ox),var(--oxDark));border-top:1px solid var(--gold);color:var(--ribText);font:700 6.5px Cinzel,serif;letter-spacing:.2em;display:flex;align-items:center;clip-path:polygon(0 0,100% 0,calc(100% - 5px) 50%,100% 100%,0 100%)}
+.cap{font-family:Cinzel,serif;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cap);white-space:nowrap}
+.pen{position:absolute;width:60px;height:57px;border:1px solid var(--goldDeep);background:linear-gradient(var(--panelTop),var(--panelBottom));clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}
+.shield{position:absolute;width:62px;height:76px;background:var(--goldDeep);clip-path:polygon(0 0,100% 0,100% 55%,50% 100%,0 55%)}
+.shield i{position:absolute;inset:1.5px;background:var(--shieldFill);clip-path:polygon(0 0,100% 0,100% 55%,50% 100%,0 55%)}
+.shield b{position:absolute;left:1.5px;right:1.5px;top:1.5px;height:18px;background:var(--shieldTop)}
+.shield u{position:absolute;left:0;right:0;top:30px;text-align:center;text-decoration:none;color:var(--gold);font:400 22px 'IM Fell English',serif}
+.lbl{position:absolute;text-align:center;font:700 8px Cinzel,serif;letter-spacing:.2em;color:var(--cap)}
+.orbwrap{position:absolute;left:105px;top:282px;width:200px;height:200px}
+.orbwrap .ring{position:absolute;inset:0}
+.orbbody{position:absolute;left:35px;top:35px;width:130px;height:130px;border-radius:50%;overflow:hidden}
+.orbbody img{position:absolute;inset:0;width:100%;height:100%}
+.orbbody .glass{mix-blend-mode:plus-lighter}
+.orbbody .dark{position:absolute;inset:0;border-radius:50%;background:#000}
+.orbbody .heart{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;background:#fff6e0;box-shadow:0 0 10px 4px var(--heart)}
+.seal{position:absolute;width:54px;height:54px;margin:-27px 0 0 -27px}
+.seal svg{position:absolute;inset:-6px;width:66px;height:66px;overflow:visible}
+.seal .half{position:absolute;inset:0}
+.seal .gl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--gold);font:400 22px 'IM Fell English',serif}
+.spark{position:absolute;border-radius:50%;background:var(--ember);box-shadow:0 0 4px var(--ember);pointer-events:none}
+</style>
+</head>
+<body>
+<h1>Breaking the seal</h1>
+<p class="note">S7 Part 1, preview only. Welcome animation when Home appears after you unlock the phone. The real lock screen stays Samsung's. Shown at the real size, 411 x 914 dp, in Gold and Oxblood and in Ember. Nothing here is built yet.</p>
+
+<h2>1. How the launcher knows "Home appears right after an unlock"</h2>
+<p>All of these need <b>no new permission</b>. All status below is <b>UNVERIFIED on the phone</b> (written from Android documentation and known behaviour; to be confirmed with a small probe on the S20 FE).</p>
+<table>
+<tr><th>Signal</th><th>What it tells</th><th>One UI 5 / limits</th></tr>
+<tr><td><b>Resume after screen off</b> (already built in T9: Home paused while the screen was off, then resumed = <code>wakes++</code>)</td><td>Home was on screen when you locked the phone and is on screen again.</td><td>Android stops activities hidden behind the keyguard, so the resume normally comes <i>after</i> the unlock, which is what we want. But with no lock or "swipe" lock it comes at screen-on, and with a Samsung "stay on lock screen" face unlock it comes only after you swipe. It does not say <i>unlocked</i> by itself.</td></tr>
+<tr><td><b><code>KeyguardManager.isKeyguardLocked</code></b> (check on resume)</td><td>True while the lock screen is still up.</td><td>Read once at resume: if it is still locked, do <b>not</b> play yet. Cheap, no receiver. Can read false a few ms before the dismiss animation ends, so start with a short delay (about 150 ms).</td></tr>
+<tr><td><b><code>ACTION_USER_PRESENT</code></b> (receiver registered only while Home is resumed or waiting)</td><td>The user finished unlocking (PIN, fingerprint, face, swipe).</td><td>Works for a runtime-registered receiver without a permission. Known quirks: not sent by every OEM for every unlock type, so it is a <b>second opinion, not the only one</b>.</td></tr>
+</table>
+<p><b>Recommended recipe (reliable enough, small):</b> keep the existing "Home paused while the screen was off" flag. When Home resumes with that flag: if <code>isKeyguardLocked</code> is false, arm and play after ~150 ms; if true, wait for <code>USER_PRESENT</code> (receiver only while resumed, removed at pause), with a 3 s timeout that gives up silently. Consume the flag when it plays: a later Home press while the phone is unlocked never plays. Pressing Home from another app is not an unlock, so nothing plays.</p>
+<p><b>Limits that stay:</b> (a) it cannot draw on the lock screen itself, only on Home once Home is under your finger; (b) if you locked the phone while inside another app (not Home), you unlock back into that app and there is no welcome; (c) with fingerprint unlock Samsung's own unlock animation runs first, so the welcome starts as that ends (about 0.2 to 0.4 s later); (d) Always-on display wakes and notification peeks are not unlocks.</p>
+
+<h2>2. Three variants (about 1.5 s, once)</h2>
+<p class="note">Key frames are the real animation sampled at 0, 25, 50, 75 and 100 percent of the time. Under each picture: the time in milliseconds. All three: the screen takes touches from frame 0 (the animation is a non-blocking picture on top, nothing waits), gate closed = Home simply appears, Home ends in exactly its normal look. Sparks are tiny.</p>
+
+<div class="live">
+ <div><div class="scaler" id="liveBox" style="width:226px;height:503px"><div id="live" class="stage" style="transform:scale(.55)"></div></div></div>
+ <div style="flex:1">
+  <h3>Play it (live, in the browser)</h3>
+  <div id="liveCtl"></div>
+  <p class="note">This is the browser preview at full frame rate. On the phone the one-shot would run at about 24 frames a second in small regions only.</p>
+ </div>
+</div>
+
+<div id="variants"></div>
+
+<h2>3. Cost and risk</h2>
+<table>
+<tr><th></th><th>A. Seal over the orb</th><th>B. Gates open (dock seals)</th><th>C. Gold sigil</th></tr>
+<tr><td>Look</td><td>One big, dramatic moment on the hero. Needs a new wax-seal picture (about 20 KB, one per palette, or tinted).</td><td>Uses the seals you already have; the whole screen wakes in order. Busiest.</td><td>Quietest and most elegant; a line that draws itself. Pure drawing, no picture needed.</td></tr>
+<tr><td>Battery</td><td>About 1.5 s of redraw over a 130 dp disc plus a few sparks, once per unlock. At 100 unlocks a day about 150 s of drawing, well under 0.1 % of the battery per day (estimate, not measured).</td><td>Draws four small discs and fades the sections (the whole page changes alpha, so the largest area of the three), once per unlock. Still about 0.1 % per day (estimate).</td><td>One thin stroke and the orb glow. Lowest of the three, under 0.05 % per day (estimate).</td></tr>
+<tr><td>Build cost</td><td>Medium: one new file (overlay with 6 shards, cracks, sparks), one seal picture per palette, a trigger, a setting.</td><td>Medium to large: the dock needs seal halves, and every Home section needs an alpha group so it can fade up; touches several files.</td><td>Small: one new overlay file (a stroke and a few marks), a trigger, a setting.</td></tr>
+<tr><td>Risk</td><td>Seal covers the orb for the first 0.4 s: if the trigger fires late the orb would look hidden briefly. Shards must be removed from drawing after they fall (no leftovers).</td><td>Sections are invisible at the start, so if the trigger misfires (for example Home visible through the keyguard) the screen could look empty for a moment: the biggest risk. Needs a hard "always end visible" failsafe.</td><td>Lowest. If the trigger misfires you see only a thin gold line.</td></tr>
+</table>
+
+<h2>4. What every variant shares (rules obeyed)</h2>
+<ol>
+<li>Plays only when the motion gate is open: Home resumed, screen on, Battery Saver off, battery above 15 % or charging, Android's remove-animations off, Animations setting not Off. Gate closed = Home just appears.</li>
+<li>Plays at most once per unlock, never on a plain Home press, never after the app comes back from another app.</li>
+<li>Never delays touch: the overlay does not take touches; the orb, dock and shields work from the first frame. Any tap ends the animation at once (jump to the final look).</li>
+<li>New setting <b>Welcome animation: On / Off</b>, right under Animations. Default On. When Animations is Off the welcome is off too.</li>
+<li>Sparks and glow only as small regions; no looping; always ends in the normal Home look; extra pictures use the current palette (Gold or Ember shown; Verdigris, Bone, Royal follow the same colour roles).</li>
+<li>No sound, no vibration (could be a later choice).</li>
+</ol>
+
+<h2>5. NOT verified</h2>
+<ul>
+<li>Nothing has run on the phone. Which unlock signals fire on One UI 5 with your lock type (fingerprint, face, PIN, none) is UNVERIFIED: a one-evening probe screen can settle it after the design is picked.</li>
+<li>The timing (feel) and how it sits next to Samsung's own unlock animation can only be judged on the phone.</li>
+<li>This preview is a browser drawing with a simplified Home; real frame rate, battery use and the seal pictures are estimates.</li>
+<li>Whether the 1.5 s feels too long after the hundredth unlock: that is why there is an Off switch, and a possible "play only the first unlock of each hour" option (question 5 below).</li>
+</ul>
+<p class="tag">QUESTIONS FOR THE OWNER: see the numbered choices in the report (variant, speed, scope).</p>
+
+<script>
+/* ===================== palettes (from MedievalPalette.kt) ===================== */
+const IMG='../../app/ui/src/main/res/drawable-nodpi/';
+const PAL={
+ gold:{name:'Gold and Oxblood',sfx:'',v:{'--gold':'#C9A55A','--goldDeep':'#8C6D3A','--goldDark':'#6B5430','--goldLine':'#4A3A20','--cap':'#A8884C','--text':'#E6D9B8','--ox':'#6A1D16','--oxDark':'#481510','--panelTop':'#1D1A14','--panelBottom':'#12100C','--ink':'#0A0907','--shieldFill':'#15120D','--shieldTop':'#3A1612','--wax':'#4E1511','--waxEdge':'#2A0A08','--ember':'#F0A050','--ribText':'#F0E2BD','--bgMid':'#26211A','--bgEdge':'#0D0C09','--heart':'#FFA060','--spark':'#FFF0C0'}},
+ ember:{name:'Ember',sfx:'_ember',v:{'--gold':'#E3A04F','--goldDeep':'#A8692A','--goldDark':'#774A1E','--goldLine':'#4A2C14','--cap':'#C0843E','--text':'#EBD8B8','--ox':'#7A1E14','--oxDark':'#4E120C','--panelTop':'#1E1612','--panelBottom':'#120D0A','--ink':'#080605','--shieldFill':'#15100C','--shieldTop':'#421812','--wax':'#5A1810','--waxEdge':'#2C0C08','--ember':'#FFB060','--ribText':'#F7E6C4','--bgMid':'#2A1D14','--bgEdge':'#0C0907','--heart':'#FFB060','--spark':'#F3D9A0'}}
+};
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const seg=(t,a,b)=>clamp((t-a)/(b-a));          // 0..1 progress of t between a and b
+const ease=x=>x*x*(3-2*x);
+const SECT=['hdr','tre','pen','shl','led','cmd','dsp','dock'];
+
+/* ===================== build one stage ===================== */
+function buildStage(el,palKey){
+  const P=PAL[palKey];
+  for(const k in P.v)el.style.setProperty(k,P.v[k]);
+  el.dataset.pal=palKey;
+  const ringTxt='NOSCE TE IPSUM ✠ SAPERE AUDE ✠ LUX ET VERITAS ✠ ';
+  el.innerHTML=`
+  <div class="a" data-s="hdr" style="left:0;top:0;width:411px;height:140px">
+    <div class="a" style="left:34px;top:44px;font:400 10px Cinzel;letter-spacing:.3em;color:var(--goldDark)">DAY OF MARS</div>
+    <div class="a" style="left:30px;top:52px;font:700 62px UnifrakturCook;color:var(--ox);filter:brightness(1.5) saturate(1.2)">T</div>
+    <div class="a" style="left:86px;top:66px;font:400 34px UnifrakturMaguntia;color:var(--text)">uesday</div>
+    <div class="a cap" style="left:88px;top:104px;font-size:10.5px">27th of October</div>
+    <div class="a" style="left:229px;top:52px;width:70px;height:70px;border-radius:50%;border:2px solid var(--goldDeep);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:26px">♂</div>
+    <div class="a" style="left:318px;top:48px;font:400 26px Cinzel;color:var(--text);letter-spacing:.04em">10:48</div>
+    <div class="a" style="left:307px;top:80px;font:italic 11px 'IM Fell English';color:#a8987a">63° · Partly cloudy</div>
+    <div class="a" style="left:30px;top:130px;width:272px;border-top:1px solid var(--goldDeep)"></div>
+  </div>
+  <div class="panel" data-s="tre" style="left:25px;top:157px;width:361px;height:60px"><div class="rib">TREASURY</div>
+    <div class="a" style="left:10px;top:11px;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e0c070,#8a6a22);border:1px solid #5a4620"></div>
+    <div class="a" style="left:66px;top:15px;font:700 19px Cinzel;color:var(--text)">[YOUR TOTAL]</div>
+    <div class="a cap" style="left:240px;top:10px;font-size:9px">Quest: [goal]</div>
+    <div class="a" style="left:240px;top:27px;width:110px;height:11px;background:#000;border:1px solid var(--goldDark)"></div></div>
+  ${[25,125,225,326].map((x,i)=>`<div class="pen" data-s="pen" style="left:${x}px;top:227px"><div class="a cap" style="left:0;right:0;top:12px;text-align:center;font-size:7.5px">${['VIGOR','STORES','WITS','HEAT'][i]}</div><div class="a" style="left:0;right:0;top:30px;text-align:center;color:var(--cap)">-</div></div>`).join('')}
+  ${[[30,307],[30,412],[320,307],[320,412]].map(([x,y])=>`<div class="shield" data-s="shl" style="left:${x}px;top:${y}px"><i></i><b></b><u>+</u></div><div class="lbl" data-s="shl" style="left:${x-6}px;top:${y+82}px;width:74px">EMPTY</div>`).join('')}
+  <div class="panel" data-s="led" style="left:25px;top:518px;width:361px;height:74px"><div class="rib">TODAY'S LEDGER</div>
+    <div class="a" style="left:20px;top:22px;font:700 11px Cinzel;color:var(--cap)">OCT 31</div><div class="a" style="left:98px;top:19px;font-size:16px">Halloween</div>
+    <div class="a" style="left:20px;top:46px;font:700 11px Cinzel;color:var(--cap)">NOV 1</div><div class="a" style="left:98px;top:43px;font-size:16px">Daylight Saving Time ends</div></div>
+  <div class="panel" data-s="cmd" style="left:25px;top:599px;width:361px;height:48px"><div class="a" style="left:60px;top:11px;font:italic 20px 'IM Fell English';color:#a89a76">Command the Oracle...</div>
+    <div class="a" style="left:268px;top:7px;width:84px;height:32px;background:linear-gradient(#481510,#1c0a08);border:1px solid var(--goldDark);color:var(--ribText);font:700 10px Cinzel;letter-spacing:.16em;display:flex;align-items:center;justify-content:center">SUMMON</div></div>
+  <div class="panel" data-s="dsp" style="left:25px;top:654px;width:361px;height:106px"><div class="rib">DISPATCHES</div><div class="a" style="left:20px;top:34px;font-size:17px;color:#cdbf9c">No dispatches</div></div>
+  <div class="a" data-s="dock" style="left:8px;top:773px;width:395px;border-top:1px solid var(--goldDark)"></div>
+  ${['HERALD','PORTRAIT','ROAD','SMITHY'].map((n,i)=>`<div class="lbl" data-s="dock" style="left:${58+i*98.7-45}px;top:855px;width:90px">${n}</div>`).join('')}
+  <div class="orbwrap" data-s="orb">
+    <svg class="ring" viewBox="-100 -100 200 200"><defs><path id="rp${palKey}" d="M0,-80 A80,80 0 1 1 -0.01,-80"/></defs>
+      <circle r="95" fill="var(--wax)" stroke="var(--goldDark)" stroke-width="1"/><circle r="66" fill="#100906" />
+      <text font-family="Cinzel" font-weight="700" font-size="10.5" letter-spacing="2.4" fill="var(--goldDeep)"><textPath href="#rp${palKey}" textLength="496">${ringTxt}</textPath></text>
+    </svg>
+    <div class="orbbody"><img src="${IMG}medieval_orb_smoke${P.sfx}.webp"><div class="heart" data-r="heart"></div><div class="dark" data-r="dark"></div><img class="glass" src="${IMG}medieval_orb_glass${P.sfx}.webp"><img src="${IMG}medieval_orb_setting${P.sfx}.webp"></div>
+  </div>
+  <div class="a" data-s="orbglow" style="left:140px;top:317px;width:130px;height:130px;border-radius:50%;pointer-events:none"></div>
+  ${[58,156.7,255.4,354].map((x,i)=>`<div class="seal" data-seal="${i}" style="left:${x}px;top:815px"></div>`).join('')}
+  <div class="a" data-big style="left:205px;top:382px;width:0;height:0"></div>
+  <div class="a" data-fx style="left:0;top:0;width:411px;height:914px;pointer-events:none"></div>
+  <div class="vig"></div>`;
+  buildSeals(el);
+}
+
+/* wax outline: wobbly disc */
+function waxPath(R,seed,n=36,wob=.07){
+  let s=seed,pts=[];const rnd=()=>{s=(s*9301+49297)%233280;return s/233280};
+  for(let i=0;i<n;i++){const a=i/n*Math.PI*2,r=R*(1+(rnd()-.5)*2*wob+(i%2?0.015:-0.01));pts.push([Math.cos(a)*r,Math.sin(a)*r])}
+  return pts;
+}
+const ptsStr=p=>p.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ');
+
+/* dock seals: whole seal for A and C; halves for B */
+function buildSeals(el){
+  el.querySelectorAll('[data-seal]').forEach((d,i)=>{
+    const pts=waxPath(31,40+i*7,30,.06);
+    const wax=`<svg viewBox="-33 -33 66 66"><defs><radialGradient id="wg${el.dataset.pal}${i}${el.id||''}" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="var(--ox)"/><stop offset="1" stop-color="var(--wax)"/></radialGradient></defs><polygon points="${ptsStr(pts)}" fill="url(#wg${el.dataset.pal}${i}${el.id||''})" stroke="var(--waxEdge)" stroke-width="1.2"/><circle r="22" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="1.5"/><circle r="23" fill="none" stroke="rgba(255,120,90,.15)" stroke-width="1"/></svg>`;
+    const gl=['☎','◎','✦','✠'][i];
+    d.innerHTML=`<div class="half">${wax}</div><div class="gl" data-g>${gl}</div>
+      <div class="half" data-h="L" style="clip-path:polygon(0 0,50% 0,56% 22%,45% 42%,55% 62%,47% 80%,52% 100%,0 100%)">${wax}</div>
+      <div class="half" data-h="R" style="clip-path:polygon(50% 0,100% 0,100% 100%,52% 100%,47% 80%,55% 62%,45% 42%,56% 22%)">${wax}</div>
+      <svg viewBox="0 0 54 54" style="position:absolute;inset:0;width:54px;height:54px;overflow:visible" data-crack><polyline points="27,2 31,13 24,24 30,34 25,44 27,52" fill="none" stroke="var(--spark)" stroke-width="1.2" stroke-dasharray="60" stroke-dashoffset="60" opacity="0"/></svg>`;
+  });
+}
+
+/* ===================== variants: frame(t) with t = 0..1 ===================== */
+const DUR={A:1500,B:1800,C:1500};
+function setS(el,name,o,dy=0){el.querySelectorAll(`[data-s="${name}"]`).forEach(n=>{n.style.opacity=o;n.style.transform=dy?`translateY(${dy}px)`:''})}
+function kindle(el,k){ // k 0..1 : orb dark -> alive
+  el.querySelector('[data-r="dark"]').style.opacity=.75*(1-k)*(1-k);
+  const h=el.querySelector('[data-r="heart"]');
+  const fl=k<=0?0:(k<.5?k/.5:1+.35*(1-(k-.5)/.5)*Math.exp(-0));
+  h.style.opacity=clamp(.15+.85*k);
+  h.style.transform=`scale(${.5+0.9*Math.sin(Math.min(1,k)*Math.PI*.85)+.4*k})`;
+}
+function glow(el,a,r,col){ // soft ring glow around the orb setting
+  const g=el.querySelector('[data-s="orbglow"]');
+  g.style.boxShadow=a>0?`0 0 ${r}px ${r/3}px ${col}`:'none';g.style.opacity=a;
+}
+function clearFx(el){
+  el.querySelector('[data-fx]').innerHTML='';el.querySelector('[data-big]').innerHTML='';
+  glow(el,0,0,'#000');
+  SECT.forEach(s=>setS(el,s,1));
+  el.querySelectorAll('[data-seal]').forEach(d=>{d.style.display='';d.style.opacity=1;
+    d.querySelectorAll('.half[data-h]').forEach(h=>{h.style.transform='';h.style.opacity=1});
+    const c=d.querySelector('[data-crack] polyline');c.style.opacity=0;c.style.strokeDashoffset=60;});
+}
+function sparks(el,list){ // list of [x,y,r,alpha]
+  const fx=el.querySelector('[data-fx]');
+  fx.innerHTML=list.map(([x,y,r,a])=>`<div class="spark" style="left:${x-r}px;top:${y-r}px;width:${2*r}px;height:${2*r}px;opacity:${a}"></div>`).join('');
+}
+function burst(cx,cy,t0,t,n,speed,life,seed){ // tiny deterministic sparks
+  const out=[];let s=seed;const rnd=()=>{s=(s*9301+49297)%233280;return s/233280};
+  for(let i=0;i<n;i++){const a=rnd()*Math.PI*2,v=speed*(.5+rnd()),ls=life*(.6+rnd()*.6);const u=(t-t0)/ls;
+    if(u<0||u>1)continue;const x=cx+Math.cos(a)*v*u*ls/1000*1.0,y=cy+Math.sin(a)*v*u*ls/1000+40*Math.pow(u*ls/1000,2);
+    out.push([x,y,1+rnd()*1.2,(1-u)*(1-u)])}
+  return out;
+}
+
+/* ---- A: big seal over the orb ---- */
+function frameA(el,ms){
+  clearFx(el);
+  const big=el.querySelector('[data-big]');
+  const N=6,R=97,wob=waxPath(R,5,60,.045);
+  const seed=wob; // outline points
+  const crack=seg(ms,120,560), fall=ms-560;
+  const k=seg(ms,520,1450);kindle(el,ms<520?0:ease(k));
+  // wedge polygons from centre
+  let wedges='';
+  for(let i=0;i<N;i++){
+    const a0=i*60-90+(i%2?-4:4),a1=(i+1)*60-90+((i+1)%2?-4:4);
+    const arc=seed.filter(p=>{let a=Math.atan2(p[1],p[0])*180/Math.PI;a=(a+360)%360;const b0=(a0+360)%360,b1=(a1+360)%360;return b0<b1?(a>=b0&&a<b1):(a>=b0||a<b1)});
+    const ca=(a0+a1)/2*Math.PI/180;
+    // fall: each wedge has its own delay, drift, spin
+    const dl=[0,60,20,90,40,110][i],u=clamp((fall-dl)/700,0,1.2);
+    const dy=ms<560?0:600*u*u+ 6*u, dx=Math.cos(ca)*40*u+(i%2?8:-8)*u, rot=(i%2?1:-1)*(8+i*5)*u;
+    const op=ms<560?1:clamp(1-(u-.45)/.55);
+    const pts=[[0,0],...arc.length?arc:[[Math.cos(ca)*R,Math.sin(ca)*R]]];
+    wedges+=`<g transform="translate(${dx.toFixed(1)},${dy.toFixed(1)}) rotate(${rot.toFixed(1)})" opacity="${op.toFixed(2)}"><polygon points="${ptsStr(pts)}" fill="url(#bg)" stroke="var(--waxEdge)" stroke-width="1.2" stroke-linejoin="round"/></g>`;
+  }
+  const cr=crack; // crack strokes along orb ring and radials
+  const ringC=2*Math.PI*66;
+  const fade=ms<560?1:0;
+  big.innerHTML=`<svg viewBox="-130 -130 260 260" style="position:absolute;left:-130px;top:-130px;width:260px;height:260px;overflow:visible">
+   <defs><radialGradient id="bg" cx=".4" cy=".32" r=".85"><stop offset="0" stop-color="var(--ox)"/><stop offset=".7" stop-color="var(--wax)"/><stop offset="1" stop-color="var(--waxEdge)"/></radialGradient></defs>
+   ${wedges}
+   <g opacity="${ms<560?1:0}">
+    <circle r="84" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="2.4"/><circle r="86" fill="none" stroke="rgba(255,130,100,.14)" stroke-width="1"/>
+    <path d="M-34,0 L34,0 M0,-34 L0,34" stroke="rgba(0,0,0,.4)" stroke-width="3" fill="none"/>
+    <circle r="66" fill="none" stroke="var(--spark)" stroke-width="1.6" stroke-dasharray="${ringC}" stroke-dashoffset="${ringC*(1-cr)}"/>
+    ${Array.from({length:N},(_,i)=>{const a=(i*60-90+(i%2?-4:4))*Math.PI/180,l=R*cr;return `<line x1="${Math.cos(a)*18}" y1="${Math.sin(a)*18}" x2="${Math.cos(a)*(18+(R-18)*cr)}" y2="${Math.sin(a)*(18+(R-18)*cr)}" stroke="var(--spark)" stroke-width="1.3" opacity="${cr>0?0.95:0}"/>`}).join('')}
+   </g></svg>`;
+  // glow along the cracks and the ring when it breaks
+  const g=ms<120?0:ms<560?cr*.55:clamp(.55*(1-(ms-560)/700));
+  glow(el,g,26,'var(--ember)');
+  const list=ms>=520?burst(205,382,520,ms,16,130,700,11):[];
+  sparks(el,list);
+}
+
+/* ---- B: dock seals break in sequence, sections rise, orb last ---- */
+function frameB(el,ms){
+  clearFx(el);
+  const order=['hdr','tre','pen','shl','led','cmd','dsp','dock'];
+  order.forEach((s,i)=>{const u=ease(seg(ms,250+i*85,650+i*85));setS(el,s,u,(1-u)*14)});
+  setS(el,'orb',ease(seg(ms,500,900)));
+  const t0=[60,210,360,510];
+  let sp=[];
+  el.querySelectorAll('[data-seal]').forEach((d,i)=>{
+    const c=seg(ms,t0[i],t0[i]+110),s=seg(ms,t0[i]+110,t0[i]+420);
+    const cr=d.querySelector('[data-crack] polyline');cr.style.opacity=c>0&&s<1?1:0;cr.style.strokeDashoffset=60*(1-c);
+    d.querySelectorAll('.half[data-h]').forEach(h=>{const dir=h.dataset.h==='L'?-1:1;
+      h.style.transform=`translate(${dir*22*s}px,${46*s*s}px) rotate(${dir*34*s}deg)`;h.style.opacity=1-clamp((s-.5)/.5)});
+
+    if(ms>=t0[i]+110)sp=sp.concat(burst(58+i*98.7,815,t0[i]+110,ms,7,70,420,30+i));
+  });
+  const k=seg(ms,1000,1750);kindle(el,k>0?ease(k):0);
+  glow(el,ms<1000?0:clamp(.5*(1-Math.abs(seg(ms,1000,1750)-.45)*2)),22,'var(--ember)');
+  if(ms>=1000)sp=sp.concat(burst(205,382,1000,ms,10,90,600,5));
+  sparks(el,sp);
+}
+
+/* ---- C: gold sigil drawn around the ring ---- */
+function frameC(el,ms){
+  clearFx(el);
+  const d=seg(ms,60,760);            // stroke progress
+  const R1=105,C1=2*Math.PI*R1,R2=111,C2=2*Math.PI*R2;
+  const fadeOut=1-seg(ms,1100,1500);
+  const marks=[];
+  for(let i=0;i<8;i++){const a=(-90+i*45)*Math.PI/180,pa=i/8; // drawn point
+    const shown=d>=pa+.02;const sc=shown?1:0;const big=i%2===0;
+    const x=Math.cos(a)*(R1),y=Math.sin(a)*R1;
+    marks.push(shown?`<g transform="translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${i*45})" opacity="${clamp((d-pa-.02)*8)}">${big?`<path d="M0,-7 L5,0 L0,7 L-5,0 Z" fill="var(--gold)" stroke="var(--spark)" stroke-width=".8"/>`:`<path d="M0,-4 L0,4 M-4,0 L4,0" stroke="var(--gold)" stroke-width="1.4"/>`}</g>`:'');}
+  const tip=(-90+360*d)*Math.PI/180;
+  const tipOn=d>0&&d<1;
+  document;
+  const big=el.querySelector('[data-big]');
+  big.innerHTML=`<svg viewBox="-130 -130 260 260" style="position:absolute;left:-130px;top:-130px;width:260px;height:260px;overflow:visible" opacity="${fadeOut.toFixed(2)}">
+    <circle r="${R1}" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-dasharray="${C1}" stroke-dashoffset="${C1*(1-d)}" transform="rotate(-90)"/>
+    <circle r="${R2}" fill="none" stroke="var(--goldDeep)" stroke-width="1" stroke-dasharray="3 5" stroke-dashoffset="0" opacity="${.9*seg(ms,260,760)}" />
+    <circle r="${R1-9}" fill="none" stroke="var(--goldDeep)" stroke-width=".8" stroke-dasharray="${2*Math.PI*(R1-9)}" stroke-dashoffset="${2*Math.PI*(R1-9)*(1-seg(ms,240,900))}" transform="rotate(90) scale(1,-1)"/>
+    ${marks.join('')}
+    ${tipOn?`<circle cx="${Math.cos(tip)*R1}" cy="${Math.sin(tip)*R1}" r="3.4" fill="var(--spark)"/><circle cx="${Math.cos(tip)*R1}" cy="${Math.sin(tip)*R1}" r="9" fill="var(--ember)" opacity=".35"/>`:''}
+  </svg>`;
+  const k=seg(ms,650,1400);kindle(el,k>0?ease(k):0);
+  const gl=ms<760?0:clamp(.6*(1-seg(ms,760,1300)));
+  glow(el,gl,30,'var(--gold)');
+  sparks(el,[...(tipOn?burst(Math.cos(tip)*R1+205,Math.sin(tip)*R1+382,0,0,0,0,1,1):[]),...(ms>=700?burst(205,382,700,ms,10,80,600,9):[])]);
+}
+const FR={A:frameA,B:frameB,C:frameC};
+function setFrame(el,v,ms){FR[v](el,ms)}
+
+/* ===================== page ===================== */
+const NAMES={A:['A. The great seal','A large wax seal lies over the orb. A gold crack runs round the orb ring, then spokes split it into six shards that fall away while the orb kindles (dark to alive, heart flares).'],
+ B:['B. Gates open','The four dock seals crack and split in sequence (Herald, Portrait, Road, Smithy), each showing its emblem. Home sections fade up from the top as they do; the orb kindles last.'],
+ C:['C. The sigil','A gold line is drawn around the orb ring, marks and diamonds appear where it passes, a spark runs at its tip. When the circle closes the orb kindles, the line fades and Home is as normal.']};
+const root=document.getElementById('variants');
+let uid=0;
+for(const v of ['A','B','C']){
+  const sec=document.createElement('div');
+  sec.innerHTML=`<h2>Variant ${NAMES[v][0]}</h2><p>${NAMES[v][1]} Length ${DUR[v]} ms.</p>`;
+  for(const pk of ['gold','ember']){
+    const h=document.createElement('h3');h.textContent=PAL[pk].name;sec.appendChild(h);
+    const row=document.createElement('div');row.className='row';
+    [0,.25,.5,.75,1].forEach(f=>{
+      const fr=document.createElement('div');fr.className='fr';
+      const sc=document.createElement('div');sc.className='scaler';
+      const st=document.createElement('div');st.className='stage';st.id='st'+(uid++);sc.appendChild(st);
+      fr.appendChild(sc);const ms=Math.round(DUR[v]*f);
+      fr.insertAdjacentHTML('beforeend',`<div class="cap">${ms} ms</div>`);
+      row.appendChild(fr);buildStage(st,pk);
+      // frame 0 shows the "sealed" state, last frame = after the animation
+      setFrame(st,v,f>=1?DUR[v]+50:ms);
+    });
+    sec.appendChild(row);
+  }
+  root.appendChild(sec);
+}
+/* live player */
+const live=document.getElementById('live');let cv='A',cp='gold',raf=0;
+function mount(){buildStage(live,cp);setFrame(live,cv,0)}
+function play(){cancelAnimationFrame(raf);mount();const t0=performance.now();
+  (function step(now){const ms=now-t0;setFrame(live,cv,Math.min(ms,DUR[cv]+50));if(ms<DUR[cv]+50)raf=requestAnimationFrame(step)})(t0)}
+const ctl=document.getElementById('liveCtl');
+function btn(label,fn,grp){const b=document.createElement('button');b.textContent=label;b.onclick=()=>{fn();if(grp){ctl.querySelectorAll('[data-g="'+grp+'"]').forEach(x=>x.classList.remove('on'));b.classList.add('on')}};b.dataset.g=grp||'';return b}
+['A','B','C'].forEach((v,i)=>{const b=btn('Variant '+v,()=>{cv=v;play()},'v');if(!i)b.classList.add('on');ctl.appendChild(b)});
+ctl.appendChild(document.createElement('br'));
+['gold','ember'].forEach((p,i)=>{const b=btn(PAL[p].name,()=>{cp=p;play()},'p');if(!i)b.classList.add('on');ctl.appendChild(b)});
+ctl.appendChild(document.createElement('br'));
+ctl.appendChild(btn('Play again',play));
+mount();setFrame(live,cv,DUR[cv]+50);
+if(location.hash.startsWith('#solo')){const [,v,ms,pk]=location.hash.split(',');document.body.innerHTML='<div id="s" class="stage"></div>';document.body.style.cssText='margin:0;padding:0;width:411px';const s=document.getElementById('s');buildStage(s,pk||'gold');setFrame(s,v,+ms);}
+</script>
+</body>
+</html>
