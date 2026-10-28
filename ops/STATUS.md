@@ -19,4 +19,7 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 - Report what SUMMON did in the Claude app (opens? new chat? words in the box?).
 - After a day: Settings > Battery > Battery usage > Deliverance, tell the coordinator the number.
 - Later, owner-started: "carry the design through the whole phone" step (gestures, search look, top swipe).
-| S4-colour-scheme | 1 | active (Part 1: design preview) | claude/S4-colour-scheme | One setting that recolours the whole look (palettes) |
+| S4-colour-scheme | 1 | READY TO PUSH (Part 2 built, compiles; not tested on phone) | claude/S4-colour-scheme | One setting that recolours the whole look (palettes) |
+
+## Monetisation track (owner 2026-10-28)
+Own section of the development; list of tasks M1 to M10 in `ops/monetization.md`. All open; the owner goes over the whole list together before any starts.

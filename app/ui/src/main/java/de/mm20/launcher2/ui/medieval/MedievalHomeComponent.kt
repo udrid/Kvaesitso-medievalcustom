@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -58,6 +59,8 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
         insets: PaddingValues,
         state: LauncherScaffoldState,
     ) {
+        val paletteContext = LocalContext.current
+        remember(paletteContext) { Medieval.palette = readPalette(paletteContext) }
         var commandOpen by remember { mutableStateOf(false) }
         BoxWithConstraints(
             modifier = modifier
@@ -65,8 +68,8 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
                 .drawBehind {
                     drawRect(
                         Brush.radialGradient(
-                            0f to Color(0xFF26211A),
-                            0.82f to Color(0xFF0D0C09),
+                            0f to Medieval.BgMid,
+                            0.82f to Medieval.BgEdge,
                             center = Offset(size.width * 0.5f, size.height * 0.42f),
                             radius = size.width * 0.9f,
                         )

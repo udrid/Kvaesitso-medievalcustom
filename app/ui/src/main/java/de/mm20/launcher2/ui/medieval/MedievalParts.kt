@@ -172,7 +172,7 @@ internal fun Panel(
                 contentAlignment = Alignment.CenterStart,
             ) {
                 MText(
-                    ribbon.uppercase(), 8.5f, Color(0xFFF0E2BD),
+                    ribbon.uppercase(), 8.5f, Medieval.RibbonText,
                     font = Medieval.Cinzel, bold = true, spacingEm = 0.24f,
                 )
             }
@@ -192,7 +192,7 @@ private fun Modifier.panelLook(): Modifier = this
         )
         val inset = 4.dp.toPx()
         drawRect(
-            Color(0x428C6D3A),
+            Medieval.GoldDeep.copy(alpha = 0.26f),
             topLeft = Offset(inset, inset),
             size = Size(size.width - 2 * inset, size.height - 2 * inset),
             style = Stroke(1.dp.toPx()),

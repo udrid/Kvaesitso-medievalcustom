@@ -27,3 +27,18 @@ fun MedievalAnimationsPreference() {
         },
     )
 }
+
+/** "Colour scheme" in the launcher settings (S4): five palettes, applied at once and saved with the other Home choices. */
+@Composable
+fun MedievalPalettePreference() {
+    val context = LocalContext.current
+    ListPreference(
+        title = "Colour scheme",
+        items = Palettes.All.map { it.title to it },
+        value = Medieval.palette,
+        onValueChanged = {
+            Medieval.palette = it
+            writePalette(context, it)
+        },
+    )
+}

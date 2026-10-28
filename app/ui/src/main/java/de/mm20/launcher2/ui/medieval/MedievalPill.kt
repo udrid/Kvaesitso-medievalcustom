@@ -57,7 +57,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import de.mm20.launcher2.notifications.Notification
 
-private val PillGold = Color(0xFFE0B25C)
+private val PillGold get() = Medieval.Glow
 private const val MaxNotificationIcons = 4
 
 /** The camera hole in window pixels (centre and size); [method] and [outline] say how it was found. */

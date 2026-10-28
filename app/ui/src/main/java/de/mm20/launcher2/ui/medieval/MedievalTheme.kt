@@ -1,5 +1,8 @@
 package de.mm20.launcher2.ui.medieval
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -8,31 +11,49 @@ import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import de.mm20.launcher2.ui.R
 
-/** Colors and fonts of design C5 (docs/design/C5.html). */
+/**
+ * Colors and fonts of design C5 (docs/design/C5.html). The colours come from the active [Palette] (S4):
+ * the palette is Compose state, so everything that reads `Medieval.X` while composing or drawing updates on a change.
+ */
 internal object Medieval {
-    val Gold = Color(0xFFC9A55A)
-    val GoldDeep = Color(0xFF8C6D3A)
-    val GoldDark = Color(0xFF6B5430)
-    val GoldLine = Color(0xFF4A3A20)
-    val Cap = Color(0xFFA8884C)
-    val Text = Color(0xFFE6D9B8)
-    val TextBright = Color(0xFFF2E6C6)
-    val TextSoft = Color(0xFFD9CCAA)
-    val TextDim = Color(0xFFA89A76)
-    val TextFaint = Color(0xFF8C7A52)
-    val Oxblood = Color(0xFF6A1D16)
-    val OxbloodDark = Color(0xFF481510)
-    val Rubric = Color(0xFFA8352B)
-    val RubricSoft = Color(0xFFC0534A)
-    val PanelTop = Color(0xFF1D1A14)
-    val PanelBottom = Color(0xFF12100C)
-    val Ink = Color(0xFF0A0907)
-    val ShieldFill = Color(0xFF15120D)
-    val ShieldTop = Color(0xFF3A1612)
-    val Wax = Color(0xFF4E1511)
-    val Ember = Color(0xFFF0A050)
-    val Parchment = Color(0xFFECDFBF)
-    val WeatherGrey = Color(0xFFA8987A)
+    var palette: Palette by mutableStateOf(Palettes.GoldOxblood)
+
+    val Gold get() = palette.gold
+    val GoldDeep get() = palette.goldDeep
+    val GoldDark get() = palette.goldDark
+    val GoldLine get() = palette.goldLine
+    val Cap get() = palette.cap
+    val Text get() = palette.text
+    val TextBright get() = palette.textBright
+    val TextSoft get() = palette.textSoft
+    val TextDim get() = palette.textDim
+    val TextFaint get() = palette.textFaint
+    val Oxblood get() = palette.oxblood
+    val OxbloodDark get() = palette.oxbloodDark
+    val Rubric get() = palette.rubric
+    val RubricSoft get() = palette.rubricSoft
+    val PanelTop get() = palette.panelTop
+    val PanelBottom get() = palette.panelBottom
+    val Ink get() = palette.ink
+    val ShieldFill get() = palette.shieldFill
+    val ShieldTop get() = palette.shieldTop
+    val Wax get() = palette.wax
+    val WaxEdge get() = palette.waxEdge
+    val Ember get() = palette.ember
+    val Parchment get() = palette.parchment
+    val WeatherGrey get() = palette.weatherGrey
+    val Label get() = palette.label
+    val RibbonText get() = palette.ribbonText
+    val GoldLight get() = palette.goldLight
+    val SummonDark get() = palette.summonDark
+    val BgMid get() = palette.bgMid
+    val BgEdge get() = palette.bgEdge
+    val Glow get() = palette.glow
+    val Heart get() = palette.heart
+    val Twinkle get() = palette.twinkle
+    val Halo get() = palette.halo
+    val Gem get() = palette.gem
+    val Badge get() = palette.badge
 
     val Blackletter = FontFamily(
         Font(R.font.unifrakturcook_bold, FontWeight.Bold),

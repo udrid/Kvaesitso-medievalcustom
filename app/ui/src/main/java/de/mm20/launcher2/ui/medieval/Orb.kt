@@ -55,7 +55,7 @@ private const val RingOuter = 86f
 private const val RingInner = 57f
 
 /** Halo round the orb: the oxblood-ember glow of the picked orb (was a flame orange). */
-private val OrbHalo = Color(0x6BBE3C1E)
+private val OrbHalo get() = Medieval.Halo
 
 /**
  * Draws [text] letter by letter on the circle of [radius] around [cx], [cy], centered on [centerDeg]
@@ -108,9 +108,9 @@ private fun DrawScope.ringCross(cx: Float, cy: Float, radius: Float, deg: Float,
  * three times, a light edge just below, a dark lip just above and the darker metal of the cut on top,
  * then a thin dark line inside the cut. Offsets are in ring units, straight down the screen.
  */
-private val EngraveLight = Color(0x80E3CF9C)
+private val EngraveLight get() = Medieval.GoldLight.copy(alpha = 0.5f)
 private val EngraveDark = Color(0xD9000000)
-private val EngraveCut = Color(0xFF5E4A26)
+private val EngraveCut get() = Medieval.palette.pennantB
 private val EngraveLine = Color(0x73000000)
 private const val EngraveLightDy = 0.65f
 private const val EngraveDarkDy = -0.45f
@@ -133,7 +133,7 @@ internal fun OracleOrb() {
     Canvas(Modifier.at(92f, 118f).size(176.dp)) {
         val k = size.width / 176f
         drawCircle(Medieval.GoldDark, radius = RingOuter * k, center = center, style = Stroke(1.5f * k))
-        drawCircle(Color(0xFF3A2E18), radius = RingInner * k, center = center, style = Stroke(1f * k))
+        drawCircle(Medieval.GoldLine.copy(alpha = 0.75f), radius = RingInner * k, center = center, style = Stroke(1f * k))
         val bandMiddle = (RingOuter + RingInner) / 2f * k
         val c = size.width / 2f
         drawIntoCanvas { canvas ->
@@ -254,7 +254,7 @@ private fun RingLight(modifier: Modifier, bandMiddle: Float, bandWidth: Float) {
         if (p < 0f) return@Canvas
         val k = size.width / 176f
         val fade = sin(PI.toFloat() * p)
-        val glint = Color(0xFFFFE2A0)
+        val glint = Medieval.Twinkle
         rotate(-30f + 360f * p) {
             drawCircle(
                 Brush.sweepGradient(

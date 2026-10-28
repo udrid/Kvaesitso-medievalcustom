@@ -105,7 +105,7 @@ private fun Pennant(x: Float, label: String, value: String, fraction: Float, fil
             drawPath(path, Medieval.GoldDeep, style = Stroke(1.5f * k))
         }
         MText(
-            label, 7f, Color(0xFFD9C48C),
+            label, 7f, Medieval.TextSoft,
             Modifier.fillMaxWidth().padding(top = 9.dp),
             font = Medieval.Cinzel, bold = true, spacingEm = 0.16f, align = TextAlign.Center,
         )
@@ -128,10 +128,10 @@ internal fun Pennants() {
     } ?: "-"
     // gold rises from 20 C (empty) to 50 C (full)
     val heatFraction = v.batteryTempC?.let { (it - 20f) / 30f } ?: 0f
-    Pennant(PennantX[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Color(0xFF7A5E2C))
-    Pennant(PennantX[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-    Pennant(PennantX[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-    Pennant(PennantX[3], "HEAT", heatText, heatFraction, Color(0xFF6E2A1E))
+    Pennant(PennantX[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Medieval.palette.pennantA)
+    Pennant(PennantX[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Medieval.palette.pennantB)
+    Pennant(PennantX[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Medieval.palette.pennantB)
+    Pennant(PennantX[3], "HEAT", heatText, heatFraction, Medieval.palette.pennantC)
 }
 
 /**

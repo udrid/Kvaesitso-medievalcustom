@@ -8,7 +8,7 @@
 @font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf");font-style:normal}
 @font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf");font-style:italic}
 @font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
-body{margin:0;background:#050403;width:1700px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+body{margin:0;background:#050403;width:2130px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
 h1{font-family:UnifrakturCook,serif;font-size:34px;font-weight:700;margin:0;color:#ecdfbf}
 h2{font-family:Cinzel,serif;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:#c9a55a;margin:0 0 10px}
 .wrap{padding:24px 30px}
@@ -72,7 +72,7 @@ ol.ch li{margin-bottom:9px}
 </head>
 <body>
 <div class="wrap">
-<h1>One setting, four colour schemes</h1>
+<h1>One setting, five colour schemes</h1>
 <div class="sub">S4 colour scheme, preview only (no code written). Same Home on every palette; layout never changes. The orb is shown re-tinted the way the launcher would do it (see "How the orb follows").</div>
 <div class="cols" id="cols"></div>
 
@@ -91,6 +91,7 @@ ol.ch li{margin-bottom:9px}
         <div class="opt"><span class="rad on"></span>Ember<span class="sw"><i style="background:#e3a04f"></i><i style="background:#7a1e14"></i><i style="background:#1e1612"></i></span></div>
         <div class="opt"><span class="rad"></span>Verdigris<span class="sw"><i style="background:#6fb5a0"></i><i style="background:#1f5a4c"></i><i style="background:#141a18"></i></span></div>
         <div class="opt"><span class="rad"></span>Bone<span class="sw"><i style="background:#d8d2c4"></i><i style="background:#6a1d16"></i><i style="background:#1a1a19"></i></span></div>
+        <div class="opt"><span class="rad"></span>Royal Blue and Silver<span class="sw"><i style="background:#c4ccd8"></i><i style="background:#22408c"></i><i style="background:#161a24"></i></span></div>
       </div>
     </div>
     <div style="font-size:12px;font-style:italic;color:#a89a76;margin-top:6px">Sits next to Animations in the existing Deliverance part of the launcher settings, same list-dialog style. Changes instantly, no restart. Saved with the other Home choices.</div>
@@ -121,7 +122,7 @@ ol.ch li{margin-bottom:9px}
   </div>
 
   <div style="width:430px">
-    <h2>Choices for the owner</h2>
+    <h2>Owner picks (2026-10-28) and what was built</h2><div style="font-size:13px;color:#a89a76;margin-bottom:8px">1a five palettes (Royal Blue and Silver added); 2a default Gold and Oxblood; 3b weather takes the palette; 4b separate orb pictures per palette (colour-graded from the originals, see S4-orbs.png); 5a matching asset sets later via S3; 6a small text lifted (values below already include it); 7 monetisation gets its own section (ops/monetization.md).</div>
     <ol class="ch">
       <li><b>Which palettes?</b> (a) all four as shown (recommended); (b) drop one; (c) swap one for Royal Blue and Silver. Ember is the orb colours you liked.</li>
       <li><b>What is the default after install?</b> (a) Gold and Oxblood (as now, recommended); (b) Ember.</li>
@@ -203,13 +204,16 @@ ol.ch li{margin-bottom:9px}
 <script>
 const P = [
  {name:'Gold and Oxblood',note:'Today\'s look. Aged gold, oxblood ribbons, warm charcoal.',
-  v:{gold:'#C9A55A',golddeep:'#8C6D3A',golddark:'#6B5430',goldline:'#4A3A20',frame:'rgba(140,109,58,.26)',cap:'#A8884C',text:'#E6D9B8',textb:'#F2E6C6',texts:'#D9CCAA',textd:'#A89A76',textf:'#8C7A52',label:'#BFAE86',ox:'#6A1D16',oxd:'#481510',rub:'#A8352B',rubs:'#C0534A',pt:'#1D1A14',pb:'#12100C',ink:'#0A0907',shf:'#15120D',sht:'#3A1612',summ:'#1C0A08',wax:'#4E1511',waxl:'#2A0A08',ember:'#F0A050',parch:'#F0E2BD',weather:'#A8987A',bg:'#26211A',bg2:'#0D0C09',glow:'rgba(229,138,60,.26)',orbA:'#4A2D14',orbB:'#0F0904',heart:'rgba(240,160,80,.55)',heart2:'#F0A050',coin1:'#E0C070',coin2:'#8A6A22',coinrim:'#5A4620',bar1:'#5A2209',bar2:'#C9772C',pen1:'#7A5E2C',pen2:'#5E4A24',pen3:'#6E2A1E',seal:'#E3CF9C'}},
+  v:{gold:'#C9A55A',golddeep:'#8C6D3A',golddark:'#6B5430',goldline:'#4A3A20',frame:'rgba(140,109,58,.26)',cap:'#A8884C',text:'#E6D9B8',textb:'#F2E6C6',texts:'#D9CCAA',textd:'#A89A76',textf:'#9A8760',label:'#BFAE86',ox:'#6A1D16',oxd:'#481510',rub:'#A8352B',rubs:'#D0645A',pt:'#1D1A14',pb:'#12100C',ink:'#0A0907',shf:'#15120D',sht:'#3A1612',summ:'#1C0A08',wax:'#4E1511',waxl:'#2A0A08',ember:'#F0A050',parch:'#F0E2BD',weather:'#A8987A',bg:'#26211A',bg2:'#0D0C09',glow:'rgba(229,138,60,.26)',orbA:'#4A2D14',orbB:'#0F0904',heart:'rgba(240,160,80,.55)',heart2:'#F0A050',coin1:'#E0C070',coin2:'#8A6A22',coinrim:'#5A4620',bar1:'#5A2209',bar2:'#C9772C',pen1:'#7A5E2C',pen2:'#5E4A24',pen3:'#6E2A1E',seal:'#E3CF9C'}},
  {name:'Ember',note:'The orb\'s colours: amber glow, deep oxblood, gold on near-black. Warmer and a little brighter.',
-  v:{gold:'#E3A04F',golddeep:'#A8692A',golddark:'#774A1E',goldline:'#4A2C14',frame:'rgba(168,105,42,.3)',cap:'#C0843E',text:'#EBD8B8',textb:'#F7E6C4',texts:'#DDC7A0',textd:'#B09A78',textf:'#957C56',label:'#CDB488',ox:'#7A1E14',oxd:'#4E120C',rub:'#C0382A',rubs:'#D45E4C',pt:'#1E1612',pb:'#120D0A',ink:'#080605',shf:'#150F0B',sht:'#421812',summ:'#240B08',wax:'#5A1810',waxl:'#2E0A06',ember:'#FFB060',parch:'#F7E6C4',weather:'#B49C78',bg:'#2A1D14',bg2:'#0C0907',glow:'rgba(240,160,80,.45)',orbA:'#7A2A10',orbB:'#180804',heart:'rgba(255,176,96,.75)',heart2:'#FFC070',coin1:'#F0B860',coin2:'#A8692A',coinrim:'#6A4220',bar1:'#6A2A0C',bar2:'#F0A050',pen1:'#A8692A',pen2:'#774A1E',pen3:'#7A1E14',seal:'#F3D9A0'}},
+  v:{gold:'#E3A04F',golddeep:'#A8692A',golddark:'#774A1E',goldline:'#4A2C14',frame:'rgba(168,105,42,.3)',cap:'#C0843E',text:'#EBD8B8',textb:'#F7E6C4',texts:'#DDC7A0',textd:'#B09A78',textf:'#A08760',label:'#CDB488',ox:'#7A1E14',oxd:'#4E120C',rub:'#C0382A',rubs:'#D86A58',pt:'#1E1612',pb:'#120D0A',ink:'#080605',shf:'#150F0B',sht:'#421812',summ:'#240B08',wax:'#5A1810',waxl:'#2E0A06',ember:'#FFB060',parch:'#F7E6C4',weather:'#B49C78',bg:'#2A1D14',bg2:'#0C0907',glow:'rgba(240,160,80,.45)',orbA:'#7A2A10',orbB:'#180804',heart:'rgba(255,176,96,.75)',heart2:'#FFC070',coin1:'#F0B860',coin2:'#A8692A',coinrim:'#6A4220',bar1:'#6A2A0C',bar2:'#F0A050',pen1:'#A8692A',pen2:'#774A1E',pen3:'#7A1E14',seal:'#F3D9A0'}},
  {name:'Verdigris',note:'Aged copper green with deep teal ribbons and a copper accent. Cool and calm.',
-  v:{gold:'#6FB5A0',golddeep:'#3F7E6E',golddark:'#2D5A4E',goldline:'#1E3B33',frame:'rgba(63,126,110,.3)',cap:'#6FA896',text:'#D6E4D8',textb:'#EAF3E4',texts:'#BCD0C2',textd:'#94AC9F',textf:'#7C968A',label:'#A5BFB2',ox:'#1F5A4C',oxd:'#123A31',rub:'#D0825A',rubs:'#DE9A74',pt:'#141A18',pb:'#0E1311',ink:'#070A09',shf:'#0F1513',sht:'#123029',summ:'#0B2620',wax:'#17463B',waxl:'#082019',ember:'#9FE0C8',parch:'#E4EEDD',weather:'#8FA89B',bg:'#17211E',bg2:'#090D0C',glow:'rgba(111,181,160,.38)',orbA:'#1D5A4A',orbB:'#04100C',heart:'rgba(159,224,200,.6)',heart2:'#9FE0C8',coin1:'#8DD0BA',coin2:'#2F6E5E',coinrim:'#1E4A40',bar1:'#12483C',bar2:'#6FB5A0',pen1:'#3F7E6E',pen2:'#2D5A4E',pen3:'#8A4A2A',seal:'#CFE8DA'}},
+  v:{gold:'#6FB5A0',golddeep:'#3F7E6E',golddark:'#2D5A4E',goldline:'#1E3B33',frame:'rgba(63,126,110,.3)',cap:'#6FA896',text:'#D6E4D8',textb:'#EAF3E4',texts:'#BCD0C2',textd:'#94AC9F',textf:'#819B8F',label:'#A5BFB2',ox:'#1F5A4C',oxd:'#123A31',rub:'#D0825A',rubs:'#DE9A74',pt:'#141A18',pb:'#0E1311',ink:'#070A09',shf:'#0F1513',sht:'#123029',summ:'#0B2620',wax:'#17463B',waxl:'#082019',ember:'#9FE0C8',parch:'#E4EEDD',weather:'#8FA89B',bg:'#17211E',bg2:'#090D0C',glow:'rgba(111,181,160,.38)',orbA:'#1D5A4A',orbB:'#04100C',heart:'rgba(159,224,200,.6)',heart2:'#9FE0C8',coin1:'#8DD0BA',coin2:'#2F6E5E',coinrim:'#1E4A40',bar1:'#12483C',bar2:'#6FB5A0',pen1:'#3F7E6E',pen2:'#2D5A4E',pen3:'#8A4A2A',seal:'#CFE8DA'}},
  {name:'Bone',note:'Pale bone and ash silver on soot, with the oxblood kept for ribbons. Stark and severe.',
-  v:{gold:'#D8D2C4',golddeep:'#9A9486',golddark:'#6E695E',goldline:'#3C3A35',frame:'rgba(154,148,134,.26)',cap:'#B0AA9A',text:'#E8E4D8',textb:'#F6F3EA',texts:'#D0CCBF',textd:'#A6A296',textf:'#8A867A',label:'#C0BBAC',ox:'#6A1D16',oxd:'#481510',rub:'#B23A30',rubs:'#CF5E54',pt:'#1A1A19',pb:'#111110',ink:'#080808',shf:'#121211',sht:'#3A1612',summ:'#1C0A08',wax:'#4E1511',waxl:'#2A0A08',ember:'#E8DCC0',parch:'#F0EADA',weather:'#A8A498',bg:'#242422',bg2:'#0C0C0B',glow:'rgba(232,220,192,.22)',orbA:'#3A3A3C',orbB:'#0A0A0B',heart:'rgba(240,232,208,.55)',heart2:'#E8DCC0',coin1:'#E4DED0',coin2:'#8A8576',coinrim:'#55524A',bar1:'#5A1A14',bar2:'#C8C2B4',pen1:'#8A8576',pen2:'#5E5A50',pen3:'#6A1D16',seal:'#E8E2D4'}}
+  v:{gold:'#D8D2C4',golddeep:'#9A9486',golddark:'#6E695E',goldline:'#3C3A35',frame:'rgba(154,148,134,.26)',cap:'#B0AA9A',text:'#E8E4D8',textb:'#F6F3EA',texts:'#D0CCBF',textd:'#A6A296',textf:'#8E8A7E',label:'#C0BBAC',ox:'#6A1D16',oxd:'#481510',rub:'#B23A30',rubs:'#D2645A',pt:'#1A1A19',pb:'#111110',ink:'#080808',shf:'#121211',sht:'#3A1612',summ:'#1C0A08',wax:'#4E1511',waxl:'#2A0A08',ember:'#E8DCC0',parch:'#F0EADA',weather:'#A8A498',bg:'#242422',bg2:'#0C0C0B',glow:'rgba(232,220,192,.22)',orbA:'#3A3A3C',orbB:'#0A0A0B',heart:'rgba(240,232,208,.55)',heart2:'#E8DCC0',coin1:'#E4DED0',coin2:'#8A8576',coinrim:'#55524A',bar1:'#5A1A14',bar2:'#C8C2B4',pen1:'#8A8576',pen2:'#5E5A50',pen3:'#6A1D16',seal:'#E8E2D4'}}
+,
+ {name:'Royal Blue and Silver',note:'Silver on blue-black with royal blue ribbons. Cold, regal.',
+  v:{gold:'#C4CCD8',golddeep:'#7F8AA0',golddark:'#55607A',goldline:'#2E3750',frame:'rgba(127,138,160,.3)',cap:'#9AA6BE',text:'#DCE2EE',textb:'#EEF2FA',texts:'#C2CADA',textd:'#98A2B8',textf:'#8793AB',label:'#B3BDD0',ox:'#22408C',oxd:'#142A64',rub:'#5B86E8',rubs:'#86A8F2',pt:'#161A24',pb:'#0E1119',ink:'#07090D',shf:'#0F131C',sht:'#142457',summ:'#0B1740',wax:'#1B3A86',waxl:'#0A1840',ember:'#B4C8FF',parch:'#E6ECF8',weather:'#9AA6BC',bg:'#1B2130',bg2:'#090B10',glow:'rgba(120,150,255,.38)',orbA:'#24408F',orbB:'#050A1C',heart:'rgba(184,204,255,.6)',heart2:'#B8CCFF',coin1:'#DCE2EE',coin2:'#7F8AA0',coinrim:'#4A5470',bar1:'#18327A',bar2:'#8FB0FF',pen1:'#7F8AA0',pen2:'#55607A',pen3:'#22408C',seal:'#DCE4F4'}}
 ];
 const shield=(t,g)=>`<button class="node" style="${t}"><svg class="shield" viewBox="0 0 62 72"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="var(--shf)"/><path d="M4 12L31 2L58 12V22H4Z" fill="var(--sht)"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="var(--golddeep)" stroke-width="2"/></svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">${g}</svg></span></button>`;
 const shields=[
