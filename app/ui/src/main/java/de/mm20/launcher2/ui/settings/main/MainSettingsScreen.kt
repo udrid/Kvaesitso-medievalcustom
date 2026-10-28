@@ -9,6 +9,7 @@ import de.mm20.launcher2.ui.component.preferences.PreferenceCategory
 import de.mm20.launcher2.ui.component.preferences.PreferenceScreen
 import de.mm20.launcher2.ui.locals.LocalBackStack
 import de.mm20.launcher2.ui.medieval.MedievalAnimationsPreference
+import de.mm20.launcher2.ui.medieval.MedievalWelcomePreference
 import de.mm20.launcher2.ui.medieval.MedievalPalettePreference
 import de.mm20.launcher2.ui.settings.about.AboutSettingsRoute
 import de.mm20.launcher2.ui.settings.appearance.AppearanceSettingsRoute
@@ -36,6 +37,7 @@ fun MainSettingsScreen() {
             PreferenceCategory {
                 MedievalPalettePreference()
                 MedievalAnimationsPreference()
+                MedievalWelcomePreference()
             }
         }
         item {
