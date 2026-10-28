@@ -27,3 +27,5 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 
 ## Monetisation track (owner 2026-10-28)
 Own section of the development; list of tasks M1 to M10 in `ops/monetization.md`. All open; the owner goes over the whole list together before any starts.
+
+| S6-landscape-fill | 1 | active (Part 1 design preview) | claude/s6-landscape-fill-a370fa | Fill the empty space in landscape Home (owner feedback 2026-10-28) |
