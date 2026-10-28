@@ -300,6 +300,7 @@ private fun LandscapeSections(vm: MedievalHomeVM, glide: RotateGlide, header: @C
                 }
         ) { OracleOrb(); ShieldsRising(vm) }
     }
+    Place(Sec.Recent, 0f, 232f) { RecentApps() }
     Place(Sec.Forecast, 0f, LandscapeRects.getValue(Sec.Forecast).w) { ForecastStrip(vm) }
     Place(Sec.Ledger, 330f) { Ledger(vm) }
     Place(Sec.Dispatches, 454f) { Dispatches(vm) }

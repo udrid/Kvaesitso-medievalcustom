@@ -74,7 +74,7 @@ internal enum class Rise(val index: Int) {
 internal fun Sec.rise(): Rise? = when (this) {
     Sec.Header -> Rise.Header
     Sec.Treasury -> Rise.Treasury
-    Sec.Pennants -> Rise.Pennants
+    Sec.Pennants, Sec.Recent -> Rise.Pennants
     Sec.Forecast -> Rise.Forecast
     Sec.Ledger -> Rise.Ledger
     Sec.Command -> Rise.Command

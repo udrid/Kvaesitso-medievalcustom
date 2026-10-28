@@ -132,8 +132,17 @@ internal object UsageCounter {
     fun bump(context: Context, packageName: String) {
         if (packageName == context.packageName) return
         val p = context.getSharedPreferences(Prefs, Context.MODE_PRIVATE)
-        p.edit().putInt(packageName, p.getInt(packageName, 0) + 1).apply()
+        p.edit().putInt(packageName, p.getInt(packageName, 0) + 1)
+            .putLong("t:" + packageName, System.currentTimeMillis()).apply()
     }
+
+    /** T23: packages opened from the launcher, newest first (the time stamp is kept beside the count). */
+    fun recent(context: Context, n: Int): List<String> =
+        context.getSharedPreferences(Prefs, Context.MODE_PRIVATE).all
+            .mapNotNull { (k, v) -> if (k.startsWith("t:") && v is Long) k.removePrefix("t:") to v else null }
+            .sortedByDescending { it.second }
+            .map { it.first }
+            .take(n)
 
     fun top(context: Context, n: Int): List<String> =
         context.getSharedPreferences(Prefs, Context.MODE_PRIVATE).all

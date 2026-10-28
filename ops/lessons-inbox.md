@@ -51,3 +51,4 @@
 - S7: Home's wake flag (Motion.wakes) is the unlock trigger; the welcome's section fade lives in RotateGlide.Section's graphicsLayer so nothing recomposes per frame. Whether Home resumes after (not before) the keyguard on One UI 5 is still unverified: look for 'Welcome: wake N, keyguard locked=' lines in the log.
 - T21: Samsung AOD Image clock has no public API; the app can only save pictures to Pictures/Deliverance and open Display settings (ACTION_DISPLAY_SETTINGS) — candidate for api-facts after the phone test.
 - T22: FLAG_LOCK setBitmap and getWallpaperFile(FLAG_LOCK) are unverified on One UI 5 (permission SET_WALLPAPER was not declared before); after the phone test add an api-facts entry.
+- T23: UsageCounter keeps a per-app 'last launched' time ('t:<package>' Long in medieval_usage); only launches through launchSafely count, so search-result launches (upstream code) are not in Recently used.

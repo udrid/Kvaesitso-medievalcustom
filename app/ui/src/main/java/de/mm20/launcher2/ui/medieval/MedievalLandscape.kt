@@ -34,7 +34,7 @@ internal const val LandscapeStageWidth = 760f
 internal const val LandscapeStageHeight = 374f
 private const val GlideMs = 350
 
-internal enum class Sec { Header, Treasury, Pennants, Oracle, Ledger, Command, Dispatches, Dock, Forecast }
+internal enum class Sec { Header, Treasury, Pennants, Oracle, Ledger, Command, Dispatches, Dock, Forecast, Recent }
 
 internal class SRect(val x: Float, val y: Float, val w: Float, val h: Float)
 
@@ -50,6 +50,7 @@ private val PortraitRects = mapOf(
     Sec.Dock to SRect(0f, 745f, 390f, 90f),
     // S6: the Forecast strip is landscape only; in portrait it sits (invisible) at the orb so it grows out of it on a turn
     Sec.Forecast to SRect(95f, 380f, 200f, 20f),
+    Sec.Recent to SRect(17f, 600f, 200f, 20f),
 )
 
 /**
@@ -60,13 +61,15 @@ private val PortraitRects = mapOf(
 internal val LandscapeRects = mapOf(
     Sec.Header to SRect(0f, 0f, 232f, 150f),
     Sec.Treasury to SRect(0f, 154f, 232f, 75f),
-    Sec.Pennants to SRect(0f, 238f, 232f, 80f),
+    Sec.Pennants to SRect(0f, 233f, 232f, 80f),
     Sec.Oracle to SRect(232f, 14f, 296f, 190f),
     Sec.Forecast to SRect(240f, 212f, 280f, 58f),
     Sec.Ledger to SRect(528f, 8f, 232f, 132f),
     Sec.Command to SRect(528f, 148f, 232f, 46f),
     Sec.Dispatches to SRect(528f, 208f, 232f, 150f),
     Sec.Dock to SRect(232f, 284f, 296f, 88f),
+    // T23: recently used apps under the pennants, down to the bottom of the stage (372)
+    Sec.Recent to SRect(0f, 310f, 232f, RecentPanelHeight),
 )
 
 internal fun rectsOf(landscape: Boolean) = if (landscape) LandscapeRects else PortraitRects
