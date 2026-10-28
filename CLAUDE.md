@@ -55,6 +55,9 @@ Need more? Search the code (Grep), then open only the files that match. Never re
 - The coordinator starts fresh each work session from `ops/STATUS.md`, updates it before stopping, and doesn't stay open for days. It reads diffs and the build log itself and never trusts an agent's "done".
 - Threads propose rule changes as lessons lines. Only the coordinator and the owner change this file, `decisions.md` or `api-facts.md`.
 
+## Design and money
+- New screens follow `docs/design/DESIGN-SYSTEM.md`; the `phone-stylist` agent (`.claude/agents`) carries the design to more of the phone. Anything sellable gets a row in `ops/monetization.md`.
+
 ## Models
 - Haiku: `api-scout`, `gate-runner`, `test-steps`, `Explore`, weekly lessons pass.
 - Sonnet: writing and fixing Kotlin, triage, `reviewer` (medium/high risk only).
