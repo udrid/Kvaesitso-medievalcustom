@@ -57,8 +57,11 @@ private fun LedgerRow(
     onClick: (() -> Unit)? = null,
     pulse: State<Float>? = null,
 ) {
+    val land = LocalLandscape.current
     Row(
-        Modifier.let { if (onClick != null) it.clickable(onClick = onClick) else it },
+        Modifier.let { if (onClick != null) it.clickable(onClick = onClick) else it }
+            // R1: in landscape the row ends inside the 222 wide column so a long title ends in "…"
+            .let { if (land) it.width((LocalColumnWidth.current - 24f).dp) else it },
         horizontalArrangement = Arrangement.spacedBy(9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -76,7 +79,7 @@ private fun LedgerRow(
             time, 10f, if (first) Medieval.Gold else Medieval.TextFaint,
             Modifier.width(42.dp), font = Medieval.Cinzel, bold = true,
         )
-        MText(title, 13f, if (first) Medieval.TextSoft else Medieval.TextDim)
+        MText(title, 13f, if (first) Medieval.TextSoft else Medieval.TextDim, if (land) Modifier.weight(1f) else Modifier)
     }
 }
 

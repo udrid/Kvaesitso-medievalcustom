@@ -17,11 +17,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalView
+import android.util.Log
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -97,27 +104,52 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
             val landscape = maxWidth > maxHeight
             val w = maxWidth.value
             val h = maxHeight.value
+            // R1: landscape keeps the stage inside the part of this box that is really on screen
+            // (the phone drew the S1 header above the top edge); portrait stays as owner-verified.
+            val view = LocalView.current
+            // measured once per orientation (Home is at rest when the phone turns), so page swipes that
+            // move this box do not resize the stage
+            var boxTop by remember(landscape) { mutableFloatStateOf(Float.NaN) }
+            val windowH = dp(view.rootView.height).takeIf { it > 0f } ?: h
+            val top0 = if (boxTop.isNaN()) 0f else boxTop
+            val visibleTop = (-top0).coerceIn(0f, h)
+            val visibleBottom = (windowH - top0).coerceIn(visibleTop, h)
             fun geoFor(l: Boolean): StageGeo =
                 if (l) {
                     stageGeo(
                         true,
                         left = maxOf(navLeft, if (cutLeft > 0f) cutLeft + CameraMargin else 0f),
-                        top = 0f,
+                        top = visibleTop,
                         right = w - maxOf(navRight, if (cutRight > 0f) cutRight + CameraMargin else 0f),
-                        bottom = h - bottomInset,
+                        bottom = minOf(visibleBottom, h - bottomInset),
                     )
                 } else {
                     stageGeo(false, 0f, topPad, w, h - bottomInset)
                 }
             val geo = geoFor(landscape)
+            if (landscape) {
+                LaunchedEffect(w, h, boxTop, windowH) {
+                    Log.i("medieval", "Stage: box ${w}x$h dp at y $boxTop, window h $windowH, nav L$navLeft R$navRight B$bottomInset, cut L$cutLeft R$cutRight -> scale ${geo.scale} at ${geo.x},${geo.y}")
+                }
+            }
             val motion = rememberMotion()
             val glide = rememberRotateGlide(landscape, motion, geoFor(!landscape), geo)
             val stageW = if (landscape) LandscapeStageWidth else StageWidth
             val stageH = if (landscape) LandscapeStageHeight else StageHeight
-            Box(Modifier.fillMaxSize()) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .onGloballyPositioned {
+                        val y = with(density) { it.positionInWindow().y.toDp().value }
+                        // a box far off screen means another launcher page is open: measure again later
+                        if (boxTop.isNaN() && kotlin.math.abs(y) <= 48f) boxTop = y
+                    }
+            ) {
                 Box(
                     Modifier
                         .offset(geo.x.dp, geo.y.dp)
+                        // R1: on a window narrower or lower than the stage, do not let Compose centre it
+                        .overflowTopStart()
                         .requiredSize(stageW.dp, stageH.dp)
                         .graphicsLayer {
                             scaleX = geo.scale
@@ -211,7 +243,10 @@ private fun LandscapeSections(vm: MedievalHomeVM, glide: RotateGlide, header: @C
     fun Place(sec: Sec, bodyY: Float, content: @Composable () -> Unit) {
         val r = LandscapeRects.getValue(sec)
         glide.Section(sec) {
-            Box(Modifier.at(r.x, r.y - bodyY).requiredSize(r.w.dp, (r.h + bodyY).dp)) {
+            // R1: these boxes are taller than the 374 high stage (the dock box is 646); a requiredSize larger
+            // than the parent is CENTRED by Compose, which pulled the dock, command bar and Dispatches up.
+            // Overflow from the top-left corner instead.
+            Box(Modifier.at(r.x, r.y - bodyY).overflowTopStart().requiredSize(r.w.dp, (r.h + bodyY).dp)) {
                 CompositionLocalProvider(LocalColumnWidth provides r.w) { content() }
             }
         }
@@ -225,6 +260,7 @@ private fun LandscapeSections(vm: MedievalHomeVM, glide: RotateGlide, header: @C
         Box(
             Modifier
                 .at(o.x + (o.w - 361f * OracleScale) / 2f, o.y - 118f * OracleScale)
+                .overflowTopStart()
                 .requiredSize(361.dp, 340.dp)
                 .graphicsLayer {
                     scaleX = OracleScale
@@ -238,6 +274,9 @@ private fun LandscapeSections(vm: MedievalHomeVM, glide: RotateGlide, header: @C
     Place(Sec.Command, 404f) { CommandBar(onCommandOpen) }
     Place(Sec.Dock, 551f + BodyLift / BodyScaleF) { Dock() }
 }
+
+/** Lets a requiredSize box that is larger than its parent start at the parent's top-left corner (no centring). */
+internal fun Modifier.overflowTopStart(): Modifier = wrapContentSize(Alignment.TopStart, unbounded = true)
 
 private const val OracleScale = 0.9f
 private const val BodyScale = BodyScaleF

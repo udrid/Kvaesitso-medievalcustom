@@ -133,7 +133,7 @@ internal fun Pennants() {
     val heatFraction = v.batteryTempC?.let { (it - 20f) / 30f } ?: 0f
     val land = LocalLandscape.current
     val xs = if (land) LandscapePennantX else PennantX
-    Box(if (land) Modifier.requiredSize(247.dp, 126.dp).graphicsLayer { scaleX = PennantsLandscapeScale; scaleY = PennantsLandscapeScale; transformOrigin = TransformOrigin(0f, 0f) } else Modifier) {
+    Box(if (land) Modifier.overflowTopStart().requiredSize(247.dp, 126.dp).graphicsLayer { scaleX = PennantsLandscapeScale; scaleY = PennantsLandscapeScale; transformOrigin = TransformOrigin(0f, 0f) } else Modifier) {
         Pennant(xs[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Color(0xFF7A5E2C))
         Pennant(xs[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
         Pennant(xs[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Color(0xFF5E4A24))

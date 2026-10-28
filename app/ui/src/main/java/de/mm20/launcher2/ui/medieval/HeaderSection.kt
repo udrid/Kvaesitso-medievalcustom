@@ -232,7 +232,7 @@ internal fun HeaderSection(
                 medallionParts, 88f, Modifier.offset(168.dp, (-2).dp).size(54.dp, 43.dp),
                 originX = -44f, originY = -35f,
             )
-            Row(Modifier.offset(y = 84.dp).fillMaxWidth(), verticalAlignment = Alignment.Top) {
+            Row(Modifier.offset(y = 80.dp).fillMaxWidth(), verticalAlignment = Alignment.Top) {
                 MText(clock, 29f, Medieval.TextBright, lineHeight = 31f)
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.End) {
                     if (forecast != null) {
@@ -262,7 +262,8 @@ internal fun HeaderSection(
                             italic = true, align = TextAlign.End, maxLines = 2, lineHeight = 13f,
                         )
                     }
-                    WeatherScene(forecast, now.toInstant().toEpochMilli(), Modifier.padding(top = 3.dp))
+                    // R1: drawn smaller than in portrait so it ends above the divider at 130 (was 136)
+                    WeatherScene(forecast, now.toInstant().toEpochMilli(), Modifier.padding(top = 1.dp).size(56.dp, 23.dp))
                 }
             }
         }
