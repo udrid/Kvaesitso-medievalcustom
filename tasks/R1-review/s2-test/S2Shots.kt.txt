@@ -1,0 +1,220 @@
+package de.mm20.launcher2.ui.medieval
+
+import android.graphics.Bitmap
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.isDialog
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
+import de.mm20.launcher2.search.SavableSearchable
+import de.mm20.launcher2.ui.component.LauncherCard
+import de.mm20.launcher2.ui.component.preferences.Preference
+import de.mm20.launcher2.ui.component.preferences.PreferenceCategory
+import de.mm20.launcher2.ui.component.preferences.PreferenceScreen
+import de.mm20.launcher2.ui.component.preferences.SliderPreference
+import de.mm20.launcher2.ui.component.preferences.SwitchPreference
+import de.mm20.launcher2.ui.launcher.search.common.list.ListResults
+import de.mm20.launcher2.ui.locals.LocalBackStack
+import de.mm20.launcher2.ui.locals.LocalDarkTheme
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
+import java.io.File
+
+/** R1 check of S2 (throwaway, not committed to S2): renders S2's restyled shared components. */
+@RunWith(RobolectricTestRunner::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@Config(sdk = [35])
+class S2Shots {
+    @get:Rule
+    val rule = createAndroidComposeRule<ComponentActivity>()
+
+    @Composable
+    private fun Themed(content: @Composable () -> Unit) {
+        MaterialTheme(colorScheme = Deliverance.colorScheme, shapes = Deliverance.shapes, typography = Deliverance.typography) {
+            CompositionLocalProvider(
+                LocalDarkTheme provides true,
+                LocalBackStack provides mockk<NavBackStack<NavKey>>(relaxed = true),
+            ) { content() }
+        }
+    }
+
+    private fun save(name: String, bmp: Bitmap) {
+        val dir = File("../../docs/design/shots/S2").apply { mkdirs() }
+        val out = File(dir, "$name.png")
+        out.outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        println("s2 shot: ${out.canonicalPath}")
+    }
+
+    private fun shotRoot(name: String) {
+        rule.mainClock.advanceTimeBy(800)
+        save(name, rule.onRoot().captureToImage().asAndroidBitmap())
+    }
+
+    // ---- settings
+    private fun settings(name: String) {
+        rule.setContent {
+            Themed {
+                PreferenceScreen(title = "Search") {
+                    item {
+                        PreferenceCategory(title = "Results") {
+                            SwitchPreference(title = "Apps", summary = "Show installed apps in the results", value = true, onValueChanged = {})
+                            SwitchPreference(title = "Contacts", summary = "Needs the contacts permission", value = false, onValueChanged = {})
+                            SwitchPreference(title = "Calendar (disabled)", value = true, enabled = false, onValueChanged = {})
+                            SliderPreference(title = "Result count", value = 0.4f, onValueChanged = {})
+                        }
+                    }
+                    item {
+                        PreferenceCategory(title = "A rather long group title for a narrow screen") {
+                            Preference(
+                                title = { Text("Animations") },
+                                summary = { Text("Full: orb glow, stars and seals move. A long summary that has to wrap over several lines on a small phone.") },
+                            )
+                            Preference(title = { Text("Hidden items") })
+                        }
+                    }
+                    item {
+                        PreferenceCategory {
+                            Preference(title = { Text("Group without a title") })
+                        }
+                    }
+                }
+            }
+        }
+        shotRoot(name)
+    }
+
+    @Test @Config(qualifiers = "w411dp-h914dp-port-420dpi")
+    fun settingsPortrait() = settings("settings-portrait")
+
+    @Test @Config(qualifiers = "w360dp-h640dp-port-xhdpi")
+    fun settingsSmall() = settings("settings-small-360x640")
+
+    @Test @Config(qualifiers = "w411dp-h914dp-port-420dpi")
+    fun settingsLargeFont() {
+        RuntimeEnvironment.setFontScale(1.3f)
+        settings("settings-font-130")
+    }
+
+    // ---- search results
+    private fun fake(key: String): SavableSearchable = mockk<SavableSearchable>(relaxed = true).also {
+        every { it.key } returns key
+        every { it.label } returns key
+    }
+
+    private fun results(name: String, selected: Int = -1) {
+        val contacts = listOf("Anna Weber", "Brother Matthias", "Capon of Rattay").map(::fake)
+        val events = listOf("Halloween", "Daylight Saving Time ends").map(::fake)
+        val apps = listOf("Maps").map(::fake)
+        rule.setContent {
+            Themed {
+                Box(Modifier.fillMaxSize().background(Medieval.Ink)) {
+                    LazyColumn(contentPadding = PaddingValues(12.dp)) {
+                        ListResults(key = "apps", items = apps, title = "Apps", itemContent = { item, _, _ -> Row1(item.label) })
+                        ListResults(key = "contacts", items = contacts, title = "Contacts", selectedIndex = selected,
+                            itemContent = { item, details, _ ->
+                                Row1(item.label)
+                                if (details) Text("Phone, message, e-mail ...", Modifier.padding(16.dp).height(80.dp))
+                            })
+                        ListResults(key = "calendar", items = events, title = "Calendar", itemContent = { item, _, _ -> Row1(item.label) })
+                    }
+                }
+            }
+        }
+        shotRoot(name)
+    }
+
+    @Composable
+    private fun Row1(label: String) {
+        Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Box(Modifier.size(40.dp).background(MaterialTheme.colorScheme.primaryContainer))
+            Text(label, style = MaterialTheme.typography.titleMedium)
+        }
+    }
+
+    @Test @Config(qualifiers = "w411dp-h914dp-port-420dpi")
+    fun resultsPortrait() = results("results-portrait")
+
+    @Test @Config(qualifiers = "w411dp-h914dp-port-420dpi")
+    fun resultsOpened() = results("results-opened-card", selected = 1)
+
+    @Test @Config(qualifiers = "w360dp-h640dp-port-xhdpi")
+    fun resultsLargeFontSmall() {
+        RuntimeEnvironment.setFontScale(1.3f)
+        results("results-small-font-130")
+    }
+
+    // ---- card, dialog, switch
+    @Test @Config(qualifiers = "w411dp-h914dp-port-420dpi")
+    fun cardAndSwitches() {
+        rule.setContent {
+            Themed {
+                Column(Modifier.fillMaxSize().background(Medieval.Ink).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    LauncherCard(Modifier.fillMaxWidth().height(160.dp)) { Text("Opened card (LauncherCard, opacity 1)", Modifier.padding(16.dp)) }
+                    LauncherCard(Modifier.fillMaxWidth().height(80.dp), backgroundOpacity = 0f) { Text("Transparent card (opacity 0)", Modifier.padding(16.dp)) }
+                    Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+                        Switch(checked = true, onCheckedChange = {})
+                        Switch(checked = false, onCheckedChange = {})
+                        Switch(checked = true, onCheckedChange = {}, enabled = false)
+                    }
+                    TextButton(onClick = {}) { Text("Text button") }
+                }
+            }
+        }
+        shotRoot("card-switches")
+    }
+
+    private fun dialog(name: String, longText: Boolean) {
+        rule.setContent {
+            Themed {
+                AlertDialog(
+                    onDismissRequest = {},
+                    title = { Text("Hide this item?") },
+                    text = { Text(if (longText) List(40) { "Line $it of a long explanation." }.joinToString(" ") else "It will no longer show in search results.") },
+                    confirmButton = { TextButton(onClick = {}) { Text("Hide") } },
+                    dismissButton = { TextButton(onClick = {}) { Text("Cancel") } },
+                )
+            }
+        }
+        rule.mainClock.advanceTimeBy(800)
+        save(name, rule.onNode(isDialog()).captureToImage().asAndroidBitmap())
+    }
+
+    @Test @Config(qualifiers = "w411dp-h914dp-port-420dpi")
+    fun dialogShort() = dialog("dialog", false)
+
+    @Test @Config(qualifiers = "w360dp-h640dp-port-xhdpi")
+    fun dialogLong() {
+        RuntimeEnvironment.setFontScale(1.3f)
+        dialog("dialog-long-small-font-130", true)
+    }
+}

@@ -14,7 +14,7 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 | T9, T12, T15 | 1 | DONE | claude/T9-vibe, T12-orb-tune, T15-tweaks | Glass orb, engraved ring, subtle animations with battery gate and Animations setting |
 | T17-small | 1 | DONE (owner verified on phone 2026-10-27; merged into main) | claude/T17-small | New-day shimmer, weather line fit, pollers gated |
 | S1-landscape | 1 | READY TO PUSH on claude/S1-landscape (compiled locally; landscape Home layout A, standing pill, glide on rotate, typing layer two panes; needs owner OK to push and phone test; header and pill most at risk) | claude/S1-landscape | Not in main yet |
-| R1-review | 1 | READY TO PUSH on claude/R1-landscape-fix (landscape bugs 1-5 fixed and seen in PC screenshots; emulator impossible here, Robolectric screenshot tests instead, ops/emulator.md; S2 review in tasks/R1-review/review-s2.md) | claude/R1-landscape-fix | Not in main; replaces S1 landscape layout code |
+| R1-review | 1 | READY TO PUSH on claude/R1-landscape-fix (landscape bugs 1-5 fixed and seen in PC screenshots; emulator impossible here, Robolectric screenshot tests instead, ops/emulator.md; S2 final check FIX FIRST in tasks/R1-review/review-s2.md, shots docs/design/shots/S2) | claude/R1-landscape-fix | Not in main; replaces S1 landscape layout code |
 | T2-treasury | 1 | deferred: owner wants it last | - | SimpleFIN Bridge (decisions.md); api-scout first; price to owner before sign-up |
 
 ## Open for the owner
