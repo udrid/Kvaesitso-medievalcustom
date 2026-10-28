@@ -13,6 +13,7 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 | T7-shields | 1 | DONE | claude/T7-shields | Gold emblems for shields, letter-shield fallback |
 | T9, T12, T15 | 1 | DONE | claude/T9-vibe, T12-orb-tune, T15-tweaks | Glass orb, engraved ring, subtle animations with battery gate and Animations setting |
 | T17-small | 1 | DONE (owner verified on phone 2026-10-27; merged into main) | claude/T17-small | New-day shimmer, weather line fit, pollers gated |
+| S1-landscape | 1 (Part 1 design) | active (design preview, no Kotlin) | claude/S1-landscape | Home landscape; waiting for owner picks after READY FOR DESIGN OK |
 | T2-treasury | 1 | deferred: owner wants it last | - | SimpleFIN Bridge (decisions.md); api-scout first; price to owner before sign-up |
 
 ## Open for the owner
