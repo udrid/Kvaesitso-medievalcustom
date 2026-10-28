@@ -66,6 +66,8 @@ class MedievalHomeVM : ViewModel(), KoinComponent {
     }
 
     private val weatherSettings: WeatherSettings by inject()
+    private val gestureSettings: de.mm20.launcher2.preferences.ui.GestureSettings by inject()
+    private val appContext: android.content.Context by inject()
     private val devicePoseProvider: DevicePoseProvider by inject()
 
     /** What the weather spot under the clock should say; see [WeatherStatus]. */
@@ -77,6 +79,7 @@ class MedievalHomeVM : ViewModel(), KoinComponent {
     private val hasLocationPermission = permissionsManager.hasPermission(PermissionGroup.Location)
 
     init {
+        GestureDefaults.applyOnce(appContext, gestureSettings)
         viewModelScope.launch {
             weatherRepository.getDailyForecasts().collectLatest { days ->
                 val now = System.currentTimeMillis()
