@@ -46,6 +46,7 @@ Need more? Search the code (Grep), then open only the files that match. Never re
 3. `tasks/<id>/handoff.md` written from the template.
 4. 0-3 lines in `ops/lessons-inbox.md` (surprises only).
 5. STATUS row updated. Say FINISHED and stop.
+6. FINAL CHECK (owner rule 2026-10-28): before any push request, the coordinator runs the Opus `final-check` agent (`.claude/agents/final-check.md`) on the finished branch. Its verdict (PASS, FIX FIRST or ASK OWNER) goes to `tasks/<id>/check.md`. Fixes go back to the thread (or a new one), then the check repeats on what changed. Only a PASS is offered to the owner for a push.
 
 ## Threads and the coordinator
 - One thread = one stage of one task, started in the repo root. Never resumed after FINISHED; the coordinator archives it.
