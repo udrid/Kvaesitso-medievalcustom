@@ -1,0 +1,7 @@
+# Task brief: S4-colour-scheme (owner request 2026-10-28, via the S3 thread)
+
+Branch claude/S4-colour-scheme (from local main). Thread acts as the `phone-stylist` agent.
+Goal: ONE setting that changes the colour scheme of the whole Deliverance look (launcher and, as far as possible, the generated assets). The owner liked the orb colours (ember amber glow, deep oxblood, gold on near-black). Home keeps its layout; only colours change behind the switch.
+Part 1 (preview only, no Kotlin): survey where colours live (`Medieval` in MedievalTheme.kt, hard-coded Color(0x...) in medieval/ files, orb pictures medieval_orb_*.webp, emblems, weather scenes, S2 branch `claude/s2-screens-1156ca` theme), what a switchable palette needs (Palette object via CompositionLocal), cheapest honest way to recolour the orb (ColorMatrix vs separate sets, size and battery cost), what cannot follow a setting (wallpaper, AOD, keyboard picture, icon pack: one file set per scheme, owner applies). Deliver `docs/design/S4-colour-scheme.html` + `.png`: 3-4 named palettes on the same Home mock, swatch strip, setting UI next to Animations, numbered choices incl. cost, contrast ratios per palette. [M] palette packs in `ops/monetization.md`.
+Then report READY FOR DESIGN OK and STOP. Part 2 (code) only after the owner's picks arrive via the coordinator.
+Out of scope: layout changes, other screens. Not pushed; no build without the owner's yes.
