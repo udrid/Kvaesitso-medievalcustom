@@ -14,7 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameMillis
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
+import java.time.LocalDate
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -54,12 +63,66 @@ private fun ordinal(day: Int): String {
     return "$day$suffix"
 }
 
-internal fun weatherLine(f: Forecast?): String {
-    if (f == null) return "[weather]"
+private fun weatherTemp(f: Forecast): String {
     val kelvin = f.temperature
     val useFahrenheit = Locale.getDefault().country == "US"
     val deg = if (useFahrenheit) (kelvin - 273.15) * 9 / 5 + 32 else kelvin - 273.15
-    return "${Math.round(deg)}° · ${f.condition}"
+    return "${Math.round(deg)}° · "
+}
+
+/**
+ * T17: short forms for every condition word the weather code produces (core/i18n strings
+ * weather_condition_*, English), each at most 11 letters. Anything with "thunder" in it becomes Storm.
+ * Other languages and plugin texts have no short form and are only shrunk.
+ */
+private val ShortCondition = mapOf(
+    "clear sky" to "Clear", "cloudy" to "Cloudy", "fair" to "Fair", "fog" to "Fog", "hail" to "Hail",
+    "haze" to "Haze", "partly cloudy" to "Part cloudy", "wind" to "Wind", "unknown" to "Unknown",
+    "thunder" to "Thunder", "thunderstorm" to "Storm",
+    "rain" to "Rain", "light rain" to "Drizzle", "heavy rain" to "Downpour",
+    "rain showers" to "Showers", "light rain showers" to "Showers", "heavy rain showers" to "Downpour",
+    "sleet" to "Sleet", "light sleet" to "Sleet", "heavy sleet" to "Sleet",
+    "sleet showers" to "Sleet", "light sleet showers" to "Sleet", "heavy sleet showers" to "Sleet",
+    "snow" to "Snow", "light snow" to "Flurries", "heavy snow" to "Snowfall",
+    "snow showers" to "Snow", "light snow showers" to "Flurries", "heavy snow showers" to "Snowfall",
+)
+
+internal fun shortCondition(condition: String): String {
+    val key = condition.trim().lowercase(Locale.ENGLISH)
+    return ShortCondition[key] ?: if ("thunder" in key) "Storm" else condition
+}
+
+private const val WeatherMaxSp = 12.5f
+private const val WeatherMinSp = 10f
+
+/** Weather line that fits [width] whole: full text shrunk to 10 sp, else the short form shrunk to 10 sp, else ellipsis. */
+@Composable
+private fun WeatherLine(f: Forecast, width: androidx.compose.ui.unit.Dp, modifier: Modifier) {
+    val measurer = androidx.compose.ui.text.rememberTextMeasurer()
+    val density = LocalDensity.current
+    val temp = weatherTemp(f)
+    val fit = remember(f.temperature, f.condition, density) {
+        val maxPx = with(density) { width.toPx() }
+        fun widthAt(text: String, sp: Float) = measurer.measure(
+            text,
+            TextStyle(fontFamily = Medieval.FellEnglish, fontStyle = androidx.compose.ui.text.font.FontStyle.Italic, fontSize = sp.sp),
+            maxLines = 1, softWrap = false,
+        ).size.width
+        fun biggest(text: String): Float? {
+            var sp = WeatherMaxSp
+            while (sp >= WeatherMinSp) {
+                if (widthAt(text, sp) <= maxPx) return sp
+                sp -= 0.5f
+            }
+            return null
+        }
+        val full = temp + f.condition
+        val short = temp + shortCondition(f.condition)
+        biggest(full)?.let { return@remember full to it }
+        biggest(short)?.let { return@remember short to it }
+        short to WeatherMinSp
+    }
+    MText(fit.first, fit.second, Medieval.WeatherGrey, modifier.width(width), italic = true, align = TextAlign.End, lineHeight = 14f)
 }
 
 private val CapShadow = Color(0xFF1C0605)
@@ -76,7 +139,7 @@ private val CapFill = Brush.verticalGradient(
  * (two outlines a hair apart stand in for the design's wobble filter) and an oxblood gradient fill.
  */
 @Composable
-private fun DropCap(letter: String) {
+private fun DropCap(letter: String, shimmer: Float = 0f) {
     val base = TextStyle(fontFamily = Medieval.Gothic, fontSize = 68.sp, lineHeight = 68.sp)
     val px = LocalDensity.current.density
     Box {
@@ -87,6 +150,22 @@ private fun DropCap(letter: String) {
         Text(letter, Modifier.offset(0.4.dp, 0.3.dp), style = base.copy(color = Medieval.GoldDeep, drawStyle = Stroke(2.2f * px)))
         Text(letter, style = base.copy(color = Medieval.Gold, drawStyle = Stroke(2.6f * px)))
         Text(letter, style = base.copy(brush = CapFill))
+        if (shimmer > 0f) {
+            // T17 new-day shimmer: a soft gold band sweeps over the red letter, clamped to the letter shape by the text brush
+            val w = with(LocalDensity.current) { 68.sp.toPx() }
+            val c = w * (-0.4f + 1.8f * shimmer)
+            val band = w * 0.28f
+            val peak = Color(0xFFF3D27A).copy(alpha = 0.85f * bump(shimmer, 0f, 1f))
+            Text(
+                letter,
+                style = base.copy(
+                    brush = Brush.linearGradient(
+                        0f to Color.Transparent, 0.5f to peak, 1f to Color.Transparent,
+                        start = Offset(c - band, 0f), end = Offset(c + band, band * 0.8f),
+                    ),
+                ),
+            )
+        }
     }
 }
 
@@ -100,6 +179,24 @@ internal fun HeaderSection(
 ) {
     val context = LocalContext.current
     val now: ZonedDateTime by rememberNow()
+
+    // T17 new-day shimmer: once per new calendar day, on the first sight of it with the motion gate open.
+    // The date is recorded either way, so a closed gate (Battery Saver, Off, ...) never replays it later.
+    val motion = LocalMotion.current
+    val ambient = rememberUpdatedState(motion.ambient)
+    var newDays by remember { mutableIntStateOf(0) }
+    var resumes by remember { mutableIntStateOf(0) }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { resumes++ }
+    LaunchedEffect(now.toLocalDate(), resumes) {
+        withFrameMillis { } // let the motion gate settle after a resume
+        val prefs = context.getSharedPreferences("medieval_home", Context.MODE_PRIVATE)
+        val shown = prefs.getString("last_day", null)
+        val today = LocalDate.now().toString()
+        if (shown == today) return@LaunchedEffect
+        prefs.edit().putString("last_day", today).apply()
+        if (shown != null && ambient.value) newDays++
+    }
+    val shimmer by rememberOneShot(newDays, 1_500L, motion.ambient)
     val planet = planetOf(now.dayOfWeek)
     val dayName = now.dayOfWeek.getDisplayName(DateTextStyle.FULL, Locale.getDefault())
     val month = now.month.getDisplayName(DateTextStyle.FULL, Locale.getDefault())
@@ -116,7 +213,7 @@ internal fun HeaderSection(
     ) {
         Cap("Day of ${planet.label}", size = 8.5f, color = Medieval.GoldDeep, spacingEm = 0.3f)
         Row(Modifier.offset(y = 10.dp)) {
-            DropCap(dayName.take(1))
+            DropCap(dayName.take(1), shimmer)
             Box(Modifier.padding(start = 6.dp)) {
                 Text(
                     dayName.drop(1), Modifier.offset(y = 16.dp), maxLines = 1,
@@ -138,14 +235,14 @@ internal fun HeaderSection(
         ) {
             MText(clock, 29f, Medieval.TextBright, lineHeight = 31f)
             val needsSetup = forecast == null
-            MText(
-                if (needsSetup) when (status) {
+            if (forecast != null) WeatherLine(forecast, 74.dp, Modifier.padding(top = 2.dp)) else MText(
+                when (status) {
                     WeatherStatus.SetUp -> "Tap to set up weather"
                     WeatherStatus.AllowLocation -> "Allow location"
                     WeatherStatus.Unavailable -> "Weather unavailable"
                     WeatherStatus.NoCoverage -> "No weather for your area"
                     else -> "Fetching weather…"
-                } else weatherLine(forecast),
+                },
                 if (needsSetup) 11.5f else 12.5f, Medieval.WeatherGrey,
                 Modifier.padding(top = 2.dp).width(if (needsSetup) 84.dp else 74.dp)
                     .let {
