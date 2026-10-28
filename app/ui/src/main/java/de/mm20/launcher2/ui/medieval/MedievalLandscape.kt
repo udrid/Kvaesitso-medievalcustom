@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalView
 
 /*
- * S1 Home in landscape (owner picks 2026-10-27: layout A three columns, standing pill P1, dock as a row).
+ * S1 Home in landscape (owner picks 2026-10-27: layout A three columns; S6 owner pick 2026-10-28: option D, taller columns and a Forecast strip, standing pill P1, dock as a row).
  * Portrait is laid out on a 390 x 842 stage, landscape on a 760 x 374 stage (docs/design/S1-landscape.html).
  * Every section has a rectangle in each stage; on a turn the new layout is drawn at once and each section
  * glides (position, size, fade) from where it was in the old layout to its new place, 350 ms, once.
@@ -34,7 +34,7 @@ internal const val LandscapeStageWidth = 760f
 internal const val LandscapeStageHeight = 374f
 private const val GlideMs = 350
 
-internal enum class Sec { Header, Treasury, Pennants, Oracle, Ledger, Command, Dispatches, Dock }
+internal enum class Sec { Header, Treasury, Pennants, Oracle, Ledger, Command, Dispatches, Dock, Forecast }
 
 internal class SRect(val x: Float, val y: Float, val w: Float, val h: Float)
 
@@ -48,17 +48,24 @@ private val PortraitRects = mapOf(
     Sec.Command to SRect(17f, 578f, 355f, 48f),
     Sec.Dispatches to SRect(17f, 632f, 355f, 105f),
     Sec.Dock to SRect(0f, 745f, 390f, 90f),
+    // S6: the Forecast strip is landscape only; in portrait it sits (invisible) at the orb so it grows out of it on a turn
+    Sec.Forecast to SRect(95f, 380f, 200f, 20f),
 )
 
-/** Landscape layout A: left column, middle (orb and dock), right column. */
+/**
+ * Landscape layout D (S6): left column header, Treasury, pennants; middle orb, shields, Forecast strip and the
+ * dock; right column Ledger (4 events), command bar, Dispatches (5 rows). The side columns are 232 wide: their
+ * sections are laid out 222 wide (Treasury 205) and drawn up to fill it (see Place in MedievalHomeComponent).
+ */
 internal val LandscapeRects = mapOf(
-    Sec.Header to SRect(0f, 0f, 222f, 144f),
-    Sec.Treasury to SRect(0f, 152f, 222f, 66f),
-    Sec.Pennants to SRect(0f, 232f, 222f, 56f),
+    Sec.Header to SRect(0f, 0f, 232f, 150f),
+    Sec.Treasury to SRect(0f, 154f, 232f, 75f),
+    Sec.Pennants to SRect(0f, 238f, 232f, 80f),
     Sec.Oracle to SRect(232f, 14f, 296f, 190f),
-    Sec.Ledger to SRect(538f, 16f, 222f, 68f),
-    Sec.Command to SRect(538f, 108f, 222f, 44f),
-    Sec.Dispatches to SRect(538f, 172f, 222f, 97f),
+    Sec.Forecast to SRect(240f, 212f, 280f, 58f),
+    Sec.Ledger to SRect(528f, 8f, 232f, 132f),
+    Sec.Command to SRect(528f, 148f, 232f, 46f),
+    Sec.Dispatches to SRect(528f, 208f, 232f, 150f),
     Sec.Dock to SRect(232f, 284f, 296f, 88f),
 )
 

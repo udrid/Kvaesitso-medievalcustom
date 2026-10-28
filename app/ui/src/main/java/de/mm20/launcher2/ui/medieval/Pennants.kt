@@ -85,16 +85,19 @@ internal fun rememberVitals(): State<Vitals> {
 }
 
 @Composable
-private fun Pennant(x: Float, label: String, value: String, fraction: Float, fill: Color) {
-    Box(Modifier.at(x, 64f).size(58.dp, 62.dp)) {
-        Canvas(Modifier.size(58.dp, 62.dp)) {
+private fun Pennant(x: Float, label: String, value: String, fraction: Float, fill: Color, tall: Boolean = false) {
+    // S6: landscape flags are 1.3 times as tall (same width), with a bigger number
+    val h = if (tall) 80f else 62f
+    Box(Modifier.at(x, 64f).size(58.dp, h.dp)) {
+        Canvas(Modifier.size(58.dp, h.dp)) {
             val k = size.width / 58f
+            val ky = size.height / 62f
             val path = Path().apply {
                 moveTo(2f * k, 1f * k)
                 lineTo(56f * k, 1f * k)
-                lineTo(56f * k, 52f * k)
-                lineTo(29f * k, 42f * k)
-                lineTo(2f * k, 52f * k)
+                lineTo(56f * k, 52f * ky)
+                lineTo(29f * k, 42f * ky)
+                lineTo(2f * k, 52f * ky)
                 close()
             }
             val stop = 1f - fraction.coerceIn(0f, 1f)
@@ -103,19 +106,19 @@ private fun Pennant(x: Float, label: String, value: String, fraction: Float, fil
                 path,
                 Brush.verticalGradient(
                     stop to dark, stop to fill, 1f to fill,
-                    startY = 1f * k, endY = 52f * k,
+                    startY = 1f * ky, endY = 52f * ky,
                 ),
             )
             drawPath(path, Medieval.GoldDeep, style = Stroke(1.5f * k))
         }
         MText(
-            label, 7f, Medieval.TextSoft,
-            Modifier.fillMaxWidth().padding(top = 9.dp),
+            label, if (tall) 7.5f else 7f, Medieval.TextSoft,
+            Modifier.fillMaxWidth().padding(top = if (tall) 12.dp else 9.dp),
             font = Medieval.Cinzel, bold = true, spacingEm = 0.16f, align = TextAlign.Center,
         )
         MText(
-            value, 13f, Medieval.TextBright,
-            Modifier.fillMaxWidth().padding(top = 22.dp),
+            value, if (tall) 18f else 13f, Medieval.TextBright,
+            Modifier.fillMaxWidth().padding(top = if (tall) 28.dp else 22.dp),
             font = Medieval.Cinzel, bold = true, align = TextAlign.Center,
         )
     }
@@ -134,11 +137,11 @@ internal fun Pennants() {
     val heatFraction = v.batteryTempC?.let { (it - 20f) / 30f } ?: 0f
     val land = LocalLandscape.current
     val xs = if (land) LandscapePennantX else PennantX
-    Box(if (land) Modifier.overflowTopStart().requiredSize(247.dp, 126.dp).graphicsLayer { scaleX = PennantsLandscapeScale; scaleY = PennantsLandscapeScale; transformOrigin = TransformOrigin(0f, 0f) } else Modifier) {
-        Pennant(xs[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Medieval.palette.pennantA)
-        Pennant(xs[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Medieval.palette.pennantB)
-        Pennant(xs[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Medieval.palette.pennantB)
-        Pennant(xs[3], "HEAT", heatText, heatFraction, Medieval.palette.pennantC)
+    Box(if (land) Modifier.overflowTopStart().requiredSize(247.dp, 144.dp).graphicsLayer { scaleX = PennantsLandscapeScale; scaleY = PennantsLandscapeScale; transformOrigin = TransformOrigin(0f, 0f) } else Modifier) {
+        Pennant(xs[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Medieval.palette.pennantA, land)
+        Pennant(xs[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Medieval.palette.pennantB, land)
+        Pennant(xs[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Medieval.palette.pennantB, land)
+        Pennant(xs[3], "HEAT", heatText, heatFraction, Medieval.palette.pennantC, land)
     }
 }
 
@@ -148,6 +151,6 @@ internal fun Pennants() {
  */
 private val PennantX = List(4) { 14f + it * (289f - 14f) / 3f }
 
-/** Landscape (S1): the row is laid out 247 wide and drawn at 0.9 so it fills the 222 wide left column. */
-internal const val PennantsLandscapeScale = 0.9f
+/** Landscape (S1): the row is laid out 247 wide and drawn at 0.94 so it fills the 232 wide left column (S6). */
+internal const val PennantsLandscapeScale = 0.94f
 private val LandscapePennantX = List(4) { it * (247f - 58f) / 3f }

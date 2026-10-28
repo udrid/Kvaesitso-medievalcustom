@@ -46,3 +46,4 @@
 - T18: `Notification` (data/notifications) did not keep `category`/`channelId`; use `dispatch` rows' extras for everything else. Robolectric shots can't show one-shot halos (gate closed).
 - Header medallion and divider were cached per weekday without the palette (T19): keys of remember(...) that hold built colours must include Medieval.palette.
 - Compose tests: a state change from runOnUiThread needs Snapshot.sendApplyNotifications() or the screen never redraws (looked like the setting not working).
+- S6: the landscape Home is width-bound (760 stage units fill 99% of the free area), so empty space is fixed by taller content, not scaling; flags can grow taller but not wider. The typing-layer shot (CommandLayerContent PeopleAndSwitches ClassCastException with the relaxed fake) fails in Robolectric: not caused by S6, untested.

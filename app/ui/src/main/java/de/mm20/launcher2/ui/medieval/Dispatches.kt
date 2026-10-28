@@ -149,7 +149,7 @@ internal fun Dispatches(vm: MedievalHomeVM) {
         rememberRises(dispatches.maxOfOrNull { it.postTime } ?: 0L), 1_800L, LocalMotion.current.ambient,
     )
 
-    Panel(top = 454f, height = 90f + BodyLift / BodyScaleF, ribbon = "Dispatches") {
+    Panel(top = 454f, height = if (LocalLandscape.current) 143f else 90f + BodyLift / BodyScaleF, ribbon = "Dispatches") {
         Box(Modifier.matchParentSize().drawBehind {
             val k = bump(glow.value, 0f, 1f)
             if (k <= 0f) return@drawBehind
@@ -186,7 +186,7 @@ internal fun Dispatches(vm: MedievalHomeVM) {
                 )
 
                 dispatches.isEmpty() -> MText("No dispatches", 13f, Medieval.TextDim)
-                else -> dispatches.take(3).forEachIndexed { i, n ->
+                else -> dispatches.take(if (LocalLandscape.current) 5 else 3).forEachIndexed { i, n ->
                     DispatchRow(
                         n, first = i == 0,
                         onOpen = { openDispatch(context, n) },

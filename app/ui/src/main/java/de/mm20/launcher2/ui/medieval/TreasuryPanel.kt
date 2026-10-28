@@ -63,10 +63,10 @@ internal fun TreasuryPanel() {
         if (land) {
             // landscape column (222 wide): total on top, quest line, bar and percentage under it
             MText(
-                "[YOUR TOTAL]", 15f, Medieval.TextBright, Modifier.at(54f, 13f).width(156.dp),
+                "[YOUR TOTAL]", 15f, Medieval.TextBright, Modifier.at(54f, 13f).width((LocalColumnWidth.current - 66f).dp),
                 font = Medieval.Cinzel, bold = true, spacingEm = 0.04f,
             )
-            Box(Modifier.at(54f, 36f).width(156.dp)) {
+            Box(Modifier.at(54f, 36f).width((LocalColumnWidth.current - 66f).dp)) {
                 Cap("Quest: [GOAL]", size = 8.5f, spacingEm = 0.12f)
                 MText(
                     "[0%] of the way", 9.5f, Medieval.TextFaint,

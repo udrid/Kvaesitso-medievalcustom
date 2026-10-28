@@ -89,7 +89,7 @@ internal fun Ledger(vm: MedievalHomeVM) {
     val context = LocalContext.current
     val hasPermission by vm.hasCalendarPermission.collectAsState()
     val now = System.currentTimeMillis()
-    val upcoming = vm.events.filter { it.endTime >= now }.take(2)
+    val upcoming = vm.events.filter { it.endTime >= now }.take(if (LocalLandscape.current) 4 else 2)
 
     // T9: while Home is on screen, check every 30 s for an event starting within 15 minutes; each event pulses once
     val motion = LocalMotion.current
@@ -114,7 +114,7 @@ internal fun Ledger(vm: MedievalHomeVM) {
         }
     }
 
-    Panel(top = 330f, height = 68f, ribbon = "Today's Ledger") {
+    Panel(top = 330f, height = if (LocalLandscape.current) 126f else 68f, ribbon = "Today's Ledger") {
         Column(
             Modifier.at(if (LocalLandscape.current) 12f else 16f, 25f),
             verticalArrangement = Arrangement.spacedBy(9.dp),
