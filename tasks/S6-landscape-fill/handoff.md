@@ -22,3 +22,4 @@ NOT verified
 
 Pictures looked at (`docs/design/shots/S6/`): both turns (Gold, Ember), busy and quiet states, 640 x 360, large font 1.3, portrait full and small. No overlaps found after moving Treasury, the flags and Dispatches down 6 to 8 units (Dispatches ribbon first touched the command bar). Quiet state shows "No hours ahead" (fake VM has no hours) and unchanged panel heights. Portrait pictures match the old layout.
 Known gap: a landscape typing-layer picture could not be made (Robolectric ClassCastException in `CommandLayerContent.PeopleAndSwitches` with the relaxed fake view model; not in S6 code). The typing layer is untouched by S6.
+Command bar (S6, coordinator bug): landscape placeholder shrunk to 11.5 and narrowed to 98 so it ends with a gap before SUMMON; looked at in pictures at 914 x 411 and 640 x 360 (docs/design/shots/S6). Ledger long titles end in an ellipsis inside the 232 wide panel (the 4th row 'Dentist, a very long ap…' in the pictures).

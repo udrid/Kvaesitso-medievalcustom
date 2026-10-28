@@ -27,3 +27,8 @@ Landscape Home only. Portrait must look exactly as before.
 
 ## F. Restart
 1. Nothing in this change saves data. Still, swipe the launcher away from the recent apps and open it again in landscape: the same layout comes back.
+
+## G. Command bar and long titles (added by the coordinator)
+1. On landscape Home, look at the bar with the quill: it should read "Command the Oracle…" in full, with a clear gap before the SUMMON button. Check both turns (camera left, then right).
+2. Report if the words touch or run under SUMMON.
+3. In Today's Ledger, a long event title ends in "…" inside the panel and never runs past its edge or under the next row.
