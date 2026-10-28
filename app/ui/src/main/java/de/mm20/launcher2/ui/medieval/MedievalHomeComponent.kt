@@ -71,6 +71,7 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
     ) {
         val paletteContext = LocalContext.current
         remember(paletteContext) { Medieval.palette = readPalette(paletteContext) }
+        remember(paletteContext) { Corners.style = readCornerStyle(paletteContext) }
         var commandOpen by remember { mutableStateOf(false) }
         BoxWithConstraints(
             modifier = modifier
