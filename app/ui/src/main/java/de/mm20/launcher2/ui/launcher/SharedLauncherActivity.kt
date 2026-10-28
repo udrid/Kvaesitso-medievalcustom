@@ -360,11 +360,7 @@ abstract class SharedLauncherActivity(
                                             gestures.swipeUpApp,
                                             Gesture.SwipeUp,
                                         ),
-                                        swipeDown = getScaffoldGesture(
-                                            gestures.swipeDownAction,
-                                            gestures.swipeDownApp,
-                                            Gesture.SwipeDown,
-                                        ),
+                                        swipeDown = null, // Deliverance S5: swipe down is off for good (any saved value is ignored)
                                         swipeLeft = getScaffoldGesture(
                                             gestures.swipeLeftAction,
                                             gestures.swipeLeftApp,
