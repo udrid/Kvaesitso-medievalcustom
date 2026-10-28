@@ -531,7 +531,7 @@ private fun SwitchChip(
     toggles: Boolean = false,
     onClick: () -> Unit,
 ) {
-    val shape = RoundedCornerShape(16.dp)
+    val shape = LocalCornerStyle.current.chipShape()
     Row(
         Modifier
             .height(32.dp)

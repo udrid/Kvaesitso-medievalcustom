@@ -12,6 +12,9 @@ import de.mm20.launcher2.themes.ThemeRepository
 import de.mm20.launcher2.ui.locals.LocalDarkTheme
 import androidx.compose.ui.platform.LocalContext
 import de.mm20.launcher2.ui.medieval.Deliverance
+import de.mm20.launcher2.ui.medieval.Corners
+import de.mm20.launcher2.ui.medieval.LocalCornerStyle
+import de.mm20.launcher2.ui.medieval.loadCornersOnce
 import de.mm20.launcher2.ui.medieval.loadPaletteOnce
 import de.mm20.launcher2.ui.theme.colorscheme.darkColorSchemeOf
 import de.mm20.launcher2.ui.theme.colorscheme.lightColorSchemeOf
@@ -69,6 +72,7 @@ fun LauncherTheme(
     // The colours follow the chosen palette (S4); load it here too for screens opened without Home.
     val context = LocalContext.current
     remember { loadPaletteOnce(context.applicationContext) }
+    remember { loadCornersOnce(context.applicationContext) }
     val colorScheme = Deliverance.colorScheme
     val shapes = Deliverance.shapes
     val typography = Deliverance.typography
@@ -78,6 +82,7 @@ fun LauncherTheme(
 
     CompositionLocalProvider(
         LocalDarkTheme provides true,
+        LocalCornerStyle provides Corners.style,
         LocalTransparencyScheme provides transparencyScheme,
     ) {
         MaterialExpressiveTheme(
