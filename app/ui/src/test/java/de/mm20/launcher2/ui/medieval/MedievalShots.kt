@@ -162,6 +162,7 @@ class MedievalShots {
                 CommandLayerVM::class.java -> mockk<CommandLayerVM>(relaxed = true).also {
                     every { it.rankedPackages } returns MutableStateFlow(emptyList())
                     every { it.hasContacts } returns MutableStateFlow(false)
+                    every { it.notifications } returns MutableStateFlow(emptyList())
                 }
                 else -> io.mockk.mockkClass(modelClass.kotlin, relaxed = true)
             } as T
