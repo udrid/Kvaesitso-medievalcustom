@@ -44,3 +44,4 @@
 - S3: a standalone iconpack/ Gradle build compiles with the repo wrapper (-p iconpack) but not with --offline (its Kotlin plugin is not cached); PowerShell script files are blocked here, so run their commands inline.
 - T18: the typing layer sits outside `MedievalStage`, so `LocalMotion` was the default (Off) there; any new animation in the layer needs the provider (now added around `CommandOverlay`).
 - T18: `Notification` (data/notifications) did not keep `category`/`channelId`; use `dispatch` rows' extras for everything else. Robolectric shots can't show one-shot halos (gate closed).
+- Header medallion and divider were cached per weekday without the palette (T19): keys of remember(...) that hold built colours must include Medieval.palette.

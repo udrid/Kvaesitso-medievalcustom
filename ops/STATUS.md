@@ -18,6 +18,7 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 | S3-assets | 1 | READY TO PUSH (Part 2 built from owner picks 2026-10-27; nothing pushed) | claude/S3-assets | Orb wallpaper, 7 AOD days, SwiftKey picture, icon pack (3 plates, 43 emblems, 108 mapped apps) in iconpack/; owner steps in tasks/S3-assets/testlist.md; whole-phone colour-scheme switch requested as a separate task |
 | T2-treasury | 1 | deferred: owner wants it last | - | SimpleFIN Bridge (decisions.md); api-scout first; price to owner before sign-up |
 | S2-screens | 1 | READY FOR PHONE TEST (Part 2 built, compiled, local commits only) | claude/S2-screens | Deliverance look on results, settings, dialogs, sheets; owner picks: variant B, wax-seal switch, sharp corners. Not pushed; waits for owner approval |
+| T19-live-palette | 1 | READY TO PUSH (header recolours live; Robolectric proof; local commits only; needs Opus final check) | claude/t19-live-palette-3e3fb0 | 2-line fix in HeaderSection.kt + T19Shots test |
 
 ## Open for the owner
 - Report what SUMMON did in the Claude app (opens? new chat? words in the box?).

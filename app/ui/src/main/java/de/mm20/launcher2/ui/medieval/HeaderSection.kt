@@ -204,8 +204,8 @@ internal fun HeaderSection(
     val date = "${ordinal(now.dayOfMonth)} of $month"
     val pattern = if (DateFormat.is24HourFormat(context)) "H:mm" else "h:mm"
     val clock = now.format(DateTimeFormatter.ofPattern(pattern))
-    val medallionParts = remember(planet) { medallion(planet) }
-    val ruleParts = remember(planet) { dayRule(planet) }
+    val medallionParts = remember(planet, Medieval.palette) { medallion(planet) }
+    val ruleParts = remember(planet, Medieval.palette) { dayRule(planet) }
 
     if (LocalLandscape.current) {
         // S1 landscape: the same pieces in the 222 wide left column: day line, weekday and date with the
