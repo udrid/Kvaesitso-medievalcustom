@@ -36,3 +36,5 @@
 - S1: to move a section drawn at absolute portrait coordinates, wrap it in a box offset by (new position minus old top) and pass its column width through a CompositionLocal (LocalColumnWidth); no rewrite of its internals.
 - S1: a moved or scaled wrapper must be as big as the stage (fillMaxSize), or its children get no touches.
 - S1: call rememberMotion() once at the root and pass it down, two calls mean two sets of listeners.
+- R1: in Compose a `requiredSize` bigger than the parent is CENTRED, not top-left; when a box must overflow its parent put `wrapContentSize(Alignment.TopStart, unbounded = true)` before it (S1 landscape broke on this).
+- R1: this PC cannot run the Android emulator (cloud VM, no nested virtualization); render Compose with the Robolectric screenshot test instead (`ops/emulator.md`) before asking the owner for a build.
