@@ -110,7 +110,11 @@ internal fun AppsHub(apps: List<HubApp>, today: HubToday, tick: Int, modifier: M
                 menuFor = app.packageName; moving = false
             }
             if (menuFor == app.packageName) {
-                DropdownMenu(expanded = true, onDismissRequest = { menuFor = null; moving = false }) {
+                DropdownMenu(
+                    expanded = true,
+                    onDismissRequest = { menuFor = null; moving = false },
+                    modifier = Modifier.background(Medieval.PanelBottom).border(1.dp, Medieval.GoldDark),
+                ) {
                     if (!moving) {
                         HubMenuItem("Open") {
                             menuFor = null
