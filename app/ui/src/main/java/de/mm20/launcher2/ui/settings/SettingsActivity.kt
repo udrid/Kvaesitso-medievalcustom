@@ -44,6 +44,8 @@ import de.mm20.launcher2.ui.locals.LocalWallpaperColors
 import de.mm20.launcher2.ui.overlays.OverlayHost
 import de.mm20.launcher2.ui.settings.about.AboutSettingsRoute
 import de.mm20.launcher2.ui.settings.about.AboutSettingsScreen
+import de.mm20.launcher2.ui.medieval.AodSettingsRoute
+import de.mm20.launcher2.ui.medieval.AodSettingsScreen
 import de.mm20.launcher2.ui.settings.appearance.AppearanceSettingsRoute
 import de.mm20.launcher2.ui.settings.appearance.AppearanceSettingsScreen
 import de.mm20.launcher2.ui.settings.appearance.ExportThemeSettingsRoute
@@ -173,6 +175,9 @@ class SettingsActivity : BaseActivity() {
         val entryProvider = entryProvider {
             entry<MainRoute> {
                 MainSettingsScreen()
+            }
+            entry<AodSettingsRoute> {
+                AodSettingsScreen()
             }
             entry<AppearanceSettingsRoute> {
                 AppearanceSettingsScreen()
