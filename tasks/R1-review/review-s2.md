@@ -44,7 +44,9 @@ Fix: `.minimumInteractiveComponentSize()` before `.size(46.dp, 24.dp)`.
 The settings slider is Material's rounded expressive slider in gold (`settings-portrait.png`); the wax-seal switch is round too (a seal is round, approved). Question for the owner: A) keep the rounded slider (recommended, cheap); B) a square gold bar with a small seal as the handle (custom work).
 
 ### 10. LOW: Appearance theme pickers do nothing now
-`theme/LauncherTheme.kt:67-75`: colours, shapes and fonts are fixed and always dark, so the colour scheme, shape, typography and light/dark settings change nothing (S2's handoff says so). ASK OWNER: A) hide those entries (recommended); B) leave them.
+`theme/LauncherTheme.kt:67-75`: colours, shapes and fonts are fixed and always dark, so the colour scheme, shape, typography and light/dark settings change nothing (S2's handoff says so). Since the owner's colour-scheme decision (decisions.md, 2026-10-28: ONE setting that recolours the whole look), `Deliverance.colorScheme` should become a function of that future setting rather than a fixed value; no change needed now, but do not build on it being constant. ASK OWNER: A) hide the old pickers until the new colour setting exists (recommended); B) leave them.
+
+Note: during this check the S2 branch moved from acac1a934 to 3702e3c ("Merge main into S2-screens": final-check agent, CLAUDE.md line, decisions). No code changed, so the verdict stands.
 
 ### 11. NIT: `PennantHandle` has no accessibility label
 `component/DismissableBottomSheet.kt:271`. Material's drag handle has expand/collapse semantics for TalkBack. Fix: `Modifier.semantics { contentDescription = "Drag handle" }`.
