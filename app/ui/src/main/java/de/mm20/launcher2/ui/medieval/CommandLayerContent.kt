@@ -3,6 +3,7 @@ package de.mm20.launcher2.ui.medieval
 import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
+import de.mm20.launcher2.notifications.Notification
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
@@ -146,6 +147,11 @@ internal class CommandLayerVM : ViewModel(), KoinComponent {
     private val favoritesService: FavoritesService by inject()
     val permissionsManager: PermissionsManager by inject()
     val hasContacts = permissionsManager.hasPermission(PermissionGroup.Contacts)
+    private val notificationRepository: de.mm20.launcher2.notifications.NotificationRepository by inject()
+
+    /** T18: active notifications; matched to the starred contacts in [PeopleAndSwitches]. */
+    val notifications = notificationRepository.notifications
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     val rankedPackages = favoritesService.getFavorites(
         includeTypes = listOf("app"),
@@ -230,7 +236,27 @@ private fun AppCell(pkg: String, modifier: Modifier) {
 
 // ---- People and switches -------------------------------------------------------------------
 
-private class Person(val name: String, val lookupUri: Uri, val photo: Uri?)
+/** Screenshot tests put fake contacts here (the test phone has no contacts provider). */
+internal var StarredForTests: (() -> List<Person>)? = null
+
+internal class Person(val name: String, val lookupUri: Uri, val photo: Uri?, val lookupKey: String, val phoneDigits: Set<String>)
+
+/** Digits of one contact's phone numbers, for matching notifications (never logged). */
+private fun loadPhoneDigits(context: Context, lookupKey: String): Set<String> {
+    val out = HashSet<String>()
+    try {
+        context.contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER),
+            "${ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY} = ?", arrayOf(lookupKey), null,
+        )?.use { c ->
+            while (c.moveToNext()) c.getString(0)?.filter { it.isDigit() }?.takeIf { it.isNotEmpty() }?.let { out += it }
+        }
+    } catch (e: Exception) {
+        Log.e(Tag, "Could not read contact numbers", e)
+    }
+    return out
+}
 
 private fun loadStarred(context: Context): List<Person> {
     if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
@@ -251,10 +277,13 @@ private fun loadStarred(context: Context): List<Person> {
         )?.use { c ->
             while (c.moveToNext() && out.size < 5) {
                 val name = c.getString(2) ?: continue
+                val key = c.getString(1) ?: continue
                 out += Person(
                     name,
-                    ContactsContract.Contacts.getLookupUri(c.getLong(0), c.getString(1)),
+                    ContactsContract.Contacts.getLookupUri(c.getLong(0), key),
                     c.getString(3)?.let { Uri.parse(it) },
+                    key,
+                    loadPhoneDigits(context, key),
                 )
             }
         }
@@ -271,7 +300,11 @@ private fun PeopleAndSwitches(tick: Int, onChanged: () -> Unit) {
     val vm: CommandLayerVM = viewModel()
     val hasContacts by vm.hasContacts.collectAsState(initial = null)
     val people by produceState(emptyList<Person>(), tick, hasContacts) {
-        value = withContext(Dispatchers.IO) { loadStarred(context) }
+        value = withContext(Dispatchers.IO) { StarredForTests?.invoke() ?: loadStarred(context) }
+    }
+    val all by vm.notifications.collectAsState()
+    val alerts = remember(all, people) {
+        contactAlerts(people.map { ContactIdentity(it.name, it.lookupKey, it.phoneDigits) }, all.asDispatches())
     }
     Box(Modifier.fillMaxWidth().padding(top = 8.dp)) {
         Column(
@@ -295,7 +328,7 @@ private fun PeopleAndSwitches(tick: Int, onChanged: () -> Unit) {
             }
             if (people.isNotEmpty()) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    people.forEach { PersonCell(it) }
+                    people.forEach { PersonCell(it, alerts[it.lookupKey].orEmpty()) }
                 }
                 Box(Modifier.fillMaxWidth().height(1.dp).background(Medieval.GoldLine))
             }
@@ -313,8 +346,12 @@ private fun PeopleAndSwitches(tick: Int, onChanged: () -> Unit) {
 }
 
 @Composable
-private fun PersonCell(p: Person) {
+private fun PersonCell(p: Person, alerts: List<Notification>) {
     val context = LocalContext.current
+    val count = alerts.size
+    // T18: the gold halo of a new dispatch (once, 1.8 s) and the badge swell; nothing moves while the gate is closed
+    val halo = rememberOneShot(rememberRises(alerts.maxOfOrNull { it.postTime } ?: 0L), 1_800L, LocalMotion.current.ambient)
+    val swell = rememberOneShot(rememberRises(count.toLong()), 1_800L, LocalMotion.current.ambient)
     val photo by produceState<ImageBitmap?>(null, p.photo) {
         value = p.photo?.let { uri ->
             withContext(Dispatchers.IO) {
@@ -332,27 +369,46 @@ private fun PersonCell(p: Person) {
     Column(
         Modifier
             .width(56.dp)
-            .clickable { launchSafely(context, Intent(Intent.ACTION_VIEW, p.lookupUri), p.name) },
+            .clickable {
+                // unread messages: the newest one opens, as in Dispatches; else the contact card
+                val newest = alerts.maxByOrNull { it.postTime }
+                if (newest != null) openDispatch(context, newest)
+                // "contact", not the name: launchSafely logs [what], and contact names are never logged
+                else launchSafely(context, Intent(Intent.ACTION_VIEW, p.lookupUri), "contact")
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        Box(
-            Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Brush.radialGradient(listOf(Medieval.palette.avatarA, Medieval.palette.avatarB)))
-                .border(1.5.dp, Medieval.GoldDeep, CircleShape),
-            contentAlignment = Alignment.Center,
-        ) {
-            val bmp = photo
-            if (bmp != null) {
-                Image(bmp, null, Modifier.size(40.dp), contentScale = ContentScale.Crop)
-            } else {
-                MText(
-                    p.name.trim().firstOrNull()?.uppercaseChar()?.toString() ?: "?", 15f, Medieval.Gold,
-                    font = Medieval.Cinzel, bold = true,
+        Box(Modifier.size(40.dp).drawBehind {
+            val k = bump(halo.value, 0f, 1f)
+            if (k <= 0f) return@drawBehind
+            val step = 1.5.dp.toPx()
+            for (i in 1..8) {
+                drawCircle(
+                    Medieval.Glow.copy(alpha = 0.45f * k * (1f - i / 9f) / 2f),
+                    radius = size.minDimension / 2 + step * i, style = Stroke(step),
                 )
             }
+        }) {
+            Box(
+                Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Brush.radialGradient(listOf(Medieval.palette.avatarA, Medieval.palette.avatarB)))
+                    .border(1.5.dp, Medieval.GoldDeep, CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                val bmp = photo
+                if (bmp != null) {
+                    Image(bmp, null, Modifier.size(40.dp), contentScale = ContentScale.Crop)
+                } else {
+                    MText(
+                        p.name.trim().firstOrNull()?.uppercaseChar()?.toString() ?: "?", 15f, Medieval.Gold,
+                        font = Medieval.Cinzel, bold = true,
+                    )
+                }
+            }
+            if (count > 0) Badge(count, swell, Modifier.align(Alignment.TopEnd).offset(8.dp, (-4).dp))
         }
         MText(
             p.name.substringBefore(' '), 11f, Medieval.TextDim,

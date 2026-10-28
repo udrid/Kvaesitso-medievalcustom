@@ -128,7 +128,7 @@ private fun ShieldBody() {
 
 /** Oxblood count badge with a gold rim (".badge" in C5.html). */
 @Composable
-private fun Badge(count: Int, swell: State<Float>, modifier: Modifier = Modifier) {
+internal fun Badge(count: Int, swell: State<Float>, modifier: Modifier = Modifier) {
     // T9: when the count goes up, the badge swells once (two beats, 1.8 s); [swell] is that one-shot
     Box(
         modifier
@@ -147,7 +147,7 @@ private fun Badge(count: Int, swell: State<Float>, modifier: Modifier = Modifier
         contentAlignment = Alignment.Center,
     ) {
         MText(
-            count.toString(), 10f, Medieval.RibbonText,
+            if (count > 99) "99+" else count.toString(), 10f, Medieval.RibbonText,
             font = Medieval.Cinzel, bold = true,
         )
     }
