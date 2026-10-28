@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -205,6 +206,69 @@ internal fun HeaderSection(
     val clock = now.format(DateTimeFormatter.ofPattern(pattern))
     val medallionParts = remember(planet) { medallion(planet) }
     val ruleParts = remember(planet) { dayRule(planet) }
+
+    if (LocalLandscape.current) {
+        // S1 landscape: the same pieces in the 222 wide left column: day line, weekday and date with the
+        // medallion on the right, then clock on the left and weather with its scene on the right.
+        Box(
+            Modifier.size(222.dp, 144.dp)
+                .combinedClickable(onClick = {}, onLongClick = { launchSafely(context, settingsIntent(context, null), "launcher settings") }),
+        ) {
+            Cap("Day of ${planet.label}", size = 8.5f, color = Medieval.GoldDeep, spacingEm = 0.3f)
+            Row(Modifier.offset(y = 10.dp)) {
+                DropCap(dayName.take(1), shimmer)
+                Box(Modifier.padding(start = 6.dp)) {
+                    Text(
+                        dayName.drop(1), Modifier.offset(y = 16.dp), maxLines = 1,
+                        style = TextStyle(
+                            fontFamily = Medieval.Gothic, fontSize = 29.sp, lineHeight = 29.sp,
+                            color = Medieval.Parchment, shadow = Shadow(Color.Black, Offset(0f, LocalDensity.current.density), 0f),
+                        ),
+                    )
+                    Cap(date, Modifier.offset(y = 54.dp), size = 10f, spacingEm = 0.2f)
+                }
+            }
+            VectorCanvas(
+                medallionParts, 88f, Modifier.offset(168.dp, (-2).dp).size(54.dp, 43.dp),
+                originX = -44f, originY = -35f,
+            )
+            Row(Modifier.offset(y = 84.dp).fillMaxWidth(), verticalAlignment = Alignment.Top) {
+                MText(clock, 29f, Medieval.TextBright, lineHeight = 31f)
+                Column(Modifier.weight(1f), horizontalAlignment = Alignment.End) {
+                    if (forecast != null) {
+                        WeatherLine(forecast, 108.dp, Modifier.padding(top = 2.dp))
+                    } else {
+                        val setUp = status == WeatherStatus.SetUp || status == WeatherStatus.AllowLocation
+                        MText(
+                            when (status) {
+                                WeatherStatus.SetUp -> "Tap to set up weather"
+                                WeatherStatus.AllowLocation -> "Allow location"
+                                WeatherStatus.Unavailable -> "Weather unavailable"
+                                WeatherStatus.NoCoverage -> "No weather for your area"
+                                else -> "Fetching weather…"
+                            },
+                            11f, Medieval.WeatherGrey,
+                            Modifier.padding(top = 2.dp).width(108.dp)
+                                .let {
+                                    if (setUp) it.clickable {
+                                        val activity = context as? AppCompatActivity
+                                        if (status == WeatherStatus.AllowLocation && activity != null) {
+                                            onAllowLocation(activity)
+                                        } else {
+                                            launchSafely(context, settingsIntent(context, SettingsActivity.ROUTE_WEATHER_INTEGRATION), "weather settings")
+                                        }
+                                    } else it
+                                },
+                            italic = true, align = TextAlign.End, maxLines = 2, lineHeight = 13f,
+                        )
+                    }
+                    WeatherScene(forecast, now.toInstant().toEpochMilli(), Modifier.padding(top = 3.dp))
+                }
+            }
+        }
+        VectorCanvas(ruleParts, 346f, Modifier.at(0f, 130f).size(222.dp, 9.dp))
+        return
+    }
 
     // Owner choice 2026-10-26: long-press the header opens the launcher settings.
     Box(

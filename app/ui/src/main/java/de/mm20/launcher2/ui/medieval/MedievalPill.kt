@@ -98,7 +98,7 @@ private fun findHole(view: android.view.View, density: Float, statusBarPx: Int):
     return Hole(shape.centerX(), cy, d, d, method, shape)
 }
 
-private fun Context.findActivity(): Activity? {
+internal fun Context.findActivity(): Activity? {
     var c = this
     while (c is ContextWrapper) {
         if (c is Activity) return c

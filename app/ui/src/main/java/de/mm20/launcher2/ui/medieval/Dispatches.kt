@@ -106,7 +106,7 @@ private fun DispatchRow(n: Notification, first: Boolean, onOpen: () -> Unit, onD
 
     Row(
         Modifier
-            .width(297.dp)
+            .width((LocalColumnWidth.current - if (LocalLandscape.current) 24f else 64f).dp)
             .graphicsLayer {
                 translationX = drag
                 alpha = 1f - (abs(drag) / (3f * DismissDistance)).coerceIn(0f, 0.6f)
@@ -167,12 +167,12 @@ internal fun Dispatches(vm: MedievalHomeVM) {
         })
         if (hasAccess != false && dispatches.isNotEmpty()) {
             Cap(
-                "${dispatches.size} unheeded", Modifier.align(Alignment.TopEnd).padding(end = 16.dp, top = 8.dp),
+                "${dispatches.size} unheeded", Modifier.align(Alignment.TopEnd).padding(end = if (LocalLandscape.current) 12.dp else 16.dp, top = 8.dp),
                 size = 8.5f, color = Medieval.RubricSoft, spacingEm = 0.18f,
             )
         }
         Column(
-            Modifier.at(16f, 27f),
+            Modifier.at(if (LocalLandscape.current) 12f else 16f, 27f),
             verticalArrangement = Arrangement.spacedBy(7.dp),
         ) {
             when {

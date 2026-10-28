@@ -113,7 +113,7 @@ internal fun Ledger(vm: MedievalHomeVM) {
 
     Panel(top = 330f, height = 68f, ribbon = "Today's Ledger") {
         Column(
-            Modifier.at(16f, 25f),
+            Modifier.at(if (LocalLandscape.current) 12f else 16f, 25f),
             verticalArrangement = Arrangement.spacedBy(9.dp),
         ) {
             when {
