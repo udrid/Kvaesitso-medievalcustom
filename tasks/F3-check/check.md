@@ -1,0 +1,25 @@
+# F3 final check: T18 + T19 + T20 on top of integrate-4
+
+## VERDICT: PASS
+Push THIS branch `claude/f3-check-606a3c` (it is `claude/integrate-5` plus 1 test-only commit from this check). No app code was changed by F3. Confidence: high for layout, colours, live recolouring and persistence logic (rendered and unit-tested); low for Samsung's real notifications and anything that needs the phone (see "Not verified").
+
+## What F3 added (test-only)
+- `F3PaletteLive.kt`: switches the palette inside one composition and compares with a fresh start, band by band, for the WHOLE Home, the open typing layer and a Settings screen with a dialog (Royal, Ember, Bone, Verdigris = 12 tests); plus `cornerStyleSurvivesProcessDeath`.
+- `MedievalShots.kt` fake: `CommandLayerVM.notifications` is now stubbed. Without it every test that opens the typing layer (T20Shots typing, F1 typing) crashed with a ClassCastException after the T18 merge (T18 reads `vm.notifications` there). Test-only, app code was never affected.
+- Pictures in `docs/design/shots/F3/`.
+
+## Checks
+(a) MERGES. Re-ran `git merge-tree` for all three merges: the only conflicts are `ops/STATUS.md` and `ops/lessons-inbox.md`; every code file auto-merged and the committed trees equal the re-merge except the conflict-marker lines of those two docs (no conflict markers left). T19's `remember(planet, Medieval.palette)` x2 present (HeaderSection.kt:207-208); T20's `LocalCornerStyle` is used in `CommandLayerContent.kt:590`, `MedievalButtons.kt`, `LauncherTheme.kt`, Home. New T18/T20 code has no hard-coded colour or shape: the only shapes are in `MedievalCorners.kt` (the setting itself) and the round avatar/state dots, which stay round by design. No manifest, gradle or xml change against `claude/integrate-4` (diff is empty). No new permission or dependency.
+(b) T19, SAME composition. Whole Home recoloured Gold to Royal, Ember, Bone, Verdigris without a new composition. Share of pixels differing from a Home that STARTED in the new palette: 0.1% in total; the only bands above 0.3% are band 4 (1.1-1.2%: the orb's moving stars) and the weather sun. Typing layer open: 0.0-0.1% (all four). Settings screen + dialog (panel, ribbon, wax-seal switches, Material text and Hide button): 0.0% (all four). I LOOKED at `home-royal-2-switched.png` (header letter, medallion, divider, weather, ribbon, pennants, shields, orb, Ledger, command bar, Summon, Dispatches, dock seals all blue/silver, no gold left), `home-royal-diffmap` (red only on orb stars and the weather sun), `typing-royal`, `typing-ember`, `settings-royal` (switched = fresh). Note: first run of the Settings test showed NOTHING recolouring; that was my test not flushing the snapshot (`Snapshot.sendApplyNotifications()`, which T20Shots also does); the real app flushes on its own, and with the flush all four are identical to a fresh start.
+(c) T20. Round typing-layer chips and dialog buttons seen (`T20/typing-gold-round`, `dialog-*-round`): chips are pills, panel, ribbon and frames stay sharp; the dialog's Cancel/Hide follow the setting while the screen stays open (same composition, no restart). Wax-seal switches are `CircleShape` in `WaxSwitch.kt` (unchanged by T20), round in all pictures. Appearance now holds Transparency + Corner style (`AppearanceSettingsScreen.kt`); Colour scheme and Animations are on the main Settings screen (`MainSettingsScreen.kt`), still reachable; what was hidden: light/dark, colour, typography, shape pickers (F1), Theme import/export and Colour source (T20), all owner decisions. Persistence: new test writes Round, reads Round fresh from SharedPreferences, default Sharp when empty or garbage; `LauncherTheme` and Home both load it on start.
+(d) T18. People panel pictures re-rendered after the merges (`F2/portrait-ember-halo`): halo, badge "2", avatars in palette colours, square chips; all T18/F2 unit tests green. Only logs: tag `medieval` lines with fixed text (the `Log.e` calls pass the exception object, not names or numbers; no notification text logged anywhere in `medieval/`).
+(e) MOTION GATE. `MedievalMotion.kt` has no diff against integrate-4; T18's halo uses the existing `LocalMotion.ambient` one-shot (F2).
+(f) BUILD. `:app:ui:testDebugUnitTest` full suite: BUILD SUCCESSFUL offline (4 min 17 s), includes all Robolectric tests. Lint NOT run.
+
+## Findings
+- None blocking. Nit: in Round mode Material chips (FilterChip etc.) stay sharp (T20 said so; owner may want them round: ask later if seen).
+- Nit (carried from F2): halo may replay when a chat app updates a notification silently.
+- Open owner question from F2 still stands (group chats badge the writer of the newest message; recommended A, current behaviour).
+
+## Not verified (phone only)
+Samsung Messages / WhatsApp / Phone-app notifications really carrying a sender (a missed call may show no badge: probe needed); halo and badge on the real screen; the Corner style popup list (a window, not in pictures); colour change from Settings to Home through a real activity switch; Samsung insets; process death on the real phone; battery saver closing the gate; lint.
