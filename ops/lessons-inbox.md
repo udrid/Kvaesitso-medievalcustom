@@ -33,3 +33,6 @@
 - T16: the weather column renders ~8-10 stage units lower than the fixed line heights say, so check layout from the owner's screenshot, not from arithmetic; a horizontal clearance is safer than a vertical one.
 - T17: older `produceState { while (true) { delay } }` pollers keep running when Home is stopped; use `produceWhileResumed` (MedievalParts) for any new ticker.
 - T17: Compose text can be fitted by measuring with `rememberTextMeasurer` (shrink, then shorten) instead of guessing widths.
+- S1: to move a section drawn at absolute portrait coordinates, wrap it in a box offset by (new position minus old top) and pass its column width through a CompositionLocal (LocalColumnWidth); no rewrite of its internals.
+- S1: a moved or scaled wrapper must be as big as the stage (fillMaxSize), or its children get no touches.
+- S1: call rememberMotion() once at the root and pass it down, two calls mean two sets of listeners.
