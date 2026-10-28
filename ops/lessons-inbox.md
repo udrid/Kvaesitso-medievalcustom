@@ -42,3 +42,4 @@
 - Colour switch: making Medieval.X getters over a Compose-state palette recoloured 110 uses with no edits; only top-level 'private val X = Color(...)' constants (frozen at load) needed converting to getters.
 - S3: Kvaesitso icon packs need the EXACT package and activity per item (IconDao matches activityName only when equal or null, and appfilter cannot make a null); a pack cannot draw letters, only wrap the real icon via iconback and scale.
 - S3: a standalone iconpack/ Gradle build compiles with the repo wrapper (-p iconpack) but not with --offline (its Kotlin plugin is not cached); PowerShell script files are blocked here, so run their commands inline.
+- Header medallion and divider were cached per weekday without the palette (T19): keys of remember(...) that hold built colours must include Medieval.palette.
