@@ -34,6 +34,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.foundation.layout.Column
+import de.mm20.launcher2.ui.medieval.PennantHandle
+import de.mm20.launcher2.ui.medieval.medievalFrame
 import de.mm20.launcher2.ui.overlays.Overlay
 import kotlinx.coroutines.CancellationException
 
@@ -139,7 +143,7 @@ fun <T>BottomSheet(
                 ) {
                     Surface(
                         shadowElevation = 1.dp,
-                        shape = BottomSheetDefaults.ExpandedShape,
+                        shape = RectangleShape,
                         modifier = Modifier
                             .statusBarsPadding()
                             .imePadding()
@@ -148,9 +152,16 @@ fun <T>BottomSheet(
                             .align(Alignment.BottomCenter)
                             .wrapContentHeight()
                     ) {
-                        content(
-                            if (expandedTarget) expandedState.targetState else expandedState.currentState
-                        )
+                        Column(Modifier.fillMaxWidth().medievalFrame(bottom = false), horizontalAlignment = Alignment.CenterHorizontally) {
+
+                            PennantHandle()
+
+                            content(
+                                    if (expandedTarget) expandedState.targetState else expandedState.currentState
+
+                            )
+
+                        }
                     }
                 }
             }

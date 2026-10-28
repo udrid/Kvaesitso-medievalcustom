@@ -184,7 +184,7 @@ private fun DrawScope.drawFrameLines(top: Boolean, bottom: Boolean, topInset: Fl
 }
 
 /** Swallow-tailed ribbon end. */
-private val RibbonShape = object : Shape {
+private val DeliveranceRibbonShape = object : Shape {
     override fun createOutline(
         size: androidx.compose.ui.geometry.Size,
         layoutDirection: androidx.compose.ui.unit.LayoutDirection,
@@ -211,7 +211,7 @@ internal fun Ribbon(text: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .height(17.dp)
-            .clip(RibbonShape)
+            .clip(DeliveranceRibbonShape)
             .background(Brush.verticalGradient(listOf(Medieval.Oxblood, Medieval.OxbloodDark)))
             .drawBehind { drawLine(Medieval.Gold, Offset(0f, 0.5f), Offset(size.width, 0.5f), 1.dp.toPx()) }
             .padding(start = 11.dp, end = 17.dp),

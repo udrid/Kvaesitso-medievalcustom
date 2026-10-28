@@ -211,6 +211,7 @@ fun LazyListScope.AppResults(
     } else null
     if (showList) {
         ListResults(
+            title = "Apps",
             key = "apps",
             items = if (isProfileLocked) emptyList() else apps,
             before = before?.let { { it() } },

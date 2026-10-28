@@ -29,6 +29,7 @@ fun LazyListScope.ContactResults(
     onShowAll: () -> Unit,
 ) {
     ListResults(
+        title = "Contacts",
         items = contacts.subList(0, if (truncate) min(5, contacts.size) else contacts.size),
         key = "contact",
         reverse = reverse,

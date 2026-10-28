@@ -13,6 +13,7 @@ fun LazyListScope.WebsiteResults(
     reverse: Boolean,
 ) {
     ListResults(
+        title = "The web",
         key = "website",
         items = websites,
         itemContent = { website, showDetails, index ->

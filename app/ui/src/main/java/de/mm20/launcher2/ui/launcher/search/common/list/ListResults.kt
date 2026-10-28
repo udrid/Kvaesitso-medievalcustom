@@ -5,6 +5,13 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.Alignment
+import de.mm20.launcher2.ui.medieval.Ribbon
+import de.mm20.launcher2.ui.medieval.medievalFrame
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +39,7 @@ fun <T : SavableSearchable> LazyListScope.ListResults(
     after: @Composable (ColumnScope.() -> Unit)? = null,
     reverse: Boolean = false,
     selectedIndex: Int = -1,
+    title: String? = null,
 ) {
     if (before != null) {
         item(
@@ -43,6 +51,7 @@ fun <T : SavableSearchable> LazyListScope.ListResults(
                 isLast = after == null && items.isEmpty(),
                 reverse = reverse,
                 isBeforeExpanded = selectedIndex == 0,
+                ribbon = title,
             ) {
                 before()
             }
@@ -66,6 +75,7 @@ fun <T : SavableSearchable> LazyListScope.ListResults(
             isExpanded = showDetails,
             isBeforeExpanded = selectedIndex - 1 == it,
             isAfterExpanded = selectedIndex >= 0 && selectedIndex + 1 == it,
+            ribbon = title,
         ) {
             itemContent(item, showDetails, it)
         }
@@ -80,6 +90,7 @@ fun <T : SavableSearchable> LazyListScope.ListResults(
                 isLast = true,
                 reverse = reverse,
                 isAfterExpanded = selectedIndex == items.lastIndex,
+                ribbon = title,
             ) {
                 after()
             }
@@ -95,6 +106,7 @@ fun LazyItemScope.ListItemSurface(
     isExpanded: Boolean = false,
     isBeforeExpanded: Boolean = false,
     isAfterExpanded: Boolean = false,
+    ribbon: String? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val transition = updateTransition(isExpanded)
@@ -134,39 +146,48 @@ fun LazyItemScope.ListItemSurface(
         }
     )
 
-    val modifier = if (reverse) {
-        Modifier
-            .padding(
-                bottom = if (!isFirst) padding else 0.dp,
-                top = if (!isLast) padding else 8.dp
-            )
-            .shadow(
-                elevation = elevation,
-                shape,
-                true,
-            )
-    } else {
-        Modifier
-            .padding(
-                top = if (!isFirst) padding else 0.dp,
-                bottom = if (!isLast) padding else 8.dp
-            )
-            .shadow(
-                elevation = elevation,
-                shape,
-                true,
-            )
-    }
+    // Deliverance: the padding between items is covered by the frame's side lines, so a group of
+    // items reads as one framed panel (see medievalFrame).
+    val topPadding = if (reverse) { if (!isLast) padding else 12.dp } else { if (!isFirst) padding else 0.dp }
+    val bottomPadding = if (reverse) { if (!isFirst) padding else 0.dp } else { if (!isLast) padding else 12.dp }
+    val topLine = isExpanded || if (!reverse) isFirst || isAfterExpanded else isLast || isBeforeExpanded
+    val bottomLine = isExpanded || if (!reverse) isLast || isBeforeExpanded else isFirst || isAfterExpanded
+    val showRibbon = ribbon != null && if (reverse) isLast else isFirst
 
-    Column(
-        modifier = modifier
+    Box(
+        modifier = Modifier
             .animateItem()
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface.copy(backgroundAlpha)),
-        verticalArrangement = if (reverse) Arrangement.BottomReversed else Arrangement.Top
+            .medievalFrame(
+                top = topLine,
+                bottom = bottomLine,
+                topInset = topPadding,
+                bottomInset = bottomPadding,
+            )
+            .padding(top = topPadding, bottom = bottomPadding)
+            .shadow(
+                elevation = elevation,
+                shape,
+                true,
+            )
     ) {
-        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-            content()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface.copy(backgroundAlpha)),
+            verticalArrangement = if (reverse) Arrangement.BottomReversed else Arrangement.Top
+        ) {
+            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                if (showRibbon && !reverse) Spacer(Modifier.height(10.dp))
+                content()
+                if (showRibbon && reverse) Spacer(Modifier.height(10.dp))
+            }
+        }
+        if (showRibbon) {
+            Ribbon(
+                ribbon!!,
+                Modifier.align(Alignment.TopStart).offset(x = 12.dp, y = (-8).dp),
+            )
         }
     }
 }

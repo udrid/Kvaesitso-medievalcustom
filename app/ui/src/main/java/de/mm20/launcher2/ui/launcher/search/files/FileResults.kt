@@ -29,6 +29,7 @@ fun LazyListScope.FileResults(
     onShowAll: () -> Unit,
 ) {
     ListResults(
+        title = "Files",
         items = files.subList(0, if (truncate) min(5, files.size) else files.size),
         key = "file",
         reverse = reverse,

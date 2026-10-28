@@ -13,6 +13,7 @@ fun LazyListScope.ArticleResults(
     reverse: Boolean,
 ) {
     ListResults(
+        title = "Wikipedia",
         key = "article",
         items = articles,
         itemContent = { article, showDetails, index ->

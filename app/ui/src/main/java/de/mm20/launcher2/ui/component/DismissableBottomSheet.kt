@@ -57,6 +57,9 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.RectangleShape
+import de.mm20.launcher2.ui.medieval.PennantHandle
+import de.mm20.launcher2.ui.medieval.medievalFrame
 import de.mm20.launcher2.ui.ktx.toPixels
 import de.mm20.launcher2.ui.overlays.Overlay
 import kotlinx.coroutines.CancellationException
@@ -204,7 +207,7 @@ fun <T> DismissableBottomSheet(
 
                 Surface(
                     shadowElevation = 1.dp,
-                    shape = BottomSheetDefaults.ExpandedShape,
+                    shape = RectangleShape,
                     color = MaterialTheme.colorScheme.surfaceContainerLow,
                     modifier = Modifier
                         .statusBarsPadding()
@@ -260,11 +263,12 @@ fun <T> DismissableBottomSheet(
                     ) {
                         Column(
                             modifier = Modifier
+                                .medievalFrame(bottom = false)
                                 .fillMaxWidth()
                                 .consumeWindowInsets(WindowInsets.ime),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            BottomSheetDefaults.DragHandle()
+                            PennantHandle()
                             Box {
                                 content(
                                     if (expandedTarget) expandedState.targetState else expandedState.currentState
