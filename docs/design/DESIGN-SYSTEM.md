@@ -28,8 +28,8 @@ Cannot (stock Samsung One UI 5, locked bootloader): the Android quick panel, loc
 | Screen | Status |
 |---|---|
 | Home portrait | DONE, owner verified |
-| Typing layer and search results | layer DONE; result cards still stock look |
-| Launcher settings | stock look (only the Animations entry is ours) |
+| Typing layer and search results | layer DONE; result cards: S2 preview in `docs/design/S2-screens.html`, waiting for owner picks |
+| Launcher settings | stock look; S2 preview made, waiting for owner picks |
 | Widget/feed page | not styled |
 | Sheets, dialogs, item cards | not styled |
 | Home landscape | not built (rotation is locked to portrait by an upstream setting) |
