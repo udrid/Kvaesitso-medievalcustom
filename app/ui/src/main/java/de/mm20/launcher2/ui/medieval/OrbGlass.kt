@@ -65,6 +65,8 @@ internal fun OrbGlass(modifier: Modifier = Modifier) {
     // smoke turn, twinkle and charging pulse share one clock: one ambient effect
     val clock = rememberAmbientClock(motion.ambient, OrbFps)
     val kindle = rememberOneShot(motion.wakes, KindleMs, motion.ambient)
+    // S7: while the welcome plays it decides how dark the orb is; otherwise the T9 wake kindle does
+    val welcome = LocalWelcome.current
     val charging = motion.charging
 
     // its own layer, so only the orb is redrawn when the clock ticks
@@ -92,7 +94,8 @@ internal fun OrbGlass(modifier: Modifier = Modifier) {
         heart(w, 1f + 0.8f * pulse, 1f + 0.35f * pulse)
 
         // waking: the orb starts dark and the heart flares up (reflections stay)
-        val k = kindle.value
+        val wk = welcome.kindle()
+        val k = if (wk >= 0f) wk else kindle.value
         if (k > 0f) drawCircle(Color.Black.copy(alpha = 0.75f * (1f - k) * (1f - k)), radius = r)
 
         drawImage(glass, IntOffset.Zero, IntSize(glass.width, glass.height), IntOffset.Zero, dst, blendMode = BlendMode.Plus, filterQuality = FilterQuality.Medium)

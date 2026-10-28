@@ -181,6 +181,10 @@ internal fun OracleOrb() {
     // T9: a faint warm glint walks once round the ring every 20 s (Animations: Full only)
     RingLight(Modifier.at(92f, 118f).size(176.dp), (RingOuter + RingInner) / 2f, RingOuter - RingInner)
 
+    // S7: the gold sigil of the welcome, drawn round the ring (nothing is drawn while the welcome is not playing)
+    val welcome = LocalWelcome.current
+    Canvas(Modifier.at(70f, 96f).size(220.dp).graphicsLayer()) { welcomeSigil(welcome.ms) }
+
     // orb (124 at 133, 284): the glass orb of T9 (oxblood smoke with gold dust in a gold setting)
     val tap = rememberTapReaction()
     Box(

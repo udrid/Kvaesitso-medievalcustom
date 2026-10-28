@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
@@ -137,12 +138,22 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
                 }
             }
             val motion = rememberMotion()
+            val welcome = rememberWelcome(motion)
             val glide = rememberRotateGlide(landscape, motion, geoFor(!landscape), geo)
             val stageW = if (landscape) LandscapeStageWidth else StageWidth
             val stageH = if (landscape) LandscapeStageHeight else StageHeight
             Box(
                 Modifier
                     .fillMaxSize()
+                    // S7: a touch ends the welcome at once (looked at in the first pass, never consumed)
+                    .pointerInput(welcome) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                val e = awaitPointerEvent(PointerEventPass.Initial)
+                                if (welcome.playing && e.changes.any { it.pressed }) welcome.stop()
+                            }
+                        }
+                    }
                     .onGloballyPositioned {
                         val y = with(density) { it.positionInWindow().y.toDp().value }
                         // a box far off screen means another launcher page is open: measure again later
@@ -161,7 +172,7 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
                             transformOrigin = TransformOrigin(0f, 0f)
                         }
                 ) {
-                    MedievalStage(state, landscape, motion, glide) { commandOpen = true }
+                    MedievalStage(state, landscape, motion, welcome, glide) { commandOpen = true }
                 }
             }
             AnimatedVisibility(commandOpen, enter = fadeIn(tween(120)), exit = fadeOut(tween(100))) {
@@ -186,6 +197,7 @@ private fun MedievalStage(
     state: LauncherScaffoldState,
     landscape: Boolean,
     motion: Motion,
+    welcome: Welcome,
     glide: RotateGlide,
     onCommandOpen: () -> Unit,
 ) {
@@ -195,6 +207,7 @@ private fun MedievalStage(
     CompositionLocalProvider(
         LocalDensity provides Density(density.density, 1f),
         LocalMotion provides motion,
+        LocalWelcome provides welcome,
         LocalLandscape provides landscape,
     ) {
         val header: @Composable () -> Unit = {
@@ -229,7 +242,7 @@ private fun PortraitSections(vm: MedievalHomeVM, glide: RotateGlide, header: @Co
     glide.Section(Sec.Header, header)
     Body(Sec.Treasury) { TreasuryPanel() }
     Body(Sec.Pennants) { Pennants() }
-    Body(Sec.Oracle) { OracleOrb(); Shields(vm) }
+    Body(Sec.Oracle) { OracleOrb(); ShieldsRising(vm) }
     Body(Sec.Ledger) { Ledger(vm) }
     Body(Sec.Dispatches) { Dispatches(vm) }
     Body(Sec.Command) { CommandBar(onCommandOpen) }
@@ -285,7 +298,7 @@ private fun LandscapeSections(vm: MedievalHomeVM, glide: RotateGlide, header: @C
                     scaleY = OracleScale
                     transformOrigin = TransformOrigin(0f, 0f)
                 }
-        ) { OracleOrb(); Shields(vm) }
+        ) { OracleOrb(); ShieldsRising(vm) }
     }
     Place(Sec.Forecast, 0f, LandscapeRects.getValue(Sec.Forecast).w) { ForecastStrip(vm) }
     Place(Sec.Ledger, 330f) { Ledger(vm) }
@@ -306,3 +319,20 @@ private const val BodyScale = BodyScaleF
 private const val BodyWidth = 361f
 private const val BodyHeight = 640f + BodyLift / BodyScaleF
 private const val BodyTop = HeaderTop + 120f - BodyLift
+
+/** The four shields rise with the welcome (S7); a plain box on the whole body, so positions inside do not change. */
+@Composable
+private fun ShieldsRising(vm: MedievalHomeVM) {
+    val welcome = LocalWelcome.current
+    val density = LocalDensity.current.density
+    Box(
+        Modifier
+            .fillMaxSize()
+            .graphicsLayer {
+                if (welcome.playing) {
+                    alpha = welcome.alpha(Rise.Shields)
+                    translationY = welcome.lift(Rise.Shields) * density
+                }
+            },
+    ) { Shields(vm) }
+}

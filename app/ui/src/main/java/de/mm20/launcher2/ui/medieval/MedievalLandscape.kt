@@ -108,10 +108,17 @@ internal class RotateGlide(
         val a = fromRect(sec)
         val b = rectsOf(to.landscape).getValue(sec)
         val density = androidx.compose.ui.platform.LocalDensity.current.density
+        // S7: while the welcome plays, a section rises and fades in its turn (read in the layer block only)
+        val welcome = LocalWelcome.current
+        val rise = sec.rise()
         Box(
             Modifier
                 .fillMaxSize()
                 .graphicsLayer {
+                    if (rise != null && welcome.playing) {
+                        alpha = welcome.alpha(rise)
+                        translationY = welcome.lift(rise) * density
+                    }
                     val p = progress.value
                     if (p < 1f) {
                         val s0 = (a.w / b.w).coerceIn(0.2f, 5f)
@@ -122,8 +129,8 @@ internal class RotateGlide(
                         val px = a.x + (b.x - a.x) * p
                         val py = a.y + (b.y - a.y) * p
                         translationX = (px - s * b.x) * density
-                        translationY = (py - s * b.y) * density
-                        alpha = (p * 2.2f).coerceIn(0f, 1f)
+                        translationY += (py - s * b.y) * density
+                        alpha *= (p * 2.2f).coerceIn(0f, 1f)
                     }
                 },
         ) { content() }

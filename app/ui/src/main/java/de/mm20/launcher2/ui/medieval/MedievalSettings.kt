@@ -42,3 +42,22 @@ fun MedievalPalettePreference() {
         },
     )
 }
+
+/** "Welcome animation: On / Off" in the launcher settings (S7): the seal-breaking show when Home appears after an unlock. */
+@Composable
+fun MedievalWelcomePreference() {
+    val context = LocalContext.current
+    var on by remember { mutableStateOf(readWelcomeOn(context)) }
+    ListPreference(
+        title = "Welcome animation",
+        items = listOf(
+            "On: the sigil, the seals and the orb when you unlock" to true,
+            "Off: Home just appears" to false,
+        ),
+        value = on,
+        onValueChanged = {
+            on = it
+            writeWelcomeOn(context, it)
+        },
+    )
+}

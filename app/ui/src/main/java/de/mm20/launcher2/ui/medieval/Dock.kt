@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -26,9 +29,12 @@ private const val WaxPath =
     "M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z"
 
 @Composable
-private fun RowScope.WaxSeal(icon: List<String>, name: String, label: String, intent: () -> Intent) {
+private fun RowScope.WaxSeal(index: Int, icon: List<String>, name: String, label: String, intent: () -> Intent) {
     val context = LocalContext.current
     val tap = rememberTapReaction()
+    val welcome = LocalWelcome.current
+    val density = LocalDensity.current.density
+    val wax = remember { androidx.compose.ui.graphics.vector.PathParser().parsePathString(WaxPath).toPath() }
     Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(7.dp)) {
         Box(
             Modifier
@@ -52,8 +58,18 @@ private fun RowScope.WaxSeal(icon: List<String>, name: String, label: String, in
                 )
             }
             SvgIcon(icon, 24f, Medieval.GoldLight)
+            // S7: the two halves of the seal cover the emblem until the welcome breaks them
+            Canvas(Modifier.size(54.dp)) { welcomeSealHalves(index, welcome.ms, wax) }
         }
-        MText(label, 8.5f, Medieval.Cap, font = Medieval.Cinzel, bold = true, spacingEm = 0.2f)
+        MText(
+            label, 8.5f, Medieval.Cap, font = Medieval.Cinzel, bold = true, spacingEm = 0.2f,
+            modifier = Modifier.graphicsLayer {
+                if (welcome.playing) {
+                    alpha = welcome.alpha(Rise.Dock)
+                    translationY = welcome.lift(Rise.Dock) * density
+                }
+            },
+        )
     }
 }
 
@@ -61,7 +77,13 @@ private fun RowScope.WaxSeal(icon: List<String>, name: String, label: String, in
 @Composable
 internal fun Dock() {
     val width = LocalColumnWidth.current
-    Canvas(Modifier.at(0f, 551f + BodyLift / BodyScaleF).size(width.dp, 10.dp)) {
+    val welcome = LocalWelcome.current
+    Canvas(
+        Modifier
+            .at(0f, 551f + BodyLift / BodyScaleF)
+            .size(width.dp, 10.dp)
+            .graphicsLayer { if (welcome.playing) alpha = welcome.alpha(Rise.Dock) },
+    ) {
         val line = Medieval.GoldLine
         drawLine(line, Offset(0f, 5f * density), Offset((width / 2f - 19f) * density, 5f * density), density)
         drawLine(line, Offset((width / 2f + 19f) * density, 5f * density), Offset(width * density, 5f * density), density)
@@ -73,11 +95,11 @@ internal fun Dock() {
         Modifier.at(0f, 566f + BodyLift / BodyScaleF).width(width.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
-        WaxSeal(MedievalIcons.Phone, "Phone", "HERALD") { Intent(Intent.ACTION_DIAL) }
-        WaxSeal(MedievalIcons.Camera, "Camera", "PORTRAIT") { Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA) }
-        WaxSeal(MedievalIcons.Compass, "Browser", "ROAD") {
+        WaxSeal(0, MedievalIcons.Phone, "Phone", "HERALD") { Intent(Intent.ACTION_DIAL) }
+        WaxSeal(1, MedievalIcons.Camera, "Camera", "PORTRAIT") { Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA) }
+        WaxSeal(2, MedievalIcons.Compass, "Browser", "ROAD") {
             Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER)
         }
-        WaxSeal(MedievalIcons.Anvil, "Settings", "SMITHY") { Intent(Settings.ACTION_SETTINGS) }
+        WaxSeal(3, MedievalIcons.Anvil, "Settings", "SMITHY") { Intent(Settings.ACTION_SETTINGS) }
     }
 }
