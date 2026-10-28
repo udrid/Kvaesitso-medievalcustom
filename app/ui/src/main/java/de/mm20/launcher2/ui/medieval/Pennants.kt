@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -97,7 +98,7 @@ private fun Pennant(x: Float, label: String, value: String, fraction: Float, fil
                 close()
             }
             val stop = 1f - fraction.coerceIn(0f, 1f)
-            val dark = Color(0xFF1A1610)
+            val dark = lerp(Medieval.Ink, Medieval.PanelTop, 0.85f) // 1A1712 in Gold and Oxblood, near-black in every palette
             drawPath(
                 path,
                 Brush.verticalGradient(

@@ -216,3 +216,15 @@ internal fun readPalette(context: Context): Palette =
 internal fun writePalette(context: Context, palette: Palette) {
     context.getSharedPreferences(PrefsName, Context.MODE_PRIVATE).edit().putString(PaletteKey, palette.id).apply()
 }
+
+private var paletteLoaded = false
+
+/**
+ * Reads the saved palette once per process. LauncherTheme calls it, so a launcher screen opened without Home
+ * (settings brought back after the process was killed) shows the chosen colours and not the default.
+ */
+internal fun loadPaletteOnce(context: Context) {
+    if (paletteLoaded) return
+    paletteLoaded = true
+    Medieval.palette = readPalette(context)
+}

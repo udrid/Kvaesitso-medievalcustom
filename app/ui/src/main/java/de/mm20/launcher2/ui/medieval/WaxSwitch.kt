@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
@@ -35,16 +35,16 @@ fun Switch(
 ) {
     val x by animateDpAsState(if (checked) 25.dp else 3.dp, tween(120), label = "seal")
     val sealBrush = if (checked) {
-        Brush.radialGradient(listOf(Color(0xFFC0453A), Medieval.Oxblood))
+        Brush.radialGradient(listOf(lerp(Medieval.Rubric, Medieval.RubricSoft, 0.4f), Medieval.Oxblood))
     } else {
-        Brush.radialGradient(listOf(Color(0xFF3A3223), Color(0xFF17140D)))
+        Brush.radialGradient(listOf(lerp(Medieval.PanelTop, Medieval.GoldLine, 0.6f), lerp(Medieval.PanelBottom, Medieval.PanelTop, 0.5f)))
     }
     Box(
         modifier = modifier
             .minimumInteractiveComponentSize()
             .size(width = 46.dp, height = 24.dp)
             .alpha(if (enabled) 1f else 0.38f)
-            .background(Color(0xFF0F0D09), CircleShape)
+            .background(lerp(Medieval.Ink, Medieval.PanelBottom, 0.6f), CircleShape)
             .border(1.dp, if (checked) Medieval.Gold else Medieval.GoldDark, CircleShape)
             .toggleable(
                 value = checked,

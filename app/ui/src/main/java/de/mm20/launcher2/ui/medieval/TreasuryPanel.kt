@@ -85,7 +85,7 @@ internal fun TreasuryPanel() {
                         Modifier
                             .fillMaxHeight()
                             .fillMaxWidth(0f)
-                            .background(Brush.horizontalGradient(listOf(Color(0xFF5A2209), Color(0xFFC9772C))))
+                            .background(Brush.horizontalGradient(listOf(Medieval.palette.barA, Medieval.palette.barB)))
                     )
                 }
             }

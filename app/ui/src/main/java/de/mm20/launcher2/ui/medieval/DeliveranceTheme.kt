@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -41,7 +42,20 @@ import androidx.compose.ui.unit.sp
  * All static drawing: nothing in this file animates by itself (motion rules, DESIGN-SYSTEM.md).
  */
 internal object Deliverance {
-    val colorScheme: ColorScheme = darkColorScheme(
+    /**
+     * Material colours of the active palette (S4). Reading it reads `Medieval.palette`, so LauncherTheme
+     * recomposes and every launcher screen recolours when the colour scheme changes.
+     */
+    val colorScheme: ColorScheme
+        get() {
+            val p = Medieval.palette
+            return schemeCache?.takeIf { it.first === p }?.second
+                ?: schemeOf().also { schemeCache = p to it }
+        }
+
+    private var schemeCache: Pair<Palette, ColorScheme>? = null
+
+    private fun schemeOf(): ColorScheme = darkColorScheme(
         primary = Medieval.Gold,
         onPrimary = Medieval.Ink,
         primaryContainer = Medieval.Oxblood,
@@ -57,7 +71,7 @@ internal object Deliverance {
         onTertiaryContainer = Medieval.Text,
         background = Medieval.Ink,
         onBackground = Medieval.Text,
-        surface = Color(0xFF12100C),
+        surface = Medieval.PanelBottom,
         onSurface = Medieval.Text,
         surfaceVariant = Medieval.PanelTop,
         onSurfaceVariant = Medieval.TextDim,
@@ -74,10 +88,11 @@ internal object Deliverance {
         surfaceBright = Medieval.PanelTop,
         surfaceDim = Medieval.Ink,
         surfaceContainerLowest = Medieval.Ink,
-        surfaceContainerLow = Color(0xFF0F0D0A),
-        surfaceContainer = Color(0xFF14120E),
-        surfaceContainerHigh = Color(0xFF1A1710),
-        surfaceContainerHighest = Color(0xFF221E15),
+        // the original Gold and Oxblood values (0F0D0A, 14120E, 1A1710, 221E15) mixed from the palette's ground
+        surfaceContainerLow = lerp(Medieval.Ink, Medieval.PanelBottom, 0.6f),
+        surfaceContainer = lerp(Medieval.PanelBottom, Medieval.PanelTop, 0.2f),
+        surfaceContainerHigh = lerp(Medieval.PanelBottom, Medieval.PanelTop, 0.75f),
+        surfaceContainerHighest = lerp(Medieval.PanelTop, Medieval.GoldLine, 0.12f),
     )
 
     /** Owner pick 2026-10-27: sharp corners everywhere (no cut corners, no rounding). */
@@ -229,7 +244,7 @@ internal fun Ribbon(text: String, modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Bold,
                 fontSize = 8.5.sp,
                 letterSpacing = 2.sp,
-                color = Color(0xFFF0E2BD),
+                color = Medieval.RibbonText,
             ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
