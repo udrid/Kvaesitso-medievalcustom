@@ -373,7 +373,8 @@ private fun PersonCell(p: Person, alerts: List<Notification>) {
                 // unread messages: the newest one opens, as in Dispatches; else the contact card
                 val newest = alerts.maxByOrNull { it.postTime }
                 if (newest != null) openDispatch(context, newest)
-                else launchSafely(context, Intent(Intent.ACTION_VIEW, p.lookupUri), p.name)
+                // "contact", not the name: launchSafely logs [what], and contact names are never logged
+                else launchSafely(context, Intent(Intent.ACTION_VIEW, p.lookupUri), "contact")
             },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp),
