@@ -35,3 +35,8 @@ Owner picks used: layout A (three columns), standing pill, dock as a row under t
 ## E. Restart check
 1. Rotate to landscape, then close Deliverance from the recent-apps list (swipe it away) and open it again by pressing Home.
 2. It must open straight in the layout the phone is in now, with no slide, and the shield choices and Treasury text unchanged.
+
+## F. Portrait must be unchanged, and Auto-rotate off
+1. Hold the phone upright and compare Home with how it looked before this update: header, Treasury, flags, orb, shields, Ledger, command bar, Dispatches, dock, camera pill. Nothing may have moved or changed size.
+2. Turn Auto rotate OFF (swipe down from the top, tap Auto rotate) and turn the phone on its side: Home must stay in portrait. This is expected, the launcher follows the phone's own setting. Turn Auto rotate back ON afterwards.
+3. Should NOT happen: any portrait difference, Home turning while Auto rotate is off.
