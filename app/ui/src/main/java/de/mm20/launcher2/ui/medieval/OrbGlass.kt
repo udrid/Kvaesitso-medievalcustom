@@ -96,7 +96,7 @@ internal fun OrbGlass(modifier: Modifier = Modifier) {
         // waking: the orb starts dark and the heart flares up (reflections stay)
         val wk = welcome.kindle()
         val k = if (wk >= 0f) wk else kindle.value
-        if (k > 0f) drawCircle(Color.Black.copy(alpha = 0.75f * (1f - k) * (1f - k)), radius = r)
+        if (k > 0f || wk >= 0f) drawCircle(Color.Black.copy(alpha = 0.75f * (1f - k) * (1f - k)), radius = r)
 
         drawImage(glass, IntOffset.Zero, IntSize(glass.width, glass.height), IntOffset.Zero, dst, blendMode = BlendMode.Plus, filterQuality = FilterQuality.Medium)
         drawImage(setting, IntOffset.Zero, IntSize(setting.width, setting.height), IntOffset.Zero, dst, filterQuality = FilterQuality.Medium)

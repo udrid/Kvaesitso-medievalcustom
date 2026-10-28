@@ -265,7 +265,7 @@ internal fun DrawScope.welcomeSigil(ms: Long) {
     val deep = Medieval.GoldDeep
     val spark = Medieval.Twinkle
     val ember = Medieval.Ember
-    val r1 = 94f * k
+    val r1 = 91f * k
 
     // glow on the ring when the circle closes
     if (ms >= SigilDrawEnd) {
@@ -277,7 +277,7 @@ internal fun DrawScope.welcomeSigil(ms: Long) {
     drawArc(gold.copy(alpha = fade), -90f, 360f * d, false, Offset(c.x - r1, c.y - r1), Size(2 * r1, 2 * r1), style = Stroke(1.8f * k))
     val dots = seg(ms, 260, 760)
     if (dots > 0f) {
-        val r2 = 99f * k
+        val r2 = 95.5f * k
         drawCircle(
             deep.copy(alpha = 0.9f * dots * fade), radius = r2, center = c,
             style = Stroke(1f * k, pathEffect = PathEffect.dashPathEffect(floatArrayOf(3f * k, 5f * k))),
@@ -285,7 +285,7 @@ internal fun DrawScope.welcomeSigil(ms: Long) {
     }
     val inner = seg(ms, 240, 900)
     if (inner > 0f) {
-        val r3 = 87f * k
+        val r3 = 88f * k
         drawArc(deep.copy(alpha = 0.8f * fade), -90f, -360f * inner, false, Offset(c.x - r3, c.y - r3), Size(2 * r3, 2 * r3), style = Stroke(0.8f * k))
     }
     for (i in 0 until 8) {
@@ -298,7 +298,7 @@ internal fun DrawScope.welcomeSigil(ms: Long) {
         rotate(i * 45f, Offset(x, y)) {
             if (i % 2 == 0) {
                 val p = Path().apply {
-                    moveTo(x, y - 7f * k); lineTo(x + 5f * k, y); lineTo(x, y + 7f * k); lineTo(x - 5f * k, y); close()
+                    moveTo(x, y - 5.5f * k); lineTo(x + 4f * k, y); lineTo(x, y + 5.5f * k); lineTo(x - 4f * k, y); close()
                 }
                 drawPath(p, gold.copy(alpha = al))
                 drawPath(p, spark.copy(alpha = al), style = Stroke(0.8f * k))
