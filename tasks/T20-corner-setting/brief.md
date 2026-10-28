@@ -1,0 +1,6 @@
+# Task brief: T20-corner-setting (owner decisions 2026-10-28, answering the F1 final check)
+Branch claude/t20-corner-setting-ad1cdf (from claude/f1-final-check-35a943).
+Owner: (1) "a toggle on the Appearance settings for both round and square" for the BUTTONS in dialogs (Cancel, Hide ...) and the CHIPS in the typing layer (Wi-Fi, Bluetooth ...), which are round pills today while panels are sharp. (2) HIDE the unused Appearance entries (Theme import/export, Colour source). (3) KEEP the wax-seal switches round.
+Build: setting "Corner style", values Sharp / Round, on Settings > Appearance. Default SHARP. Changes dialog buttons, typing-layer chips and any other button/chip drawn as a pill. NOT panels, cards, frames, ribbons; NOT the wax seal. Saved in SharedPreferences, read through a CompositionLocal, changes live (no top-level val shape caches). Hide the two dead entries like 93a1602e6.
+Ambiguity: "toggle for both round and square" was built as a two-value choice for buttons and chips.
+Proof: Robolectric pictures of a dialog and the typing-layer chips in Sharp and Round (Gold, Oxblood, Ember) and Settings > Appearance. Done: compile green, testlist, handoff, lessons, STATUS, READY TO PUSH.

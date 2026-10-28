@@ -35,7 +35,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import de.mm20.launcher2.ui.medieval.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Button
+import de.mm20.launcher2.ui.medieval.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -51,14 +51,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.OutlinedButton
+import de.mm20.launcher2.ui.medieval.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import de.mm20.launcher2.ui.medieval.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import de.mm20.launcher2.ui.medieval.TextButton
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
