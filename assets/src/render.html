@@ -30,9 +30,25 @@ function keyboard(){
   s+='</g>'+ringText(cx,cy,372,30,.4,'rk');
   return s+'<rect width="1080" height="1000" filter="url(#grain)" opacity=".4"/>';
 }
+function imageclock(day){
+  /* A1: 1200x900 (4:3) for Samsung Image clock. Pure black, everything dim (opacity .6), nothing within 8% of the edges (96 px sides, 72 px top and bottom). */
+  var s='<rect width="1200" height="900" fill="#000"/><g opacity=".6">';
+  if(day==='plain'){
+    s+='<g transform="translate(600 450) scale(7.4)" fill="none" stroke="'+G+'"><circle r="25" stroke-width="1.4"/><circle r="22" stroke="'+GD+'" stroke-width=".6"/><circle r="28" stroke="'+GD+'" stroke-width=".8" stroke-dasharray="1 2.6"/><circle r="33" stroke-width=".6"/>';
+    for(var i=0;i<48;i++){var a=i*Math.PI/24,l=i%6?1.6:3.4;s+='<path d="M'+(Math.cos(a)*33).toFixed(2)+' '+(Math.sin(a)*33).toFixed(2)+'L'+(Math.cos(a)*(33+l)).toFixed(2)+' '+(Math.sin(a)*(33+l)).toFixed(2)+'" stroke-width=".7"/>'}
+    s+='<path d="M0 -12L5 0L0 12L-5 0Z" stroke-width="1.2"/></g>';
+  }else{
+    var d=DAYS.filter(function(x){return x[0]===day})[0];
+    s+=medal(day,600,305,5.4).replace('#15120d','#000');
+    s+='<text x="600" y="685" text-anchor="middle" font-family="UnifrakturMaguntia" font-size="110" fill="'+G+'">'+d[1]+'</text>';
+    s+='<text x="600" y="768" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="34" letter-spacing="14" fill="'+G+'">'+d[2].toUpperCase()+'</text>';
+  }
+  return s+'</g>';
+}
 var k=location.hash.slice(1),w=1080,h=2400,svg;
 if(k==='wall')svg=wpC();
 else if(k.indexOf('aod-')===0)svg=aod(k.slice(4));
 else if(k==='keyboard'){svg=keyboard();h=1000}
+else if(k.indexOf('ic-')===0){svg=imageclock(k.slice(3));w=1200;h=900}
 document.getElementById('out').innerHTML='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'">'+svg+'</svg>';
 </script></body></html>

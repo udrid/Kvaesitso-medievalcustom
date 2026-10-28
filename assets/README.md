@@ -11,3 +11,5 @@ Re-render (Edge headless, from this folder; fonts load from `app/ui/src/main/res
 `msedge --headless --hide-scrollbars --force-device-scale-factor=1 --window-size=1080,2400 --screenshot=out.png "file:///.../assets/src/render.html#wall"` (also `#aod-sol` to `#aod-saturn`, `#keyboard` with height 1000).
 Icon sheets: `icons.html#heater|seal|bare` at 1536 x 1152 with `--default-background-color=00000000`; `icons.html#fallback-heater|seal` at 192 x 192.
 Then run the commands in `build-iconpack.ps1` (it needs PowerShell; a signed-scripts policy may require pasting them into a console).
+
+A1 (2026-10-28): the phone's Image clock shows a small 4:3 frame, so use `aod/imageclock/aod-imageclock-<day|plain>-1200x900.png` instead of the full-screen `aod/` files. Render with `render.html#ic-<day>` (window 1200 x 900); contact sheet from `aod-sheet.html`.

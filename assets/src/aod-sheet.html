@@ -1,0 +1,22 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>A1 AOD contact sheet</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+html,body{margin:0;background:#0b0b0b;color:#c9a55a;font-family:Cinzel,serif}
+body{width:1800px;height:1000px;overflow:hidden}
+h1{margin:0;padding:26px 0 4px 40px;font-size:30px;letter-spacing:6px}
+p.s{margin:0 0 18px 40px;font-size:15px;color:#8c6d3a;letter-spacing:2px}
+.g{display:grid;grid-template-columns:repeat(4,400px);gap:30px 20px;padding:0 40px}
+.c{background:#000;border:1px solid #2a2a2a;border-radius:26px;height:420px;position:relative}
+.t{position:absolute;top:22px;width:100%;text-align:center;color:#fff;font-family:Roboto,Arial,sans-serif}
+.t b{font-size:40px;font-weight:500}.t span{font-size:15px;margin-left:8px}
+.f{position:absolute;left:50px;top:90px;width:300px;height:225px;border-radius:16px;overflow:hidden;border:1px solid #2c2c2c}
+.f img{width:100%;height:100%;display:block}
+.l{position:absolute;bottom:16px;width:100%;text-align:center;font-size:14px;letter-spacing:3px;color:#8c6d3a}
+</style></head><body>
+<h1>A1 AOD IMAGE CLOCK</h1><p class="s">1200 x 900 PX, PURE BLACK, DIM GOLD. DRAWN AT REAL PROPORTIONS INSIDE A ROUNDED FRAME UNDER A MOCK CLOCK</p>
+<div class="g" id="g"></div>
+<script>
+['sol','luna','mars','mercury','jupiter','venus','saturn','plain'].forEach(function(d){
+document.getElementById('g').innerHTML+='<div class="c"><div class="t"><b>10:04</b><span>Wed, Oct 28</span></div><div class="f"><img src="../aod/imageclock/aod-imageclock-'+d+'-1200x900.png"></div><div class="l">'+d.toUpperCase()+'</div></div>'});
+</script></body></html>
