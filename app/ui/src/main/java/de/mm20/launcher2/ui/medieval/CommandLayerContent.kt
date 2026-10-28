@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -107,8 +108,16 @@ internal fun CommandLayerContent(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        MostUsedApps(tick)
-        PeopleAndSwitches(tick) { tick++ }
+        if (LocalConfiguration.current.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+            // S1 landscape: only about 200 high above the keyboard, so two panes side by side
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Column(Modifier.weight(1f)) { MostUsedApps(tick) }
+                Column(Modifier.weight(1f)) { PeopleAndSwitches(tick) { tick++ } }
+            }
+        } else {
+            MostUsedApps(tick)
+            PeopleAndSwitches(tick) { tick++ }
+        }
     }
 }
 

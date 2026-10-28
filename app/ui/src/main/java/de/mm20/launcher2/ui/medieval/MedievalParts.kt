@@ -150,10 +150,12 @@ internal fun Panel(
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    // portrait: 16 from both sides of the 361 body; landscape: the full column
+    val inset = if (LocalLandscape.current) 0f else 16f
     Box(
         modifier
-            .at(16f, top)
-            .size(329.dp, height.dp)
+            .at(inset, top)
+            .size((LocalColumnWidth.current - 2 * inset).dp, height.dp)
             .panelLook()
             .let { if (onClick != null) it.clickable(onClick = onClick) else it }
     ) {

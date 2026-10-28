@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
@@ -66,8 +67,47 @@ private class Hole(
     val method: String = "none", val outline: RectF? = null,
 )
 
+/**
+ * Landscape (S1): the cutout sits on the left or right edge. Same reading as [findHole] turned on its side: a box
+ * that starts at the screen edge and is taller than wide is described as a box, the hole is a circle as tall as the
+ * box is high at the box's inner end; otherwise the outline centre. Falls back to the left edge, mid height.
+ */
+private fun findSideHole(view: android.view.View, density: Float): Hole {
+    val rects: List<Rect> = ViewCompat.getRootWindowInsets(view)?.displayCutout?.boundingRects.orEmpty()
+    val side = rects.firstOrNull { it.left <= 2 * density || it.right >= view.width - 2 * density }
+    if (side == null) {
+        Log.w("medieval", "Pill: landscape, no cutout on a side edge, using the left edge, mid height")
+        return Hole(14f * density, view.height / 2f, 12f * density, 12f * density)
+    }
+    var shape = RectF(side)
+    var source = "rect"
+    if (Build.VERSION.SDK_INT >= 31) {
+        val path = view.rootWindowInsets?.displayCutout?.cutoutPath
+        if (path != null) {
+            val b = RectF()
+            path.computeBounds(b, true)
+            if (!b.isEmpty) {
+                shape = b
+                source = "path"
+            }
+        }
+    }
+    val onLeft = shape.left <= 2f * density
+    val onRight = shape.right >= view.width - 2f * density
+    val fromEdge = (onLeft || onRight) && shape.width() > shape.height() * 1.15f
+    val d = if (fromEdge) shape.height() else minOf(shape.width(), shape.height())
+    val cx = when {
+        fromEdge && onLeft -> shape.right - d / 2f
+        fromEdge -> shape.left + d / 2f
+        else -> shape.centerX()
+    }
+    Log.i("medieval", "Pill: landscape cutout rect $side, outline $shape ($source), hole x $cx y ${shape.centerY()} d $d")
+    return Hole(cx, shape.centerY(), d, d, "$source-side", shape)
+}
+
 /** Top cutout of the window; falls back to the top centre (about 14 dp down, 12 dp wide). */
 private fun findHole(view: android.view.View, density: Float, statusBarPx: Int): Hole {
+    if (view.width > view.height) return findSideHole(view, density)
     val rects: List<Rect> = ViewCompat.getRootWindowInsets(view)?.displayCutout?.boundingRects.orEmpty()
     val top = rects.filter { it.top <= 8 * density }.minByOrNull { it.top }
     if (top == null) {
@@ -98,7 +138,7 @@ private fun findHole(view: android.view.View, density: Float, statusBarPx: Int):
     return Hole(shape.centerX(), cy, d, d, method, shape)
 }
 
-private fun Context.findActivity(): Activity? {
+internal fun Context.findActivity(): Activity? {
     var c = this
     while (c is ContextWrapper) {
         if (c is Activity) return c
@@ -161,6 +201,18 @@ internal fun MedievalPill(notifications: List<Notification>, hasNotificationAcce
             }
     ) {
         val holeDp = with(density) { minOf(hole.w, hole.h).toDp() }
+        if (configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+            // S1: the hole is on a side edge: the pill stands up, notification icons above the hole, status icons below
+            StandingPill(
+                holeCenterX = hole.cx - originX,
+                holeCenterY = hole.cy - originY,
+                holeSize = holeDp,
+                modifier = Modifier.fillMaxSize(),
+                up = { NotificationIcons(notifications, hasNotificationAccess, vertical = true) },
+                down = { StatusIcons(status, vertical = true) },
+            )
+            return@Box
+        }
         val pillHeight = maxOf(26.dp, holeDp + 10.dp)
         val topPx = hole.cy - originY - with(density) { pillHeight.toPx() } / 2f
         Pill(
@@ -227,7 +279,7 @@ private fun Pill(
 }
 
 @Composable
-private fun NotificationIcons(notifications: List<Notification>, hasAccess: Boolean) {
+private fun NotificationIcons(notifications: List<Notification>, hasAccess: Boolean, vertical: Boolean = false) {
     val context = LocalContext.current
     // newest first, one icon per app, like the system status bar
     val apps = remember(notifications, hasAccess) {
@@ -239,7 +291,7 @@ private fun NotificationIcons(notifications: List<Notification>, hasAccess: Bool
     }
     if (apps.isEmpty()) return
     val shown = apps.take(MaxNotificationIcons)
-    Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+    Flow(vertical, 4.dp) {
         shown.forEach { n ->
             val bitmap = remember(n.key, n.postTime) {
                 try {
@@ -262,8 +314,8 @@ private fun NotificationIcons(notifications: List<Notification>, hasAccess: Bool
 }
 
 @Composable
-private fun StatusIcons(status: PillStatus) {
-    Row(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalAlignment = Alignment.CenterVertically) {
+private fun StatusIcons(status: PillStatus, vertical: Boolean = false) {
+    Flow(vertical, 7.dp) {
         if (status.hushed) SvgIcon(MedievalIcons.Moon, 11f, PillGold, strokeWidth = 2.2f)
         if (status.bluetooth) SvgIcon(MedievalIcons.Bluetooth, 11f, PillGold, strokeWidth = 2.2f)
         if (status.wifi) SvgIcon(MedievalIcons.Wifi, 12f, PillGold, strokeWidth = 2.2f)
@@ -285,5 +337,69 @@ private fun SignalBars(level: Int) {
                 cornerRadius = CornerRadius(bar * 0.3f),
             )
         }
+    }
+}
+
+/** The pill of [Pill] turned on its side for a camera hole on the left or right edge (S1 landscape, option P1). */
+@Composable
+private fun StandingPill(
+    holeCenterX: Float,
+    holeCenterY: Float,
+    holeSize: Dp,
+    modifier: Modifier,
+    up: @Composable () -> Unit,
+    down: @Composable () -> Unit,
+) {
+    Layout(
+        modifier = modifier,
+        content = {
+            Box(
+                Modifier
+                    .layoutId("bg")
+                    .background(Color(0xFF050505), CircleShape)
+                    .border(1.dp, Medieval.GoldDark, CircleShape)
+            )
+            Box(
+                Modifier
+                    .layoutId("hole")
+                    .size(holeSize)
+                    .background(Color(0xFF0C0D10), CircleShape)
+                    .border(1.5.dp, Color(0xFF2A2418), CircleShape)
+            )
+            Box(Modifier.layoutId("up"), contentAlignment = Alignment.BottomCenter) { up() }
+            Box(Modifier.layoutId("down"), contentAlignment = Alignment.TopCenter) { down() }
+        },
+    ) { measurables, constraints ->
+        val loose = Constraints()
+        fun find(id: String) = measurables.first { it.layoutId == id }
+        val u = find("up").measure(loose)
+        val d = find("down").measure(loose)
+        val hole = find("hole").measure(loose)
+        val pad = 11.dp.roundToPx()
+        val gap = 7.dp.roundToPx()
+        val upPart = if (u.height > 0) u.height + gap else 0
+        val downPart = if (d.height > 0) gap + d.height else 0
+        val capsuleW = maxOf(26.dp.roundToPx(), hole.width + 10.dp.roundToPx())
+        val capsuleH = pad + upPart + hole.height + downPart + pad
+        val bg = find("bg").measure(Constraints.fixed(capsuleW, capsuleH))
+        val x = (holeCenterX - capsuleW / 2f).toInt()
+        val y = (holeCenterY - (pad + upPart + hole.height / 2f)).toInt()
+        val cx = x + capsuleW / 2
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            bg.place(x, y)
+            u.place(cx - u.width / 2, y + pad)
+            hole.place(cx - hole.width / 2, y + pad + upPart)
+            d.place(cx - d.width / 2, y + pad + upPart + hole.height + gap)
+        }
+    }
+}
+
+/** Icons in a row (pill lying down) or a column (pill standing up). */
+@Composable
+private fun Flow(vertical: Boolean, gap: Dp, content: @Composable () -> Unit) {
+    if (vertical) {
+        Column(verticalArrangement = Arrangement.spacedBy(gap), horizontalAlignment = Alignment.CenterHorizontally) { content() }
+    } else {
+        Row(horizontalArrangement = Arrangement.spacedBy(gap), verticalAlignment = Alignment.CenterVertically) { content() }
     }
 }

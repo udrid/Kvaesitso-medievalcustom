@@ -12,7 +12,10 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -128,10 +131,14 @@ internal fun Pennants() {
     } ?: "-"
     // gold rises from 20 C (empty) to 50 C (full)
     val heatFraction = v.batteryTempC?.let { (it - 20f) / 30f } ?: 0f
-    Pennant(PennantX[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Color(0xFF7A5E2C))
-    Pennant(PennantX[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-    Pennant(PennantX[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-    Pennant(PennantX[3], "HEAT", heatText, heatFraction, Color(0xFF6E2A1E))
+    val land = LocalLandscape.current
+    val xs = if (land) LandscapePennantX else PennantX
+    Box(if (land) Modifier.overflowTopStart().requiredSize(247.dp, 126.dp).graphicsLayer { scaleX = PennantsLandscapeScale; scaleY = PennantsLandscapeScale; transformOrigin = TransformOrigin(0f, 0f) } else Modifier) {
+        Pennant(xs[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Color(0xFF7A5E2C))
+        Pennant(xs[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
+        Pennant(xs[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
+        Pennant(xs[3], "HEAT", heatText, heatFraction, Color(0xFF6E2A1E))
+    }
 }
 
 /**
@@ -139,3 +146,7 @@ internal fun Pennants() {
  * flags' visible edges meet the panel edges (16 and 345) and the gaps between the four are equal.
  */
 private val PennantX = List(4) { 14f + it * (289f - 14f) / 3f }
+
+/** Landscape (S1): the row is laid out 247 wide and drawn at 0.9 so it fills the 222 wide left column. */
+internal const val PennantsLandscapeScale = 0.9f
+private val LandscapePennantX = List(4) { it * (247f - 58f) / 3f }

@@ -1,6 +1,7 @@
 package de.mm20.launcher2.ui.medieval
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,14 +19,15 @@ import de.mm20.launcher2.ui.launcher.search.SearchVM
 internal fun CommandBar(onOpen: () -> Unit) {
     val context = LocalContext.current
     val searchVM: SearchVM = viewModel()
+    val land = LocalLandscape.current
     Panel(top = 404f, height = 44f, onClick = onOpen) {
         SummonButton(Modifier.align(Alignment.TopEnd).padding(top = 7.dp, end = 8.dp)) {
             summonToClaude(context, searchVM.searchQuery.value)
         }
-        SvgIcon(MedievalIcons.Quill, 20f, Medieval.Gold, Modifier.at(16f, 12f))
+        SvgIcon(MedievalIcons.Quill, if (land) 17f else 20f, Medieval.Gold, Modifier.at(if (land) 11f else 16f, if (land) 13f else 12f))
         MText(
-            "Command the Oracle…", 16f, Medieval.TextFaint,
-            Modifier.at(46f, 11f), italic = true,
+            "Command the Oracle…", if (land) 13f else 16f, Medieval.TextFaint,
+            Modifier.at(if (land) 34f else 46f, if (land) 14f else 11f).let { if (land) it.width(104.dp) else it }, italic = true,
         )
     }
 }

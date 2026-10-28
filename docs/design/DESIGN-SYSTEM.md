@@ -32,7 +32,7 @@ Cannot (stock Samsung One UI 5, locked bootloader): the Android quick panel, loc
 | Launcher settings | stock look (only the Animations entry is ours) |
 | Widget/feed page | not styled |
 | Sheets, dialogs, item cards | not styled |
-| Home landscape | not built (rotation is locked to portrait by an upstream setting) |
+| Home landscape | BUILT (S1, layout A), awaiting phone test |
 | Wallpaper, lock screen, AOD | not made |
 | Icon pack | not made |
 | Keyboard (SwiftKey) theme | not made |

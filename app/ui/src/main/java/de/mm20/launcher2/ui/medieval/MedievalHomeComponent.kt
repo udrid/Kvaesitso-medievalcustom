@@ -12,13 +12,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalView
+import android.util.Log
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -74,30 +84,80 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
                 }
                 .pointerInput(Unit) {},
         ) {
-            // The launcher draws edge to edge, so keep the stage clear of the system bars:
-            // the navigation bar (3 buttons or gesture line) at the bottom, and any status bar
-            // taller than the 20 dp the design already leaves above the header at the top.
+            // The launcher draws edge to edge, so keep the stage clear of the system bars.
+            // Portrait: the navigation bar at the bottom, and any status bar taller than the 20 dp the
+            // design already leaves above the header at the top.
+            // Landscape (S1): the navigation bar and the camera hole sit on the short sides, so the stage
+            // leaves a strip on each side that has one (plus a small margin next to the camera hole).
             val density = LocalDensity.current
-            val bottomInset = with(density) { WindowInsets.navigationBars.getBottom(this).toDp() }
-            val topInset = with(density) { WindowInsets.statusBarsIgnoringVisibility.getTop(this).toDp() }
-            val topPad = (topInset - 20.dp).coerceAtLeast(0.dp)
-            val freeHeight = maxHeight - topPad - bottomInset
-            val scale = minOf(maxWidth.value / StageWidth, freeHeight.value / StageHeight)
+            val ltr = LayoutDirection.Ltr
+            val navBars = WindowInsets.navigationBars
+            val cutout = WindowInsets.displayCutout
+            fun dp(px: Int) = with(density) { px.toDp().value }
+            val bottomInset = dp(navBars.getBottom(density))
+            val topInset = dp(WindowInsets.statusBarsIgnoringVisibility.getTop(density))
+            val navLeft = dp(navBars.getLeft(density, ltr))
+            val navRight = dp(navBars.getRight(density, ltr))
+            val cutLeft = dp(cutout.getLeft(density, ltr))
+            val cutRight = dp(cutout.getRight(density, ltr))
+            val topPad = (topInset - 20f).coerceAtLeast(0f)
+            val landscape = maxWidth > maxHeight
+            val w = maxWidth.value
+            val h = maxHeight.value
+            // R1: landscape keeps the stage inside the part of this box that is really on screen
+            // (the phone drew the S1 header above the top edge); portrait stays as owner-verified.
+            val view = LocalView.current
+            // measured once per orientation (Home is at rest when the phone turns), so page swipes that
+            // move this box do not resize the stage
+            var boxTop by remember(landscape) { mutableFloatStateOf(Float.NaN) }
+            val windowH = dp(view.rootView.height).takeIf { it > 0f } ?: h
+            val top0 = if (boxTop.isNaN()) 0f else boxTop
+            val visibleTop = (-top0).coerceIn(0f, h)
+            val visibleBottom = (windowH - top0).coerceIn(visibleTop, h)
+            fun geoFor(l: Boolean): StageGeo =
+                if (l) {
+                    stageGeo(
+                        true,
+                        left = maxOf(navLeft, if (cutLeft > 0f) cutLeft + CameraMargin else 0f),
+                        top = visibleTop,
+                        right = w - maxOf(navRight, if (cutRight > 0f) cutRight + CameraMargin else 0f),
+                        bottom = minOf(visibleBottom, h - bottomInset),
+                    )
+                } else {
+                    stageGeo(false, 0f, topPad, w, h - bottomInset)
+                }
+            val geo = geoFor(landscape)
+            if (landscape) {
+                LaunchedEffect(w, h, boxTop, windowH) {
+                    Log.i("medieval", "Stage: box ${w}x$h dp at y $boxTop, window h $windowH, nav L$navLeft R$navRight B$bottomInset, cut L$cutLeft R$cutRight -> scale ${geo.scale} at ${geo.x},${geo.y}")
+                }
+            }
+            val motion = rememberMotion()
+            val glide = rememberRotateGlide(landscape, motion, geoFor(!landscape), geo)
+            val stageW = if (landscape) LandscapeStageWidth else StageWidth
+            val stageH = if (landscape) LandscapeStageHeight else StageHeight
             Box(
                 Modifier
                     .fillMaxSize()
-                    .padding(top = topPad, bottom = bottomInset),
+                    .onGloballyPositioned {
+                        val y = with(density) { it.positionInWindow().y.toDp().value }
+                        // a box far off screen means another launcher page is open: measure again later
+                        if (boxTop.isNaN() && kotlin.math.abs(y) <= 48f) boxTop = y
+                    }
             ) {
                 Box(
                     Modifier
-                        .align(Alignment.Center)
-                        .requiredSize(StageWidth.dp, StageHeight.dp)
+                        .offset(geo.x.dp, geo.y.dp)
+                        // R1: on a window narrower or lower than the stage, do not let Compose centre it
+                        .overflowTopStart()
+                        .requiredSize(stageW.dp, stageH.dp)
                         .graphicsLayer {
-                            scaleX = scale
-                            scaleY = scale
+                            scaleX = geo.scale
+                            scaleY = geo.scale
+                            transformOrigin = TransformOrigin(0f, 0f)
                         }
                 ) {
-                    MedievalStage(state) { commandOpen = true }
+                    MedievalStage(state, landscape, motion, glide) { commandOpen = true }
                 }
             }
             AnimatedVisibility(commandOpen, enter = fadeIn(tween(120)), exit = fadeOut(tween(100))) {
@@ -107,23 +167,50 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
             val notifications by vm.notifications.collectAsState()
             val hasNotificationAccess by vm.hasNotificationAccess.collectAsState()
             HideStatusBarWhileHome()
+            RotationAnimationEffect()
             MedievalPill(notifications, hasNotificationAccess == true)
             GrainAndVignette(Modifier.fillMaxSize())
         }
     }
 }
 
+/** Space kept between the camera hole's cutout and the first thing drawn beside it (landscape). */
+private const val CameraMargin = 6f
+
 @Composable
-private fun MedievalStage(state: LauncherScaffoldState, onCommandOpen: () -> Unit) {
+private fun MedievalStage(
+    state: LauncherScaffoldState,
+    landscape: Boolean,
+    motion: Motion,
+    glide: RotateGlide,
+    onCommandOpen: () -> Unit,
+) {
     val vm: MedievalHomeVM = viewModel()
     val density = LocalDensity.current
     // T9: what may move (lifecycle, screen, Battery Saver, battery, Android animations, the Animations setting)
-    val motion = rememberMotion()
-    CompositionLocalProvider(LocalDensity provides Density(density.density, 1f), LocalMotion provides motion) {
-        HeaderSection(vm.forecast, vm.weatherStatus) {
-            vm.permissionsManager.requestPermission(it, PermissionGroup.Location)
+    CompositionLocalProvider(
+        LocalDensity provides Density(density.density, 1f),
+        LocalMotion provides motion,
+        LocalLandscape provides landscape,
+    ) {
+        val header: @Composable () -> Unit = {
+            HeaderSection(vm.forecast, vm.weatherStatus) {
+                vm.permissionsManager.requestPermission(it, PermissionGroup.Location)
+            }
         }
-        // T4: everything below the header is laid out on a 361 wide body and drawn 8% larger (361 x 1.08 = 390)
+        if (landscape) {
+            LandscapeSections(vm, glide, header, onCommandOpen)
+        } else {
+            PortraitSections(vm, glide, header, onCommandOpen)
+        }
+    }
+}
+
+/** Portrait, exactly as before: everything below the header is laid out on a 361 wide body drawn 8% larger. */
+@Composable
+private fun PortraitSections(vm: MedievalHomeVM, glide: RotateGlide, header: @Composable () -> Unit, onCommandOpen: () -> Unit) {
+    @Composable
+    fun Body(sec: Sec, content: @Composable () -> Unit) = glide.Section(sec) {
         Box(
             Modifier
                 .at(0f, BodyTop)
@@ -133,19 +220,65 @@ private fun MedievalStage(state: LauncherScaffoldState, onCommandOpen: () -> Uni
                     scaleY = BodyScale
                     transformOrigin = TransformOrigin(0f, 0f)
                 }
-        ) {
-            TreasuryPanel()
-            Pennants()
-            OracleOrb()
-            Shields(vm)
-            Ledger(vm)
-            Dispatches(vm)
-            CommandBar(onCommandOpen)
-            Dock()
-        }
+        ) { content() }
     }
+    glide.Section(Sec.Header, header)
+    Body(Sec.Treasury) { TreasuryPanel() }
+    Body(Sec.Pennants) { Pennants() }
+    Body(Sec.Oracle) { OracleOrb(); Shields(vm) }
+    Body(Sec.Ledger) { Ledger(vm) }
+    Body(Sec.Dispatches) { Dispatches(vm) }
+    Body(Sec.Command) { CommandBar(onCommandOpen) }
+    Body(Sec.Dock) { Dock() }
 }
 
+/**
+ * Landscape layout A (S1): left column header, Treasury, pennants; middle orb with shields and the dock
+ * under it; right column Ledger, command bar, Dispatches. Sections keep their portrait internals; each is
+ * moved so its portrait body y lands on its landscape rectangle, with the column width in [LocalColumnWidth].
+ */
+@Composable
+private fun LandscapeSections(vm: MedievalHomeVM, glide: RotateGlide, header: @Composable () -> Unit, onCommandOpen: () -> Unit) {
+    @Composable
+    fun Place(sec: Sec, bodyY: Float, content: @Composable () -> Unit) {
+        val r = LandscapeRects.getValue(sec)
+        glide.Section(sec) {
+            // R1: these boxes are taller than the 374 high stage (the dock box is 646); a requiredSize larger
+            // than the parent is CENTRED by Compose, which pulled the dock, command bar and Dispatches up.
+            // Overflow from the top-left corner instead.
+            Box(Modifier.at(r.x, r.y - bodyY).overflowTopStart().requiredSize(r.w.dp, (r.h + bodyY).dp)) {
+                CompositionLocalProvider(LocalColumnWidth provides r.w) { content() }
+            }
+        }
+    }
+    Place(Sec.Header, 0f, header)
+    Place(Sec.Treasury, 0f) { TreasuryPanel() }
+    Place(Sec.Pennants, 64f * PennantsLandscapeScale) { Pennants() }
+    // the orb zone (ring, orb, four shields) is drawn at 0.9 so its 325 wide span fits the 296 wide middle column
+    val o = LandscapeRects.getValue(Sec.Oracle)
+    glide.Section(Sec.Oracle) {
+        Box(
+            Modifier
+                .at(o.x + (o.w - 361f * OracleScale) / 2f, o.y - 118f * OracleScale)
+                .overflowTopStart()
+                .requiredSize(361.dp, 340.dp)
+                .graphicsLayer {
+                    scaleX = OracleScale
+                    scaleY = OracleScale
+                    transformOrigin = TransformOrigin(0f, 0f)
+                }
+        ) { OracleOrb(); Shields(vm) }
+    }
+    Place(Sec.Ledger, 330f) { Ledger(vm) }
+    Place(Sec.Dispatches, 454f) { Dispatches(vm) }
+    Place(Sec.Command, 404f) { CommandBar(onCommandOpen) }
+    Place(Sec.Dock, 551f + BodyLift / BodyScaleF) { Dock() }
+}
+
+/** Lets a requiredSize box that is larger than its parent start at the parent's top-left corner (no centring). */
+internal fun Modifier.overflowTopStart(): Modifier = wrapContentSize(Alignment.TopStart, unbounded = true)
+
+private const val OracleScale = 0.9f
 private const val BodyScale = BodyScaleF
 private const val BodyWidth = 361f
 private const val BodyHeight = 640f + BodyLift / BodyScaleF

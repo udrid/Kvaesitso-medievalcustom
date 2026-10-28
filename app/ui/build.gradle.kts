@@ -68,6 +68,9 @@ android {
         abortOnError = false
     }
     namespace = "de.mm20.launcher2.ui"
+
+    // Deliverance: screenshot tests render Compose on the PC (ops/emulator.md); test-only
+    testOptions.unitTests.isIncludeAndroidResources = true
 }
 
 
@@ -154,4 +157,11 @@ dependencies {
     implementation(project(":services:favorites"))
     implementation(project(":services:feed"))
     implementation(project(":core:devicepose"))
+
+    // Deliverance: screenshot tests (ops/emulator.md); test-only, not in the APK
+    testImplementation(libs.junit)
+    testImplementation("org.robolectric:robolectric:4.17")
+    testImplementation("io.mockk:mockk:1.14.11")
+    testImplementation("androidx.compose.ui:ui-test-junit4:${libs.versions.androidx.compose.asProvider().get()}")
+    testImplementation("androidx.compose.ui:ui-test-manifest:${libs.versions.androidx.compose.asProvider().get()}")
 }

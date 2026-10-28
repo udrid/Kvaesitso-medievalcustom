@@ -27,10 +27,11 @@ import androidx.compose.ui.unit.dp
 /** Treasury: placeholders only, no invented numbers. Real data comes in T2 (SimpleFIN). */
 @Composable
 internal fun TreasuryPanel() {
-    Panel(top = 0f, height = 56f, ribbon = "Treasury") {
+    val land = LocalLandscape.current
+    Panel(top = 0f, height = if (land) 66f else 56f, ribbon = "Treasury") {
         Box(
             Modifier
-                .at(14f, 9f)
+                .at(if (land) 12f else 14f, if (land) 14f else 9f)
                 .size(38.dp)
                 .clip(CircleShape)
                 .background(
@@ -58,6 +59,37 @@ internal fun TreasuryPanel() {
                 drawLine(ink, Offset(12f * k, 13f * k), Offset(22f * k, 13f * k), w, StrokeCap.Round)
                 drawLine(ink, Offset(12f * k, 20f * k), Offset(22f * k, 20f * k), w, StrokeCap.Round)
             }
+        }
+        if (land) {
+            // landscape column (222 wide): total on top, quest line, bar and percentage under it
+            MText(
+                "[YOUR TOTAL]", 15f, Medieval.TextBright, Modifier.at(54f, 13f).width(156.dp),
+                font = Medieval.Cinzel, bold = true, spacingEm = 0.04f,
+            )
+            Box(Modifier.at(54f, 36f).width(156.dp)) {
+                Cap("Quest: [GOAL]", size = 8.5f, spacingEm = 0.12f)
+                MText(
+                    "[0%] of the way", 9.5f, Medieval.TextFaint,
+                    Modifier.fillMaxWidth(), italic = true, align = TextAlign.End,
+                )
+                Box(
+                    Modifier
+                        .padding(top = 14.dp)
+                        .fillMaxWidth()
+                        .height(9.dp)
+                        .border(1.dp, Medieval.GoldDark)
+                        .background(Color(0xFF050505))
+                        .padding(1.5.dp)
+                ) {
+                    Box(
+                        Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(0f)
+                            .background(Brush.horizontalGradient(listOf(Color(0xFF5A2209), Color(0xFFC9772C))))
+                    )
+                }
+            }
+            return@Panel
         }
         MText(
             "[YOUR TOTAL]", 16f, Medieval.TextBright, Modifier.at(62f, 18f).width(130.dp),

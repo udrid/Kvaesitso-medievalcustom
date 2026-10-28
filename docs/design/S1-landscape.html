@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>S1 Home in landscape: design options</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0a0907;color:#e6d9b8;font-family:'IM Fell English',Georgia,serif;padding:28px 32px 60px;width:1000px}
+h1{font-family:UnifrakturCook,serif;font-size:34px;font-weight:700;color:#ecdfbf;margin:0 0 4px}
+h2{font-family:Cinzel,serif;font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:#c9a55a;margin:34px 0 8px;border-top:1px solid #4a3a20;padding-top:16px}
+h3{font-family:Cinzel,serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#a8884c;margin:14px 0 4px}
+p,li{font-size:15px;line-height:1.35;color:#d9ccaa;margin:4px 0}
+ol,ul{margin:4px 0;padding-left:22px}
+.note{color:#a89a76;font-style:italic;font-size:13px}
+.m{color:#f0a050;font-family:Cinzel,serif;font-size:11px;font-weight:700}
+.cols{display:flex;gap:24px}
+.cols>div{flex:1}
+code{font-family:Consolas,monospace;font-size:12.5px;color:#e0c98f}
+/* design system pieces, as in C5 */
+.abs{position:absolute}
+.panel{position:absolute;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);box-shadow:inset 0 0 22px rgba(0,0,0,.6),0 2px 0 #050403}
+.panel::before{content:"";position:absolute;inset:3px;border:1px solid rgba(140,109,58,.26);pointer-events:none}
+.ribbon{position:absolute;top:-8px;left:10px;height:16px;padding:0 15px 0 10px;background:linear-gradient(#6a1d16,#481510);border-top:1px solid #c9a55a;color:#f0e2bd;font-family:Cinzel,serif;font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:center;clip-path:polygon(0 0,100% 0,calc(100% - 7px) 50%,100% 100%,0 100%)}
+.cap{font-family:Cinzel,serif;font-weight:700;letter-spacing:.2em;color:#a8884c;text-transform:uppercase;white-space:nowrap}
+.stage{position:relative;width:844px;height:390px;overflow:hidden;background:radial-gradient(90% 70% at 50% 45%,#26211a 0%,#0d0c09 82%),#0a0907;border:1px solid #3a2e18;border-radius:26px}
+.vig{position:absolute;inset:0;background:radial-gradient(120% 100% at 50% 50%,transparent 55%,rgba(0,0,0,.7) 100%);pointer-events:none;z-index:50}
+.cs{position:absolute;top:8px;height:374px}
+.guide{position:absolute;border:1px dashed rgba(201,165,90,.28);pointer-events:none;z-index:40}
+.gl{position:absolute;font:9px Consolas,monospace;color:#a8884c;z-index:41}
+.row{display:flex;align-items:center;gap:7px;line-height:1;color:#d9ccaa;white-space:nowrap}
+.time{font-family:Cinzel,serif;font-size:9px;font-weight:700;color:#c9a55a;flex:none;width:36px}
+.node{position:absolute;width:56px;height:65px}
+.node svg.shield{position:absolute;inset:0}
+.node .glyph{position:absolute;left:0;right:0;top:20px;display:flex;justify-content:center;color:#e6d9b8}
+.badge{position:absolute;top:-5px;right:-4px;min-width:17px;height:17px;border-radius:9px;background:#6e1a14;border:1.5px solid #c9a55a;color:#f2e6c8;font:700 9px Cinzel,serif;display:flex;align-items:center;justify-content:center;z-index:2}
+.lbl{position:absolute;text-align:center;font:700 9px Cinzel,serif;letter-spacing:.16em;text-transform:uppercase;color:#bfae86;white-space:nowrap}
+.seal{position:absolute;width:46px;height:46px}
+.seal svg.wax{position:absolute;inset:0}
+.seal .ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.pen{position:absolute;height:60px}
+.pen .l{position:absolute;left:0;right:0;top:9px;text-align:center;font:700 6.5px Cinzel,serif;letter-spacing:.14em;color:#d9c48c}
+.pen .v{position:absolute;left:0;right:0;top:21px;text-align:center;font:700 12px Cinzel,serif;color:#f2e6c6}
+.navbar{position:absolute;top:0;bottom:0;width:48px;background:rgba(255,255,255,.03);border-left:1px solid #2a2418;z-index:45;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px}
+.navbar i{display:block;color:#6c6450;font-style:normal;font-size:13px}
+.hole{position:absolute;width:12px;height:12px;border-radius:50%;background:#0c0d10;border:2px solid #2a2418;z-index:46}
+.tag{position:absolute;z-index:60;background:#6a1d16;color:#f0e2bd;font:700 9px Cinzel,serif;letter-spacing:.1em;padding:2px 6px;border-radius:2px}
+.kb{position:absolute;left:0;right:0;bottom:0;height:150px;background:#1a1a1c;border-top:1px solid #333;z-index:44}
+.kb span{position:absolute;height:26px;border-radius:5px;background:#2c2c30}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#a89a76;margin-top:6px}
+.demo{position:relative;background:#050403;border:1px solid #3a2e18;border-radius:10px;overflow:hidden;margin:8px 0}
+.blk{position:absolute;border:1px solid #8c6d3a;background:linear-gradient(178deg,#2a2217,#14110c);border-radius:3px;display:flex;align-items:center;justify-content:center;font:700 8px Cinzel,serif;letter-spacing:.12em;color:#c9a55a;text-transform:uppercase;transition:all 350ms cubic-bezier(.4,0,.2,1);overflow:hidden}
+.blk.round{border-radius:50%;background:radial-gradient(circle at 50% 38%,#4a2d14,#0f0904 72%)}
+.blk.red{background:#3a1612}
+button.b{font:700 10px Cinzel,serif;letter-spacing:.14em;color:#e6d9b8;background:linear-gradient(#3a1612,#1c0a08);border:1px solid #6b5430;padding:6px 12px;cursor:pointer;margin-right:8px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+td,th{border:1px solid #3a2e18;padding:5px 8px;vertical-align:top;text-align:left;color:#d9ccaa}
+th{font-family:Cinzel,serif;font-size:10px;letter-spacing:.12em;color:#c9a55a;text-transform:uppercase;background:#14110c}
+</style>
+</head>
+<body>
+
+<h1>Home in landscape</h1>
+<p class="note">Design preview S1 for the Deliverance launcher. Screen: Galaxy S20 FE turned on its side, drawn at 844 x 390 (the phone itself is 914 x 411 dp; everything scales to fit). Every look piece is the approved C5 design. Nothing here is built yet.</p>
+
+<h2>Where the screen is spent</h2>
+<p>Landscape gives you a wide but short screen (390 high instead of 844). Three things take space away from the sides, and the design keeps clear of all three:</p>
+<ol>
+<li><b>The camera hole</b> moves to a short edge: the <b>left</b> edge when the top of the phone points left, the <b>right</b> edge when it points right. It sits halfway down that edge.</li>
+<li><b>The navigation buttons</b> (you use the 3-button bar) sit on the right side, about 48 wide. Android may put them on the left when the phone is turned the other way (UNVERIFIED on your phone); the layout reads the real sides, so it works either way.</li>
+<li><b>The status bar</b> stays hidden on Home, as in portrait. The pill takes its job.</li>
+</ol>
+<p>Usable content area: <b>760 x 374</b> (dashed gold line in the pictures). The code draws it on this stage and scales it up to the real free area, as it does today for portrait.</p>
+
+<h2>Layout A: three columns, everything visible, no scrolling</h2>
+<div style="position:relative;width:844px">
+<div class="stage" id="stA"></div>
+</div>
+<div class="legend"><span>Left column: header, Treasury, pennants</span><span>Middle: orb, shields, dock</span><span>Right: Ledger, command bar, Dispatches</span><span>Phone turned so the camera is on the LEFT (nav buttons on the right)</span></div>
+<ol>
+<li><b>Header</b> moves to the top of the left column. Date row on top, clock and weather under it on one line. Same weekday medallion and divider.</li>
+<li><b>Treasury</b> and the <b>four pennants</b> sit under it, narrower. The Treasury quest bar drops under the total.</li>
+<li><b>Orb</b> stays in the exact middle of the screen, ring text and glow unchanged. Two shields each side, as in portrait.</li>
+<li><b>Dock</b> becomes a row of four wax seals under the orb, the same size as in portrait.</li>
+<li><b>Ledger, command bar, Dispatches</b> stack in the right column, narrower.</li>
+</ol>
+<p><b>Good:</b> all sections are on screen at once, nothing to scroll, closest to the portrait feel. <b>Cost:</b> six sections must be re-flowed to a narrower width (the code today fixes them at 361 wide). Smallest text stays at 9 to 10 pt after scaling.</p>
+
+<h2>Layout B: Oracle on the left, one scrolling column on the right</h2>
+<div style="position:relative;width:844px">
+<div class="stage" id="stB"></div>
+</div>
+<div class="legend"><span>Left: orb, shields and dock exactly as in portrait</span><span>Right: portrait column, scrolls, command bar pinned</span><span>Phone turned so the camera is on the RIGHT (nav buttons on the left)</span></div>
+<ol>
+<li><b>Oracle half</b> (orb, four shields, label, dock) is the portrait picture unchanged, centred in the left half. The orb is a little larger.</li>
+<li><b>Right half</b> is a portrait-width column: header, Treasury, pennants, Ledger fit on the first view. <b>Dispatches</b> is below the fold: slide the column up to read it.</li>
+<li><b>Command bar</b> is pinned at the bottom of the right column so it is always one tap away.</li>
+</ol>
+<p><b>Good:</b> the sections keep their portrait size and look (cheapest to build, least risk). <b>Cost:</b> Dispatches is not visible without a scroll, and a scrolling column fights Home's own up/down swipes (the code must hand over only at the ends).</p>
+
+<h2>Camera hole and pill</h2>
+<p>The pill is drawn around the hole, so in landscape it must follow the hole to the edge. Options:</p>
+<div class="cols">
+<div>
+<div class="stage" id="pillP" style="width:410px;height:190px;border-radius:14px"></div>
+<h3>P1 Standing pill (recommended)</h3>
+<p>A black capsule stands on the edge around the hole, same gold hairline. Waiting-notification icons stack <b>above</b> the hole (max 4, then +n), Hushed, Bluetooth, Wi-Fi and signal stack <b>below</b>. Nothing else on Home goes within 36 of that edge, so nothing sits under it.</p>
+</div>
+<div>
+<div class="stage" id="pillH" style="width:410px;height:190px;border-radius:14px"></div>
+<h3>P2 Hide the pill</h3>
+<p>The same icons move into a thin strip at the top of the right column (rotated phone has no room for a capsule). Simpler, but the hole is then just a black dot with no frame.</p>
+</div>
+</div>
+
+<h2>Dock, shields, tap reactions</h2>
+<ul>
+<li>Shields and seals keep their portrait size (tap targets at least 46 dp). The press flash and the 120 ms delay before the app starts are unchanged.</li>
+<li>The dock never touches the navigation bar: it stays at least 12 dp away from it, and a thin gold line separates the two.</li>
+<li>Orb tap, orb glow, ring light, wake and charging reactions are unchanged. Nothing new animates all the time.</li>
+</ul>
+
+<h2>Command bar, typing layer and keyboard</h2>
+<div style="position:relative;width:844px">
+<div class="stage" id="stK"></div>
+</div>
+<ol>
+<li>Tap the command bar: the typing layer opens over Home, as in portrait. The text field stays on top and the keyboard comes up from below; the screen above the keyboard is only about 200 high.</li>
+<li>So in landscape the layer has <b>two panes</b>: most-used apps (4 x 2) on the left, the framed panel with starred contacts and quick chips on the right. Search results use the same two panes.</li>
+<li>Typed text stays when you rotate with the keyboard open (the screen is not rebuilt).</li>
+<li>The home gesture / Home button still closes the layer.</li>
+</ol>
+
+<h2>The transition</h2>
+<p>Press the buttons to watch it (the real thing is on the phone; this is a model with simple blocks, drawn at half size, using layout A):</p>
+<div class="demo" id="demo" style="width:700px;height:430px">
+  <div id="demoPhone" style="position:absolute;left:0;top:0;transition:all 350ms cubic-bezier(.4,0,.2,1);background:radial-gradient(90% 60% at 50% 45%,#26211a,#0d0c09 82%);border:1px solid #3a2e18"></div>
+</div>
+<button class="b" onclick="demoTo('l')">Rotate to landscape</button><button class="b" onclick="demoTo('p')">Rotate to portrait</button><button class="b" onclick="demoAuto()">Loop</button>
+<h3>What you see (about 350 ms, one time)</h3>
+<ol>
+<li>You turn the phone. Android turns the screen; the launcher does <b>not</b> restart.</li>
+<li>Each section glides from its portrait spot to its landscape spot and changes size on the way, using a soft ease in and out (350 ms). The orb barely moves: it is centred in both.</li>
+<li>Text and glow keep drawing while the sections move; pressing something mid-way still works.</li>
+<li>Animations setting <b>Off</b>, or Android's remove-animations, or Battery Saver: the sections jump to the new spot at once, no motion.</li>
+</ol>
+<h3>What the code must do</h3>
+<ol>
+<li>Tell Android the launcher handles rotation itself (manifest <code>configChanges</code> for orientation and screen size on the launcher activity). Without it the whole activity is destroyed and rebuilt on every turn: flicker, lost typed text, the layer closing. This is one line in an upstream file, in its own commit.</li>
+<li>Ask Android for a quick cross-fade instead of its slow turning picture (<code>rotationAnimation</code> on the window). UNVERIFIED on One UI 5: if Samsung ignores it, the system animation plays under ours, which is still fine.</li>
+<li>One animated number (0 = portrait, 1 = landscape) drives every section's position and size. It starts only when the orientation changes and is not run on the first draw, so launching the launcher is as quick as now.</li>
+<li>The launch delay (120 ms), press flashes and all reactions are untouched; they live inside each section.</li>
+</ol>
+
+<h2>What changes versus portrait, numbered</h2>
+<ol>
+<li>The stage: 390 x 842 portrait becomes 760 x 374 in landscape, and is scaled by the free width and height (minus nav bar and camera strip on their real sides).</li>
+<li>Sections no longer share one column; each has a landscape home (layout A or B).</li>
+<li>Six sections (header, Treasury, pennants, Ledger, command bar, Dispatches) take a width instead of the fixed 361 (layout A only).</li>
+<li>The dock goes from a row at the bottom of everything to a row under the orb (A) or the Oracle half (B).</li>
+<li>The pill stands up along the hole's edge (P1).</li>
+<li>The typing layer gets two panes and respects the camera and nav-bar sides.</li>
+<li>Rotation: no activity restart; a 350 ms glide; the turn is allowed only if the phone's own Auto-rotate is on and the launcher's rotation lock is off.</li>
+</ol>
+
+<h2>Is it feasible? What I found in the code</h2>
+<table>
+<tr><th>Item</th><th>Finding</th></tr>
+<tr><td>Rotation lock</td><td><code>SharedLauncherActivity.kt</code>: when the launcher setting "fixed rotation" (Settings, Home screen) is on, the screen is forced to portrait; when off, it follows the phone's own Auto-rotate. Default is off. So landscape can already be reached; today it would show a tiny portrait strip. Note: the upstream "Landscape" choice also forces portrait; harmless because the app only offers on/off.</td></tr>
+<tr><td>Manifest</td><td>No <code>configChanges</code> on <code>LauncherActivity</code>: Android rebuilds the whole activity on rotation. Our typing layer state (open or closed) is a plain <code>remember</code>, so it would be lost. Fix = declare the changes (planned).</td></tr>
+<tr><td>Stage scale</td><td><code>MedievalHomeComponent.kt</code>: one 390 x 842 stage scaled by min(width/390, height/842), minus bottom nav bar and top bar. In landscape that gives scale 0.43 (a narrow strip). Needs a second stage and the real left/right bars.</td></tr>
+<tr><td>Camera pill</td><td><code>MedievalPill.kt</code> looks for a cutout at the top edge; on a side edge it finds none and falls back to the top centre (wrong). Needs a side-hole finder and a vertical capsule layout.</td></tr>
+<tr><td>Insets</td><td>Only bottom nav and top status inset are read; left/right bars and the side camera cutout are not. Typing layer: same (top and bottom only).</td></tr>
+<tr><td>Sections</td><td>Each is drawn at fixed coordinates in a 361-wide body (A needs a width parameter for six of them; B can place them as they are).</td></tr>
+<tr><td>Motion gate</td><td>The glide uses the existing gate in <code>MedievalMotion.kt</code> (Full/Minimal animate, Off snaps). No always-running animation is added.</td></tr>
+<tr><td>Not verifiable here</td><td>How Samsung rotates (does it honour a cross-fade, which side the nav bar takes, whether Home can rotate with its own switch). All on the phone.</td></tr>
+</table>
+
+<h2>Things that could be sold [M]</h2>
+<p><span class="m">[M]</span> Nothing new is sold here. The landscape layouts and the seal/shield art are existing C5 pieces; a "landscape wallpaper" for the same look is a later wallpaper-pack idea (already in <code>ops/monetization.md</code>).</p>
+
+<script>
+const SVG_SHIELD='<svg class="shield" viewBox="0 0 62 72"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/></svg>';
+const GL={
+ twitter:'<path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/>',
+ discord:'<path d="M6 7h9v10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7z"/><path d="M15 9h2a2 2 0 0 1 0 5h-2"/>',
+ videos:'<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/>',
+ msg:'<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>',
+ phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 4 5a1 1 0 0 1 1-1z"/>',
+ cam:'<path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.5"/>',
+ road:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+ smithy:'<path d="M12 3v18M7 8h10M9 21h6"/>'
+};
+function ico(p,s,c,sw){return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${sw||1.6}" stroke-linejoin="round" stroke-linecap="round">${p}</svg>`}
+function shield(x,y,key,name,badge){
+ return `<div class="node" style="left:${x}px;top:${y}px">${badge?`<span class="badge">${badge}</span>`:''}${SVG_SHIELD}<span class="glyph">${ico(GL[key],24,'currentColor')}</span></div><div class="lbl" style="left:${x-14}px;top:${y+68}px;width:84px">${name}</div>`}
+function seal(x,y,key,name){
+ return `<div class="seal" style="left:${x}px;top:${y}px"><svg class="wax" viewBox="0 0 54 54"><path d="M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z" fill="#4e1511"/><circle cx="27" cy="27" r="19" fill="none" stroke="#2a0a08" stroke-width="2"/></svg><span class="ic">${ico(GL[key],21,'#e3cf9c')}</span></div><div class="lbl" style="left:${x-19}px;top:${y+50}px;width:84px;font-size:8px;color:#a8884c">${name}</div>`}
+function header(x,y,w,compact){
+ const clk=compact?'':'';
+ return `<div class="abs" style="left:${x}px;top:${y}px;width:${w}px">
+ <div style="display:flex;align-items:flex-start;gap:6px"><div style="font-family:UnifrakturMaguntia,UnifrakturCook,serif;font-size:42px;line-height:.82;color:#a8352b;text-shadow:0 1px 0 #3a0e0a">S</div>
+ <div><div style="font-family:UnifrakturMaguntia,UnifrakturCook,serif;font-size:19px;line-height:1;color:#ecdfbf">unday</div><div class="cap" style="margin-top:4px;font-size:8.5px">27th of October</div></div>
+ <div style="margin-left:auto;width:30px;height:30px;border-radius:50%;border:1px solid #8c6d3a;display:flex;align-items:center;justify-content:center;color:#c9a55a;font-size:15px;background:radial-gradient(circle at 40% 35%,#3a2a12,#14100a)">☉</div></div>
+ <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:5px"><div style="font-size:34px;line-height:.9;color:#f2e6c6;text-shadow:0 0 12px rgba(201,165,90,.22)">2:17</div><div style="font-size:11px;font-style:italic;color:#a8987a;text-align:right">62° · Mostly clear</div></div>
+ <div style="margin-top:6px;border-top:1px solid #4a3a20;position:relative"><span style="position:absolute;left:50%;top:-8px;transform:translateX(-50%);color:#8c6d3a;background:#14110c;font-size:11px;padding:0 4px">+</span></div></div>`}
+function treasury(x,y,w,h){
+ return `<div class="panel" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><div class="ribbon">Treasury</div>
+ <div class="abs" style="left:12px;top:15px;width:32px;height:32px;border-radius:50%;border:2px solid #5a4620;background:radial-gradient(circle at 35% 30%,#e0c070,#8a6a22);display:flex;align-items:center;justify-content:center"><svg width="26" height="26" viewBox="0 0 34 34" fill="none" stroke="#3a2a0a" stroke-width="1.6"><circle cx="17" cy="17" r="10" stroke-dasharray="1.5 3"/><path d="M17 10v14M12 13h10M12 20h10"/></svg></div>
+ <div class="abs" style="left:52px;top:13px;font:700 15px Cinzel,serif;color:#f2e6c6;letter-spacing:.03em">[YOUR TOTAL]</div>
+ <div class="abs" style="left:52px;top:34px;right:12px"><div class="cap" style="font-size:7.5px;display:flex;justify-content:space-between"><span>Quest: [GOAL]</span><span style="font-style:italic;font-family:'IM Fell English',serif;letter-spacing:0;text-transform:none;color:#8c7a52;font-size:9.5px">[0%] of the way</span></div><div style="margin-top:3px;height:7px;border:1px solid #6b5430;background:#050505;padding:1px"><div style="width:40%;height:100%;background:linear-gradient(90deg,#5a2209,#c9772c)"></div></div></div></div>`}
+function pennants(x,y,w){
+ const f=[.16,.5,.6,.7],c=['#7a5e2c','#5e4a24','#5e4a24','#6e2a1e'],n=['VIGOR','STORES','WITS','HEAT'],v=['84','[ ]','[ ]','[ ]°'];
+ const pw=52,gap=(w-4*pw)/3;let s='';
+ for(let i=0;i<4;i++){s+=`<div class="pen" style="left:${x+i*(pw+gap)}px;top:${y}px;width:${pw}px"><svg viewBox="0 0 58 62" width="${pw}" height="56" preserveAspectRatio="none" fill="none"><defs><linearGradient id="pg${x}${i}${y}" x1="0" y1="0" x2="0" y2="1"><stop offset="${f[i]}" stop-color="#1a1610"/><stop offset="${f[i]}" stop-color="${c[i]}"/></linearGradient></defs><path d="M2 1H56V52L29 42L2 52Z" fill="url(#pg${x}${i}${y})" stroke="#8c6d3a" stroke-width="1.5"/></svg><div class="l">${n[i]}</div><div class="v">${v[i]}</div></div>`}
+ return s}
+function orbzone(cx,y,ring,withLabel,sw){
+ const r=ring/2,x0=cx-r,svgS=ring;
+ const inner=ring*0.70;
+ let s=`<svg class="abs" width="${svgS}" height="${svgS}" viewBox="0 0 176 176" style="left:${x0}px;top:${y}px" fill="none"><defs><path id="rt${cx}${y}" d="M88 88m-71 0a71 71 0 1 1 142 0a71 71 0 1 1-142 0"/></defs><circle cx="88" cy="88" r="86" stroke="#6b5430" stroke-width="1.5"/><circle cx="88" cy="88" r="57" stroke="#3a2e18"/><text font-family="Cinzel,serif" font-size="8.5" font-weight="700" letter-spacing="2.6" fill="#8c6d3a"><textPath href="#rt${cx}${y}">✠ NOSCE TE IPSUM ✠ SAPERE AUDE ✠ LUX ET VERITAS ✠</textPath></text></svg>
+ <div class="abs" style="left:${cx-inner/2}px;top:${y+ring/2-inner/2}px;width:${inner}px;height:${inner}px;border-radius:50%;border:2px solid #8c6d3a;background:radial-gradient(circle at 50% 38%,#4a2d14,#0f0904 72%);box-shadow:0 0 0 3px #0a0907,0 0 30px rgba(229,138,60,.26),inset 0 0 26px rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center"><svg width="${inner*.43}" height="${inner*.43}" viewBox="0 0 24 24" fill="none" stroke="#f0a050" stroke-width="1.4" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px rgba(229,138,60,.65))"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg></div>`;
+ if(withLabel) s+=`<div class="abs" style="left:${cx-70}px;top:${y+ring+2}px;width:140px;text-align:center;font:19px UnifrakturCook,serif;color:#e6d9b8">The Oracle</div>`;
+ const sx=sw; // shield span from ring edge
+ s+=shield(cx-r-60,y+20,"twitter","Twitter")+shield(cx+r+4,y+20,"discord","Discord",3)+shield(cx-r-60,y+ring-58,"videos","Videos")+shield(cx+r+4,y+ring-58,"msg","Messages",2);
+ return s}
+function ledger(x,y,w,h){
+ return `<div class="panel" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><div class="ribbon">Today's Ledger</div><div class="abs" style="left:12px;right:12px;top:22px;display:flex;flex-direction:column;gap:8px"><div class="row" style="font-size:12px"><span style="color:#a8352b">✠</span><span class="time">[TIME]</span><span>[Next event]</span></div><div class="row" style="font-size:12px"><span style="color:#6b5430">✠</span><span class="time" style="color:#8c7a52">[TIME]</span><span style="color:#a89a76">[Then this]</span></div></div></div>`}
+function command(x,y,w,h){
+ return `<div class="panel" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">${ico('<path d="M20 4c-9 0-14 5-14 12l-2 4 4-2c7 0 12-5 12-14z"/><path d="M8 16c3-4 6-7 9-9"/>',17,'#c9a55a')?`<span class="abs" style="left:11px;top:${h/2-8.5}px">${ico('<path d="M20 4c-9 0-14 5-14 12l-2 4 4-2c7 0 12-5 12-14z"/><path d="M8 16c3-4 6-7 9-9"/>',17,'#c9a55a')}</span>`:''}<span class="abs" style="left:34px;top:${h/2-8}px;font-size:13px;font-style:italic;color:#8c7a52;white-space:nowrap">Command the Oracle…</span><span class="abs" style="right:5px;top:${h/2-12}px;height:24px;padding:0 9px;border:1px solid #6b5430;background:linear-gradient(#3a1612,#1c0a08);color:#e6d9b8;font:700 8.5px Cinzel,serif;letter-spacing:.14em;display:flex;align-items:center">SUMMON</span></div>`}
+function dispatches(x,y,w,h){
+ const r=(i,a,b)=>`<div class="row" style="font-size:11.5px"><span style="flex:none;display:flex">${i}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;${a[1]?'color:#a89a76':''}">${a[0]}</span><span style="font-size:10px;color:#8c7a52;font-style:italic">${b}</span></div>`;
+ return `<div class="panel" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><div class="ribbon">Dispatches</div><div class="abs cap" style="right:12px;top:6px;color:#b0524a;font-size:7.5px">3 unheeded</div><div class="abs" style="left:12px;right:12px;top:24px;display:flex;flex-direction:column;gap:8px">${r(ico('<circle cx="7" cy="12" r="4"/><circle cx="17" cy="12" r="4"/><path d="M7 16h10"/>',13,'#c0534a',2),['New voicemail'],'2:13 AM')}${r(ico(GL.msg,13,'#c9a55a',2),['[Sender] · [message]',1],'[time]')}${r(ico(GL.discord,13,'#c9a55a',2),['[Discord] · [mention]',1],'[time]')}</div></div>`}
+function dockRow(x,y,w){
+ const k=[['phone','HERALD'],['cam','PORTRAIT'],['road','ROAD'],['smithy','SMITHY']];const gap=w/4;let s='';
+ k.forEach((a,i)=>{s+=seal(x+gap*i+gap/2-23,y,a[0],a[1])});return s}
+function pillV(cx,cy,up,down,side){ // standing pill
+ const w=26,h=14+ (up+down)*17+16;
+ const top=cy-7-up*17-8;
+ let s=`<div class="abs" style="left:${cx-w/2}px;top:${top}px;width:${w}px;height:${h}px;border-radius:13px;background:#050505;border:1px solid #6b5430;z-index:47"></div>`;
+ for(let i=0;i<up;i++) s+=`<div class="abs" style="left:${cx-6}px;top:${cy-7-8-(i+1)*17+5}px;width:12px;height:12px;border-radius:3px;background:${['#c9a55a','#a8352b','#8c6d3a','#e6d9b8'][i%4]};opacity:.85;z-index:48"></div>`;
+ const st=[GL.road,'<path d="M3 9a14 14 0 0 1 18 0M6 13a9 9 0 0 1 12 0M12 17h.01"/>','<path d="M7 7l10 10-5 5V2l5 5L7 17"/>','<path d="M4 9v6h4l5 4V5L8 9z"/>'];
+ for(let i=0;i<down;i++) s+=`<div class="abs" style="left:${cx-6}px;top:${cy+7+8+i*17-2}px;z-index:48">${ico(st[i%4],12,'#c9a55a',2)}</div>`;
+ return s}
+function hole(x,y){return `<div class="hole" style="left:${x-6}px;top:${y-6}px"></div>`}
+function navbar(side){return `<div class="navbar" style="${side}:0;${side=='left'?'border-right:1px solid #2a2418;border-left:0':''}"><i>◁</i><i>○</i><i>▥</i></div>`}
+function guide(x,y,w,h,t){return `<div class="guide" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"></div><div class="gl" style="left:${x+4}px;top:${y+h-12}px">${t||''}</div>`}
+
+// ---------- Layout A: hole on the LEFT edge, nav bar on the right
+(function(){
+ const L=36,W=760; let h=`<div class="vig"></div>`;
+ h+=hole(14,195)+navbar('right')+pillV(14,195,3,3);
+ h+=guide(L,8,W,374,'content area 760 x 374');
+ h+=`<div class="abs" style="left:${L}px;top:8px;width:760px;height:374px">`;
+ // left column 222
+ h+=header(0,6,222)+treasury(0,128,222,62)+pennants(0,214,222);
+ h+=`<div class="abs cap" style="left:0;top:282px;width:222px;font-size:7.5px;color:#6b5430;letter-spacing:.16em;text-align:center"></div>`;
+ // middle 292 at x=234
+ h+=orbzone(232+148,4,176,true,56);
+ h+=dockRow(232,296,296);
+ h+=`<div class="abs" style="left:240px;top:284px;width:280px;height:1px;background:#4a3a20"></div><div class="abs" style="left:376px;top:278px;color:#8c6d3a;font-size:12px;background:#0d0c09;padding:0 4px">+</div>`;
+ // right column 222 at x=538
+ h+=ledger(538,16,222,74)+command(538,112,222,40)+dispatches(538,176,222,100);
+ h+=`</div>`;
+ h+=`<div class="tag" style="left:2px;top:236px;transform:rotate(-90deg);transform-origin:left top;top:230px;margin-left:12px;display:none"></div>`;
+ document.getElementById('stA').innerHTML=h;
+})();
+
+// ---------- Layout B: hole on the RIGHT edge, nav bar on the left
+(function(){
+ const L=48,W=760; let h=`<div class="vig"></div>`;
+ h+=hole(830,195)+navbar('left')+pillV(830,195,2,4);
+ h+=guide(L,8,W,374,'content area 760 x 374 (nav bar now on the left, camera strip on the right)');
+ h+=`<div class="abs" style="left:${L}px;top:8px;width:760px;height:374px">`;
+ // left half 360: orb zone (larger ring) + dock
+ h+=orbzone(180,10,176,true,56);
+ h+=`<div class="abs" style="left:10px;top:262px;width:340px;height:1px;background:#4a3a20"></div><div class="abs" style="left:170px;top:256px;color:#8c6d3a;font-size:12px;background:#0d0c09;padding:0 4px">+</div>`;
+ h+=dockRow(8,284,344);
+ // right half scroll column: 372 wide from x=388
+ h+=`<div class="abs" style="left:380px;top:0;width:380px;height:374px;overflow:hidden"><div class="abs" style="left:0;top:0;width:380px;height:374px">`;
+ h+=header(8,4,360);
+ h+=treasury(8,106,361,56)+pennants(8,176,361)+ledger(8,244,361,62);
+ h+=dispatches(8,322,361,92);
+ h+=`</div>`;
+ h+=`<div class="abs" style="left:0;right:0;bottom:0;height:62px;background:linear-gradient(transparent,#0c0b08 38%)"></div>`;
+ h+=command(8,326,361,40);
+ h+=`<div class="abs" style="right:2px;top:10px;width:3px;height:150px;border-radius:2px;background:#6b5430"></div></div>`;
+ h+=`</div>`;
+ document.getElementById('stB').innerHTML=h;
+})();
+
+// ---------- pill options (zoom on the edge)
+(function(){
+ let a=`<div class="vig"></div>`;
+ a+=hole(14,95)+pillV(14,95,3,3);
+ a+=`<div class="guide" style="left:36px;top:6px;width:360px;height:178px"></div>`;
+ a+=`<div class="abs" style="left:48px;top:16px;font:italic 11px 'IM Fell English',serif;color:#8c7a52;width:340px">Home content starts 36 from the edge. Three notification icons above the hole, Hushed, Wi-Fi and signal below.</div>`;
+ a+=`<div class="tag" style="left:34px;top:84px;display:none"></div>`;
+ document.getElementById('pillP').innerHTML=a;
+ let b=`<div class="vig"></div>`+hole(14,95);
+ b+=`<div class="abs" style="left:48px;top:10px;width:350px;display:flex;justify-content:flex-end;gap:8px;align-items:center;height:20px;border:1px solid #4a3a20;background:#0a0907;padding:0 8px;border-radius:10px"><span style="font-size:9px;color:#8c7a52;font-style:italic;margin-right:auto">icons from the pill, as a strip</span><span style="width:12px;height:12px;border-radius:3px;background:#c9a55a;opacity:.85"></span><span style="width:12px;height:12px;border-radius:3px;background:#a8352b;opacity:.85"></span>${ico(GL.road,12,'#c9a55a',2)}${ico('<path d="M3 9a14 14 0 0 1 18 0M6 13a9 9 0 0 1 12 0M12 17h.01"/>',12,'#c9a55a',2)}</div>`;
+ b+=`<div class="abs" style="left:48px;top:44px;font:italic 11px 'IM Fell English',serif;color:#8c7a52;width:340px">No frame around the hole: it is a plain black dot at the edge.</div>`;
+ document.getElementById('pillH').innerHTML=b;
+})();
+
+// ---------- typing layer + keyboard (hole left)
+(function(){
+ const L=36; let h=`<div class="vig"></div>`+hole(14,195)+navbar('right')+pillV(14,195,1,3);
+ h+=`<div class="abs" style="left:${L}px;top:8px;width:760px;height:236px;overflow:hidden">`;
+ h+=`<div class="panel" style="left:0;top:0;width:760px;height:40px"><span class="abs" style="left:12px;top:11px">${ico('<path d="M20 4c-9 0-14 5-14 12l-2 4 4-2c7 0 12-5 12-14z"/>',17,'#c9a55a')}</span><span class="abs" style="left:38px;top:10px;font-size:15px;color:#e6d9b8;font-style:italic">Wi-Fi settin<span style="border-left:1px solid #c9a55a;margin-left:1px"></span></span><span class="abs" style="right:6px;top:7px;height:26px;padding:0 12px;border:1px solid #6b5430;background:linear-gradient(#3a1612,#1c0a08);color:#e6d9b8;font:700 9px Cinzel,serif;letter-spacing:.16em;display:flex;align-items:center">SUMMON</span></div>`;
+ // left pane: apps 4x2
+ h+=`<div class="panel" style="left:0;top:54px;width:372px;height:172px"><div class="ribbon">Most used</div>`;
+ const keys=['phone','cam','road','msg','discord','twitter','videos','smithy'];
+ keys.forEach((k,i)=>{const x=14+(i%4)*88,y=26+Math.floor(i/4)*76;h+=`<div class="abs" style="left:${x}px;top:${y}px;width:70px;text-align:center"><div style="margin:0 auto;width:44px;height:50px;position:relative"><svg viewBox="0 0 62 72" width="44" height="50" style="position:absolute;inset:0">${SVG_SHIELD.replace('<svg class="shield" viewBox="0 0 62 72">','').replace('</svg>','')}</svg><span style="position:absolute;left:0;right:0;top:14px;display:flex;justify-content:center;color:#e6d9b8">${ico(GL[k],19,'currentColor')}</span></div><div class="lbl" style="position:static;margin-top:3px;font-size:7.5px">${['Phone','Camera','Browser','Messages','Discord','Twitter','Videos','Settings'][i]}</div></div>`});
+ h+=`</div>`;
+ // right pane: contacts + chips
+ h+=`<div class="panel" style="left:388px;top:54px;width:372px;height:172px"><div class="ribbon">Starred &amp; quick</div>`;
+ for(let i=0;i<4;i++){h+=`<div class="abs" style="left:${14+i*64}px;top:28px;width:56px;text-align:center"><div style="width:36px;height:36px;margin:0 auto;border-radius:50%;border:1px solid #8c6d3a;background:#1a1610;display:flex;align-items:center;justify-content:center;font:700 13px Cinzel,serif;color:#c9a55a">${'ABCD'[i]}</div><div style="font-size:9.5px;color:#a89a76;margin-top:3px">[Name]</div></div>`}
+ const chips=['Wi-Fi','Bluetooth','Flashlight','Auto-rotate','Power saving','Location','Sound'];
+ chips.forEach((c,i)=>{h+=`<div class="abs" style="left:${12+(i%4)*90}px;top:${104+Math.floor(i/4)*32}px;height:24px;padding:0 7px;border:1px solid #6b5430;background:#17130d;border-radius:12px;font:700 8px Cinzel,serif;letter-spacing:.1em;color:#c9a55a;display:flex;align-items:center;white-space:nowrap">${c}</div>`});
+ h+=`</div></div>`;
+ h+=`<div class="kb"><div style="position:absolute;left:36px;right:48px;top:0;bottom:0">`;
+ for(let r=0;r<3;r++)for(let c=0;c<10;c++)h+=`<span style="left:${c*72+ r*10}px;top:${10+r*34}px;width:62px"></span>`;
+ h+=`</div></div>`;
+ h+=`<div class="tag" style="left:48px;top:250px;z-index:60;display:none"></div>`;
+ h+=`<div class="gl" style="left:48px;top:236px;color:#c9a55a">visible above the keyboard: about 230 of 390</div>`;
+ document.getElementById('stK').innerHTML=h;
+})();
+
+// ---------- transition demo (layout A, half size). stage coordinates are scaled by .5
+const SC=.5;
+const P={ // portrait 390x842 -> boxes [x,y,w,h]
+ header:[22,40,346,90,'Header'],treasury:[18,140,354,56,'Treasury'],pennants:[22,204,346,62,'Pennants'],
+ orb:[107,258,176,176,'Orb'],shL:[24,276,62,160,'◇'],shR:[304,276,62,160,'◇'],
+ ledger:[18,476,354,68,'Ledger'],command:[18,554,354,44,'Command'],dispatches:[18,612,354,90,'Dispatches'],dock:[18,722,354,64,'Dock']};
+const LS=[ // landscape 844x390 (layout A, content offset 36)
+ ['header',[36,14,222,100]],['treasury',[36,136,222,62]],['pennants',[36,222,222,58]],
+ ['orb',[36+234+146-75,12,150,150]],['shL',[36+234+146-75-56,32,56,130]],['shR',[36+234+146+75,32,56,130]],
+ ['ledger',[36+538,24,222,74]],['command',[36+538,120,222,40]],['dispatches',[36+538,184,222,100]],['dock',[36+234,298,292,56]]];
+const Lm=Object.fromEntries(LS);
+const demo=document.getElementById('demoPhone');
+let blocks={};
+Object.keys(P).forEach(k=>{const d=document.createElement('div');d.className='blk'+(k=='orb'?' round':'')+(k.startsWith('sh')?' red':'');d.textContent=P[k][4];demo.appendChild(d);blocks[k]=d});
+function place(mode){
+ const land=mode=='l';
+ const W=land?844:390,H=land?390:842;
+ demo.style.width=W*SC+'px';demo.style.height=H*SC+'px';
+ demo.style.left=(land?(700-W*SC)/2:(700-W*SC)/2)+'px';demo.style.top=(land?(430-H*SC)/2:(430-H*SC)/2)+'px';
+ demo.style.borderRadius=22*SC+'px';
+ Object.keys(P).forEach(k=>{const b=land?Lm[k]:P[k];const e=blocks[k];e.style.left=b[0]*SC+'px';e.style.top=b[1]*SC+'px';e.style.width=b[2]*SC+'px';e.style.height=b[3]*SC+'px'});
+}
+let loopT=null;
+function demoTo(m){clearInterval(loopT);place(m)}
+function demoAuto(){clearInterval(loopT);let m='p';place(m);loopT=setInterval(()=>{m=m=='p'?'l':'p';place(m)},2200)}
+place('p');
+if(location.hash=='#land')place('l');
+</script>
+</body>
+</html>
