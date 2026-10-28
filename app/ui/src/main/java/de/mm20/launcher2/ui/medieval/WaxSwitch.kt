@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -40,6 +41,7 @@ fun Switch(
     }
     Box(
         modifier = modifier
+            .minimumInteractiveComponentSize()
             .size(width = 46.dp, height = 24.dp)
             .alpha(if (enabled) 1f else 0.38f)
             .background(Color(0xFF0F0D09), CircleShape)

@@ -16,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
@@ -27,6 +29,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -211,6 +215,7 @@ internal fun Ribbon(text: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .height(17.dp)
+            .widthIn(max = 280.dp)
             .clip(DeliveranceRibbonShape)
             .background(Brush.verticalGradient(listOf(Medieval.Oxblood, Medieval.OxbloodDark)))
             .drawBehind { drawLine(Medieval.Gold, Offset(0f, 0.5f), Offset(size.width, 0.5f), 1.dp.toPx()) }
@@ -227,6 +232,7 @@ internal fun Ribbon(text: String, modifier: Modifier = Modifier) {
                 color = Color(0xFFF0E2BD),
             ),
             maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -236,6 +242,7 @@ internal fun Ribbon(text: String, modifier: Modifier = Modifier) {
 internal fun PennantHandle(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
+            .semantics { contentDescription = "Drag handle" }
             .width(60.dp)
             .height(12.dp)
             .drawBehind {

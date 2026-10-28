@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +35,21 @@ fun AlertDialog(
     text: (@Composable () -> Unit)? = null,
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
+        DialogPanel(confirmButton, modifier, dismissButton, icon, title, text)
+    }
+}
+
+/** The dialog body (split out so screenshot tests can render it without a window). */
+@Composable
+internal fun DialogPanel(
+    confirmButton: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    dismissButton: (@Composable () -> Unit)? = null,
+    icon: (@Composable () -> Unit)? = null,
+    title: (@Composable () -> Unit)? = null,
+    text: (@Composable () -> Unit)? = null,
+) {
+    run {
         Box(modifier = modifier.widthIn(max = 420.dp).padding(top = 9.dp)) {
             Column(
                 modifier = Modifier
@@ -54,7 +71,9 @@ fun AlertDialog(
                     CompositionLocalProvider(
                         LocalTextStyle provides MaterialTheme.typography.bodyMedium,
                         LocalContentColor provides MaterialTheme.colorScheme.onSurface,
-                    ) { text() }
+                    ) {
+                        Box(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState())) { text() }
+                    }
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(top = 18.dp),
@@ -67,5 +86,17 @@ fun AlertDialog(
             }
             Ribbon("Deliverance", Modifier.align(Alignment.TopStart).padding(start = 14.dp))
         }
+    }
+}
+
+/** Body of a framed bottom sheet: pennant on top, then the content at full width. */
+@Composable
+internal fun SheetBody(content: @Composable () -> Unit) {
+    Column(
+        Modifier.fillMaxWidth().medievalFrame(bottom = false),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        PennantHandle()
+        Box(Modifier.fillMaxWidth(), propagateMinConstraints = true) { content() }
     }
 }

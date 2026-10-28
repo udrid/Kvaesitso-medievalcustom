@@ -28,12 +28,12 @@ fun LauncherCard(
     Surface(
         modifier = modifier
             .medievalPanelBackground(backgroundOpacity.coerceIn(0f, 1f))
-            .medievalFrame(),
+            .then(if (backgroundOpacity > 0f) Modifier.medievalFrame() else Modifier),
         shape = shape,
         content = content,
         contentColor = MaterialTheme.colorScheme.onSurface,
         color = color,
-        shadowElevation = if (backgroundOpacity == 1f) elevation else 0.dp,
+        shadowElevation = 0.dp,
         tonalElevation = 0.dp,
     )
 }

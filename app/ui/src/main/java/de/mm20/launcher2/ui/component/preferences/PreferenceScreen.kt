@@ -90,6 +90,8 @@ fun PreferenceScreen(
         containerColor = MaterialTheme.colorScheme.surfaceContainer
     ) {
         Box {
+            // Deliverance: film grain and a weak vignette BEHIND the list (static, drawn once), text stays crisp.
+            GrainAndVignette(Modifier.fillMaxSize(), rim = 0.3f)
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -104,8 +106,6 @@ fun PreferenceScreen(
                     end = 12.dp
                 )
             )
-            // Deliverance: film grain and vignette over every settings screen (static, drawn once).
-            GrainAndVignette(Modifier.fillMaxSize())
         }
     }
 }

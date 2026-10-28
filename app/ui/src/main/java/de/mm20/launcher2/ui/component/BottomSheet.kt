@@ -36,7 +36,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.foundation.layout.Column
-import de.mm20.launcher2.ui.medieval.PennantHandle
+import de.mm20.launcher2.ui.medieval.SheetBody
 import de.mm20.launcher2.ui.medieval.medievalFrame
 import de.mm20.launcher2.ui.overlays.Overlay
 import kotlinx.coroutines.CancellationException
@@ -152,15 +152,10 @@ fun <T>BottomSheet(
                             .align(Alignment.BottomCenter)
                             .wrapContentHeight()
                     ) {
-                        Column(Modifier.fillMaxWidth().medievalFrame(bottom = false), horizontalAlignment = Alignment.CenterHorizontally) {
-
-                            PennantHandle()
-
+                        SheetBody {
                             content(
-                                    if (expandedTarget) expandedState.targetState else expandedState.currentState
-
+                                if (expandedTarget) expandedState.targetState else expandedState.currentState
                             )
-
                         }
                     }
                 }

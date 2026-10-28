@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Slider
+import de.mm20.launcher2.ui.medieval.Medieval
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -86,6 +87,17 @@ fun SliderPreference(
                     },
                     onValueChangeFinished = {
                         onValueChanged(sliderState.value)
+                    },
+                    // square track (owner: sharp corners everywhere)
+                    track = { s ->
+                        Box(Modifier.fillMaxWidth().height(8.dp).background(Medieval.GoldLine)) {
+                            Box(
+                                Modifier
+                                    .fillMaxWidth(s.coercedValueAsFraction)
+                                    .fillMaxHeight()
+                                    .background(Medieval.Gold)
+                            )
+                        }
                     },
                 )
                 if (label != null) {

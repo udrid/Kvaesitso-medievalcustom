@@ -148,32 +148,33 @@ fun LazyItemScope.ListItemSurface(
 
     // Deliverance: the padding between items is covered by the frame's side lines, so a group of
     // items reads as one framed panel (see medievalFrame).
-    val topPadding = if (reverse) { if (!isLast) padding else 12.dp } else { if (!isFirst) padding else 0.dp }
+    val showRibbon = ribbon != null && if (reverse) isLast else isFirst
+    // 8 dp of room above the first item so the ribbon is not clipped at the top of the list
+    val topPadding = if (reverse) { if (!isLast) padding else 12.dp } else { if (!isFirst) padding else if (showRibbon) 8.dp else 0.dp }
     val bottomPadding = if (reverse) { if (!isFirst) padding else 0.dp } else { if (!isLast) padding else 12.dp }
     val topLine = isExpanded || if (!reverse) isFirst || isAfterExpanded else isLast || isBeforeExpanded
     val bottomLine = isExpanded || if (!reverse) isLast || isBeforeExpanded else isFirst || isAfterExpanded
-    val showRibbon = ribbon != null && if (reverse) isLast else isFirst
 
     Box(
         modifier = Modifier
             .animateItem()
             .fillMaxWidth()
-            .medievalFrame(
-                top = topLine,
-                bottom = bottomLine,
-                topInset = topPadding,
-                bottomInset = bottomPadding,
-            )
-            .padding(top = topPadding, bottom = bottomPadding)
-            .shadow(
-                elevation = elevation,
-                shape,
-                true,
-            )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .medievalFrame(
+                    top = topLine,
+                    bottom = bottomLine,
+                    topInset = topPadding,
+                    bottomInset = bottomPadding,
+                )
+                .padding(top = topPadding, bottom = bottomPadding)
+                .shadow(
+                    elevation = elevation,
+                    shape,
+                    true,
+                )
                 .background(MaterialTheme.colorScheme.surface.copy(backgroundAlpha)),
             verticalArrangement = if (reverse) Arrangement.BottomReversed else Arrangement.Top
         ) {
@@ -183,10 +184,12 @@ fun LazyItemScope.ListItemSurface(
                 if (showRibbon && reverse) Spacer(Modifier.height(10.dp))
             }
         }
+        // The ribbon is a sibling drawn AFTER the framed, clipped column, so no gold line crosses it
+        // and the column's clip does not cut it (as in PreferenceCategory).
         if (showRibbon) {
             Ribbon(
                 ribbon!!,
-                Modifier.align(Alignment.TopStart).offset(x = 12.dp, y = (-8).dp),
+                Modifier.align(Alignment.TopStart).offset(x = 12.dp, y = topPadding - 8.dp),
             )
         }
     }
