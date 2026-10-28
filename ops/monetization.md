@@ -42,3 +42,9 @@ Every monetisation task lives here, not scattered in other threads. Status: all 
 | M9 | Guide, template or course for the phone-stylist workflow (remove personal data first) | none | OPEN |
 | M10 | Payments, licences per pack, store accounts, taxes: set-up and CHECK with a professional | M2 | OPEN |
 Rule: a thread that makes something sellable adds a row above and a line in the table at the top of this file.
+
+## S5 gestures and apps hub (preview 2026-10-28)
+| Part | Where | Ways to monetise | Risks / CHECK |
+|---|---|---|---|
+| Shipped app-to-category list ("Armoury") [M] | planned, `medieval/` data file | Maintained list as part of a paid pack or update service | Package names must be verified; the list is data inside the GPL app |
+| Hub panels: Ledger, weather scene, Oracle question sets, Chronicle (usage time), tasks [M] | S5 docs/design | Paid panel styles or question packs, per palette | Usage access permission and privacy text; question wording is the owner's |

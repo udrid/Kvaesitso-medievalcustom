@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>S5 gestures and apps hub (design preview)</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf");font-style:normal}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf");font-style:italic}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:1250px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+h1{font-family:UnifrakturCook,serif;font-size:30px;color:#c9a55a;margin:0;padding:18px 14px 2px;font-weight:700}
+.sub{font-size:13px;font-style:italic;color:#a89a76;padding:0 14px 6px;line-height:1.4;width:1180px}
+.hd{font-family:Cinzel,serif;font-size:12px;font-weight:700;letter-spacing:.22em;color:#c9a55a;text-transform:uppercase;padding:26px 14px 0}
+.row{display:flex;gap:20px;padding:0 10px 6px}
+.col{width:390px}
+.label{font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.2em;color:#8c6d3a;text-transform:uppercase;padding:10px 4px 6px}
+.frame{position:relative;width:390px;height:700px;overflow:hidden;background:radial-gradient(90% 70% at 50% 30%,#26211a 0%,#0d0c09 90%),#0a0907}
+.frame .vig{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 70px rgba(0,0,0,.65)}
+.frame .fade{position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(transparent,#0a0907);pointer-events:none;z-index:6}
+.note{font-size:11.5px;font-style:italic;color:#8d7f5c;line-height:1.35;padding:6px 4px 0}
+.m{font-family:Cinzel,serif;font-size:8px;font-weight:700;letter-spacing:.1em;color:#f0a050;border:1px solid #f0a050;border-radius:3px;padding:0 3px;margin-left:4px;vertical-align:middle}
+.ribbon{height:17px;padding:0 17px 0 11px;display:inline-flex;align-items:center;background:linear-gradient(#6a1d16,#481510);border-top:1px solid #c9a55a;color:#f0e2bd;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;clip-path:polygon(0 0,100% 0,calc(100% - 7px) 50%,100% 100%,0 100%)}
+.panel{position:relative;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);box-shadow:inset 0 0 22px rgba(0,0,0,.6)}
+.panel.dbl::after{content:"";position:absolute;inset:3px;border:1px solid #4a3a20;pointer-events:none;z-index:1}
+.panel .ribbon{position:absolute;top:-8px;left:12px;z-index:3}
+.t{font-family:Cinzel,serif;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#d9ccaa}
+.dim2{color:#a8987a;font-style:italic;font-size:12px}
+.ch{display:inline-flex;height:24px;box-sizing:border-box;align-items:center;padding:0 10px;border:1px solid #6b5430;border-radius:12px;background:linear-gradient(178deg,#1d1a14,#12100c);font-family:Cinzel,serif;font-size:8px;font-weight:700;letter-spacing:.13em;color:#d9ccaa;text-transform:uppercase;margin:0 5px 5px 0}
+.ch.on{border-color:#c9a55a;color:#f0e2bd;background:linear-gradient(#6a1d16,#481510)}
+.bar{position:absolute;left:14px;right:14px;top:22px;height:40px;box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);display:flex;align-items:center;padding:0 12px;gap:9px;font-style:italic;color:#8d7f5c;font-size:14px}
+.bar::after{content:"";position:absolute;inset:3px;border:1px solid #4a3a20;pointer-events:none}
+.bar .typed{color:#e6d9b8;font-style:normal}
+.cat{display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border-bottom:1px solid #2a2316}
+.cat:last-child{border-bottom:0}
+.cat .t{font-size:10px;flex:1}
+.cat .n{font-family:Cinzel,serif;font-size:9px;font-weight:700;color:#8c6d3a;letter-spacing:.1em}
+.cat .chev{color:#c9a55a;font-size:11px;width:10px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 2px;padding:12px 6px 8px}
+.app{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:#d9ccaa;text-align:center;line-height:1.1}
+.tabs{position:absolute;left:0;right:0;display:flex;gap:0;border-bottom:1px solid #4a3a20;padding:0 10px;overflow:hidden}
+.tab{font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8c6d3a;padding:10px 9px 8px;white-space:nowrap}
+.tab.on{color:#f0e2bd;border-bottom:2px solid #c9a55a;margin-bottom:-1px}
+.dots{display:flex;justify-content:center;gap:6px;padding:4px 0}
+.dots i{width:5px;height:5px;transform:rotate(45deg);background:#4a3a20}.dots i.on{background:#c9a55a}
+.tile{box-sizing:border-box;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);height:50px;display:flex;align-items:center;gap:8px;padding:0 10px;position:relative}
+.tile .t{font-size:8.5px;flex:1;line-height:1.25}
+.tile .n{font-family:Cinzel,serif;font-size:9px;font-weight:700;color:#8c6d3a}
+.tile.open{border-color:#c9a55a}
+.menu{position:absolute;box-sizing:border-box;border:1px solid #6b5430;background:#16130e;box-shadow:0 6px 18px #000a;z-index:8;width:178px}
+.menu div{font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#d9ccaa;padding:10px 12px;border-bottom:1px solid #2a2316}
+.menu div:last-child{border:0}
+.hl{height:1px;background:linear-gradient(90deg,#6b5430,rgba(107,84,48,0));margin:6px 0}
+.frm{position:absolute}
+.hint{position:absolute;left:0;right:0;text-align:center;font-family:Cinzel,serif;font-size:7.5px;letter-spacing:.2em;color:#8c6d3a;text-transform:uppercase}
+.mark{font-family:Cinzel,serif;font-size:8px;letter-spacing:.2em;color:#f0a050;font-weight:700}
+.draw{position:absolute;left:8px;top:4px;font-family:Cinzel,serif;font-size:7.5px;letter-spacing:.2em;color:#ffffff99;z-index:9;background:#0008;padding:2px 5px;font-weight:700}
+table{border-collapse:collapse;margin:8px 14px;width:1220px;font-size:12.5px}
+th{font-family:Cinzel,serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#c9a55a;text-align:left;border-bottom:1px solid #6b5430;padding:6px 8px}
+td{border-bottom:1px solid #2a2316;padding:6px 8px;vertical-align:top;line-height:1.35}
+.ok{color:#9fc18a}.warn{color:#f0a050}.bad{color:#d8695e}
+.pick{color:#f0e2bd;font-weight:bold}
+.choice{margin:6px 14px;width:1180px;font-size:13.5px;line-height:1.5}
+.choice b{color:#c9a55a}
+.pre{margin:6px 14px;width:1180px;font-size:12.5px;line-height:1.5;color:#cbbd98}
+</style>
+</head>
+<body>
+<h1>Deliverance: gestures and the apps hub</h1>
+<div class="sub">S5-gestures-apps, design preview (Part 1, no code yet). All frames are MOCK-UPS made from the real C5 pieces (Cinzel, IM Fell, UnifrakturCook, gold hairlines, oxblood ribbons, letter shields). App names and counts are EXAMPLES, not the owner's phone data. Shown in Gold and Oxblood; every colour comes from <code>Medieval.palette</code>, so the other four palettes recolour it for free. <b style="color:#f0a050">[M]</b> = could be sold. The phone was not touched: nothing here is verified on a device.</div>
+
+<div class="hd">1. What the code does today (survey)</div>
+<table id="t1"></table>
+
+<div class="hd">2. Where do categories come from?</div>
+<table id="t2"></table>
+
+<div class="hd">3. The swipe-up page, three variants</div>
+<div class="row" id="r3"></div>
+<div class="row" id="r3b"></div>
+
+<div class="hd">4. Expanded vs collapsed, filter and long-press, in variant A</div>
+<div class="row" id="r4"></div>
+
+<div class="hd">5. Menu of ideas for below the apps</div>
+<table id="t5"></table>
+
+<div class="hd">6. Gesture table</div>
+<table id="t6"></table>
+
+<div class="hd">7. Choices for the owner (numbered, with cost and risk)</div>
+<div id="choices"></div>
+
+<script>
+var G='#c9a55a', GD='#8c6d3a';
+function svg(w,h,vb,inner,sw){return '<svg width="'+w+'" height="'+h+'" viewBox="'+vb+'" fill="none" stroke="'+G+'" stroke-width="'+(sw||1.6)+'" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg>';}
+var E={
+ raven:'<path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/>',
+ scroll:'<path d="M6 6.5h12v11H6z"/><path d="M3.6 6.2a1.4 1.4 0 0 1 2.8 0v11.6a1.4 1.4 0 0 1-2.8 0zM17.6 6.2a1.4 1.4 0 0 1 2.8 0v11.6a1.4 1.4 0 0 1-2.8 0z"/>',
+ letter:'<path d="M3.5 6h17v12h-17z"/><path d="M3.5 6.5l8.5 6.2 8.5-6.2"/>',
+ compass:'<circle cx="12" cy="12" r="9"/><path d="M12 5.2l1.8 5 5 1.8-5 1.8-1.8 5-1.8-5-5-1.8 5-1.8z"/>',
+ hour:'<path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9"/>',
+ lute:'<circle cx="9" cy="15" r="5"/><path d="M12.5 11.5L20 4M18 3l3 3"/>',
+ cal:'<path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>',
+ goblet:'<path d="M7 4h10c0 5-2 8-5 8S7 9 7 4zM12 12v6M8 20h8"/>',
+ sword:'<path d="M12 3v14M8 14h8M12 17v4"/>',
+ coin:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/>',
+ horn:'<path d="M4 17c0-8 6-12 16-12-1 8-5 12-12 12H4z"/>',
+ bag:'<path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/>',
+ boot:'<path d="M8 4v10l-4 2v4h16v-3l-6-3V4z"/>',
+ tower:'<path d="M6 21V8l2-2V3h2v2h4V3h2v3l2 2v13zM10 21v-5h4v5"/>',
+ other:'<circle cx="7" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="17" cy="12" r="1.6"/>'
+};
+function ic(k,s){return svg(s,s,'0 0 24 24',E[k]);}
+function shield(letter,size){
+ return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 26 26"><path d="M13 2l9 3v7c0 6-4 10-9 12C8 22 4 18 4 12V5z" fill="#14110b" stroke="'+GD+'" stroke-width="1.4"/><text x="13" y="16.4" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="9.5" fill="'+G+'">'+letter+'</text></svg>';
+}
+function rib(t){return '<div class="ribbon">'+t+'</div>';}
+function fr(inner,extra){return '<div class="frame">'+(extra||'')+inner+'<div class="vig"></div><div class="fade"></div></div>';}
+function bar(txt,typed){return '<div class="bar">'+ic('compass',18)+(typed?'<span class="typed">'+txt+'</span>':'<span>'+txt+'</span>')+'</div>';}
+var CATS=[['Communication','letter',7],['Social','raven',9],['Media and Music','lute',8],['Games','sword',5],['Tools','gear',14],['Shopping','bag',4],['Finance','coin',3],['Travel and Maps','boot',6],['Work','scroll',5],['System','tower',11],['Other','other',6]];
+var EX={'Communication':['Messages','Phone','Mail','Contacts','Discord','Signal','Meet'],'Tools':['Calculator','Clock','Files','Scanner','Notes','Torch','Recorder','Settings']};
+function catRow(c,open){return '<div class="cat">'+ic(c[1],18)+'<div class="t">'+c[0]+'</div><div class="n">'+c[2]+'</div><div class="chev">'+(open?'&#9662;':'&#9656;')+'</div></div>';}
+function appGrid(names,cols){var h='<div class="grid">';names.forEach(function(n){h+='<div class="app">'+shield(n[0],34)+'<span>'+n+'</span></div>';});return h+'</div>';}
+function catList(open){
+ var h='<div class="panel dbl" style="position:absolute;left:14px;right:14px;top:80px">'+rib('The Armoury &middot; 82 apps');
+ h+='<div style="padding:12px 0 2px">';
+ CATS.forEach(function(c){
+  if(c[0]===open){
+   h+='<div style="background:#16130e;border-top:1px solid #4a3a20;border-bottom:1px solid #4a3a20">'+catRow(c,true)+appGrid(EX[c[0]].slice(0,8)).replace('<div class="grid">','<div class="grid" style="padding-top:2px">')+'</div>';
+  } else h+=catRow(c,false);
+ });
+ return h+'</div></div>';
+}
+function today(top,compact){
+ var h='<div class="panel dbl" style="position:absolute;left:14px;right:14px;top:'+top+'px;padding:16px 12px 10px">'+rib('Today');
+ h+='<div style="display:flex;gap:10px;align-items:center"><div style="flex:1"><div class="t" style="font-size:9px">Next on the Ledger</div><div style="font-size:13px;color:#e6d9b8;margin-top:2px">10:30 &middot; Example event</div></div><div style="text-align:right"><div class="t" style="font-size:9px">Weather</div><div style="font-size:13px;color:#e6d9b8;margin-top:2px">14&deg; &middot; Fair</div></div></div>';
+ if(!compact){h+='<div class="hl"></div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="ch">Wi-Fi</span><span class="ch">Torch</span><span class="ch">Sound</span><span class="ch">Rotate</span></div>';}
+ return h+'</div>';
+}
+function oracle(top){
+ return '<div class="panel dbl" style="position:absolute;left:14px;right:14px;top:'+top+'px;padding:16px 12px 8px">'+rib('Ask the Oracle')+'<div style="display:flex;flex-wrap:wrap"><span class="ch">Plan my day</span><span class="ch">Explain a word</span><span class="ch">Draft a reply</span><span class="ch">Summon a question</span></div><div class="dim2" style="margin-top:2px">Tap sends a ready question to the Claude app.</div></div>';
+}
+function recent(top){
+ var n=['Messages','Discord','Maps','Camera','Notes'];
+ var h='<div class="panel dbl" style="position:absolute;left:14px;right:14px;top:'+top+'px;padding:16px 8px 8px">'+rib('Recently used')+'<div style="display:flex;justify-content:space-around">';
+ n.forEach(function(x){h+='<div class="app">'+shield(x[0],34)+'<span>'+x+'</span></div>';});
+ return h+'</div></div>';
+}
+/* ---------- section 3: variants ---------- */
+var A=fr(bar('Search your apps&hellip;')+
+ '<div class="hint" style="top:70px;margin-top:-4px"></div>'+catList('')+oracle(560)+
+ '',
+ '');
+A=A.replace('</div><div class="vig">','</div><div class="vig">');
+var B=fr(bar('Search your apps&hellip;')+
+ '<div class="tabs" style="top:72px"><div class="tab on">All</div><div class="tab">Comms</div><div class="tab">Social</div><div class="tab">Media</div><div class="tab">Games</div><div class="tab">Tools</div></div>'+
+ '<div class="panel dbl" style="position:absolute;left:14px;right:14px;top:124px">'+rib('Communication &middot; 7')+'<div style="padding-top:10px">'+appGrid(EX['Communication'].concat(['Camera']))+'</div></div>'+
+ '<div class="dots" style="position:absolute;left:0;right:0;top:330px"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>'+
+ '<div class="hint" style="top:344px">&larr; swipe sideways between pages &rarr;</div>'+
+ recent(380)+today(488,true)+oracle(578));
+var C=fr(bar('Search your apps&hellip;')+
+ '<div class="panel dbl" style="position:absolute;left:14px;right:14px;top:78px;padding:16px 8px 8px">'+rib('Favourites')+'<div style="display:flex;justify-content:space-around">'+['Messages','Phone','Mail','Maps','Camera'].map(function(x){return '<div class="app">'+shield(x[0],34)+'<span>'+x+'</span></div>';}).join('')+'</div></div>'+
+ '<div style="position:absolute;left:14px;right:14px;top:182px;display:grid;grid-template-columns:1fr 1fr;gap:6px">'+CATS.slice(0,10).map(function(c,i){return '<div class="tile'+(i==4?' open':'')+'">'+ic(c[1],18)+'<div class="t">'+c[0]+'</div><div class="n">'+c[2]+'</div></div>';}).join('')+'</div>'+
+ today(478,false));
+document.getElementById('r3').innerHTML=
+ '<div class="col"><div class="label">A &middot; Categories first (collapsed), ideas as panels below</div>'+A+'<div class="note">All eleven categories as a framed list with a count. Everything closed on opening, so the whole list of categories is seen at once. Scroll down for the panels.</div></div>'+
+ '<div class="col"><div class="label">B &middot; Category tab strip, apps in pages</div>'+B+'<div class="note">One category per page: swipe sideways or tap a tab. "All" page is the whole A to Z list with a letter rail. Fewest taps to an app, but you only see one category at a time.</div></div>'+
+ '<div class="col"><div class="label">C &middot; Favourites, category tiles, compact Today</div>'+C+'<div class="note">Five favourite apps on top, categories as a two-column tile grid (Tools is open). The Today strip sits below. The densest page; the tile grid expands in place.</div></div>';
+
+/* ---------- section 4: states in variant A ---------- */
+var A1=fr(bar('Search your apps&hellip;')+catList('Tools')+'<div class="hint" style="top:690px"></div>');
+var A2=fr(bar('ca',true).replace('<span class="typed">ca</span>','<span class="typed">ca</span>')+
+ '<div class="panel dbl" style="position:absolute;left:14px;right:14px;top:80px">'+rib('Found &middot; 4')+'<div style="padding-top:8px">'+appGrid(['Calculator','Calendar','Camera','Scanner (card)'])+'</div></div>'+
+ '<div class="panel dbl" style="position:absolute;left:14px;right:14px;top:244px;padding:16px 12px 8px">'+rib('In categories')+'<div class="dim2">Tools &middot; 2 &nbsp; Work &middot; 1 &nbsp; Media &middot; 1</div></div>'+
+ '<div class="hint" style="top:330px">Typing filters every category at once; matching ones open</div>');
+var A3=fr(bar('Search your apps&hellip;')+catList('Tools')+
+ '<div class="menu" style="left:150px;top:300px"><div>Open</div><div>Move to category&hellip;</div><div>Add to favourites</div><div>App info</div><div>Uninstall</div></div>'+
+ '<div class="hint" style="top:228px;left:0;right:0;text-align:center;color:#f0a050">LONG-PRESS an app</div>');
+document.getElementById('r4').innerHTML=
+ '<div class="col"><div class="label">A open: tap a category, it opens in place</div>'+A1+'<div class="note">Open one at a time or several (setting). The open category shows its apps as shield + name, 4 across, same grid as the existing app picker. Tap again closes. Counts stay visible.</div></div>'+
+ '<div class="col"><div class="label">A filter: type in the bar</div>'+A2+'<div class="note">The bar at the top of this page filters the apps as you type, across all categories. The Home command bar and its typing layer are unchanged.</div></div>'+
+ '<div class="col"><div class="label">A long-press menu</div>'+A3+'<div class="note">Uses Kvaesitso\'s existing item menu with one added line, "Move to category". Moving stores a tag on the app, so your choice always wins over the shipped list.</div></div>';
+
+/* ---------- tables ---------- */
+function tbl(id,head,rows){var h='<tr>'+head.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';rows.forEach(function(r){h+='<tr>'+r.map(function(x){return '<td>'+x+'</td>';}).join('')+'</tr>';});document.getElementById(id).innerHTML=h;}
+tbl('t1',['Question','Finding (from the code)'],[
+ ['What each gesture can do','Kvaesitso has seven gesture slots: swipe up, down, left, right, double tap, long press, Home button (<code>GestureSettings</code>). Each takes one of: No action, Notifications, Quick settings, Lock screen, Recents, Power menu, Search, a Widgets page (4 pages exist), Launch an app, the Feed, Launcher settings (<code>GestureAction</code>). Notifications, Quick settings, Lock screen, Recents and Power menu work through an <b>Accessibility service</b> the owner must switch on in Android settings.'],
+ ['Which one opens the BLANK search','<b>Swipe down</b>. Its default is <code>GestureAction.Search</code>; the scaffold turns it into a pull-down that opens <code>SearchComponent</code> (with the keyboard, per T11). The same Search action can be put on any other slot (double tap, long press, Home button, left, right), so check them too. The Home command bar opens the same page by design and stays.'],
+ ['Is it saved on the phone?','Yes. The saved value on the owner\'s phone is Search. Changing the default in code would NOT change an already-installed phone; the fork must ignore the saved swipe-down value (or the owner sets "No action" by hand in Settings &gt; Gestures).'],
+ ['How to disable it completely','In <code>SharedLauncherActivity</code> the phone-mode gestures are built by <code>getScaffoldGesture</code>. Passing <code>swipeDown = null</code> makes the scaffold ignore a pull-down (the scaffold only listens when this slot is non-null). That is a one-line upstream edit, plus changing the default to <b>No action</b> for new installs, plus hiding the Swipe-down row in Settings. The Android system shade from the top edge is not ours and stays as decided (2026-10-26).'],
+ ['Other entry points','<b>Home button</b>: default is No action; Home on the Home page only closes pop-ups (T15). <b>Assistant</b> (<code>LauncherActivityMode.Assistant</code>, shown only if Deliverance is chosen as the phone\'s digital assistant; the owner has not set that): a separate search page, not reached by any swipe. Recommend leaving it, since it is an opt-in system feature. <b>Long press / double tap</b>: not Search by default (double tap = Lock screen, which needs the Accessibility service).'],
+ ['How the swipe-up page is built','Swipe up = <code>GestureAction.Widgets()</code> =&gt; <code>WidgetsComponent</code> (a scrolling column) =&gt; <code>WidgetColumn</code>: a stack of user-placed widgets (Calendar, Weather, Music, Notes, Favourite apps, external Android widgets) saved in the widget database, with an edit mode. There are 4 such pages. Since S2 each card has our frame; no ribbons yet.'],
+ ['The all-apps list','Upstream draws it in <code>SearchColumn</code> when the query is empty and <code>searchUiSettings.allApps</code> is on. T11 hard-coded <code>allAppsEnabled = false</code> there, so the list is gone from search. It can <b>stay off</b> in the search page; the new hub is a separate composable above <code>WidgetColumn</code> inside <code>WidgetsComponent</code> (one small upstream edit), which reads installed apps from the app repository itself. So yes: apps come back inside the swipe-up page only.'],
+ ['Existing pieces we can reuse','Tags (Kvaesitso stores tags per app: <code>CustomAttributesRepository</code>), the favourites widget, Calendar / Weather / Music / Notes widgets, T14 "most used" ranking, the letter-shield and the app-picker grid (T1b), S2 frames and ribbons.']
+]);
+tbl('t2',['Source','Accuracy','Effort','Notes'],[
+ ['Android <code>ApplicationInfo.category</code> (API 26+)','<span class="warn">Poor to fair.</span> Only apps whose developers declared it have one (games, audio, video, social, maps...). Many apps say "undefined" and Samsung apps vary. Only 8 fixed types.','Low (one read)','Cannot tell Finance, Work, Shopping, Travel. Fine as a fallback, not as the answer.'],
+ ['Kvaesitso tags','<span class="ok">Exact</span> but starts empty','Low in code, <span class="bad">high for you</span> (tag each of ~80 apps by hand)','Already stored and survives restarts. Needs a screen to assign.'],
+ ['A curated list we ship (package name -&gt; category), unknown = Other','<span class="ok">Good for well-known apps</span> (a list of ~250 popular packages covers most of an ordinary phone); anything unlisted lands in Other','Medium: the list is written once (my work), grows by owner reports','Sellable [M] as an "Armoury" list. Works offline, no permission, no battery cost. Package names must be checked; I will list the ones I am unsure about instead of guessing.'],
+ ['Owner drags an app to a category (long-press &gt; Move to category)','<span class="ok">Exact</span>, always right','Medium: needs the menu line and a picker','Stored as a tag, so it is the same store as above.'],
+ ['<b class="pick">Recommended: combine</b>','Order of rule: (1) your own tag, (2) shipped list, (3) Android category, (4) Other','Medium','Best accuracy for least effort: most apps sort themselves, you fix the odd one with one long-press, and a fix is never lost.']
+]);
+tbl('t5',['Idea','Data source','Permission','Battery','Clutter','Sellable'],[
+ ['Recently used apps (5 shields)','Kvaesitso\'s own launch history (as T14). Counts only launches made through Deliverance, not from notifications or other launchers.','none','none','low','no'],
+ ['Pinned / favourite apps','Kvaesitso favourites (exists as the Favourites widget)','none','none','low','no'],
+ ['Upcoming agenda (the Ledger)','Calendar already read by the Home Ledger and the Calendar widget','Calendar (already used)','low, read on open only','low','[M] Ledger panel style in the paid pack'],
+ ['Weather forecast panel','Bright Sky data the header already fetches; next hours or 3 days','none new','none extra (re-uses cached data)','medium (tall)','[M] weather scene art by palette'],
+ ['Quick-settings chips','Same seven chips as the typing layer (T14)','Modify system settings for Rotate (already asked)','none','low, but they are already on the typing layer, so a duplicate','no'],
+ ['Music / media controls','Upstream Music widget; shows only while something plays','Notification access (already granted for Dispatches)','none while idle','low (hidden when idle)','no'],
+ ['Notes','Upstream Notes widget, local files, no cloud','none','none','medium','no'],
+ ['Clipboard history','Android 10+ stops a launcher reading the clipboard in the background; clipboard may hold passwords. <span class="bad">Recommend: skip.</span>','n/a','n/a','n/a','no'],
+ ['Today\'s tasks','A small to-do list stored by Deliverance (manual entry). Importing from a Tasks app is UNVERIFIED.','none','none','medium','[M] possible add-on'],
+ ['"Ask the Oracle" starters','Prepared question chips; tap = SUMMON (T6): share intent to the Claude app plus clipboard backup. Question wording is YOURS to choose.','none','none','low','[M] a pack of question sets'],
+ ['App usage time','Android UsageStatsManager: minutes per app today and this week; a "Chronicle" panel','Usage access (special switch in Android settings, owner turns it on once)','low, read on open','low','[M] weekly chronicle panel'],
+ ['Tag / folder shortcuts','Your own tags (Work, Travel...) shown as shortcut rows','none','none','low','no'],
+ ['Files (recent files)','Kvaesitso file search','Storage access, heavy for Android 13','medium','medium','no. Recommend: skip']
+]);
+tbl('t6',['Gesture','Now','Proposed','What it opens','How to change'],[
+ ['Swipe UP','Widgets page (placed widgets)','<b>Apps hub</b> (this page)','The Armoury (apps by category) with the ideas below it. Existing widgets stay on the same page, below the hub.','Code (new composable; one small upstream edit)'],
+ ['Swipe DOWN','<span class="bad">Search (blank page)</span>','<b>Disabled</b>','Nothing. The Android shade from the status bar is untouched.','One line in <code>SharedLauncherActivity</code> plus default and hidden settings row. Or by hand: Settings &gt; Gestures &gt; No action (3 taps, but easy to undo).'],
+ ['Swipe LEFT','No action','Your pick (choice 6)','Option: widgets page 2 as a "Chronicle" page of panels, or an app, or nothing.','Setting in the app, no code if nothing new is built'],
+ ['Swipe RIGHT','No action','Your pick (choice 6)','Option: Launcher settings, or an app, or nothing.','Setting, no code'],
+ ['Double tap','Lock screen','Keep, or No action','Lock screen needs the Accessibility service. Not confirmed whether it is on.','Setting, no code'],
+ ['Long press on empty space','No action','Your pick: nothing / hub / edit widgets','Option: the hub (a second way in).','Setting, no code'],
+ ['Home button','No action (closes pop-ups on Home)','Keep','Option: a second press opens the hub.','Setting, no code'],
+ ['Command bar on Home','Opens the typing search','Keep (done earlier)','Search with keyboard and SUMMON','no change']
+]);
+var CH=[
+ ['Which swipe-up variant?','<b>1 =</b> A categories list (my pick: calm, whole list at a glance, collapsed by default) &middot; <b>2 =</b> B tab strip and pages &middot; <b>3 =</b> C favourites and tiles &middot; <b>4 =</b> mix (say which).','A: medium work. B: medium, plus sideways-swipe conflicts with page gestures. C: medium. All draw only while the page is open: no battery cost.'],
+ ['Where do categories come from?','<b>1 =</b> combine: your tags, then shipped list, then Android category, then Other (recommended) &middot; <b>2 =</b> only my shipped list &middot; <b>3 =</b> only your own sorting.','Option 1: medium; shipped list covers most apps; unlisted ones land in Other, long-press fixes. UNVERIFIED how many of your apps the list will place until it runs on the phone.'],
+ ['Can several categories be open at once?','<b>1 =</b> one at a time (tidy) &middot; <b>2 =</b> several at once.','Same cost. Several open makes the page long.'],
+ ['Which ideas go below the apps? (pick any)','<b>1</b> Recently used &middot; <b>2</b> Favourites &middot; <b>3</b> Ledger agenda &middot; <b>4</b> Weather &middot; <b>5</b> Quick chips &middot; <b>6</b> Music &middot; <b>7</b> Notes &middot; <b>8</b> Tasks &middot; <b>9</b> Oracle starters &middot; <b>10</b> App usage time &middot; <b>11</b> Tag shortcuts &middot; <b>12</b> none.','Most are small and re-use data already on the phone. Tasks and Usage time are the biggest: Tasks adds storage, Usage time asks for the Usage access switch. Too many panels turns the page into a list: I suggest at most 3.'],
+ ['Order of the page','<b>1 =</b> bar, apps, then panels &middot; <b>2 =</b> bar, favourites row, apps, panels &middot; <b>3 =</b> bar, apps, with panels on a second sideways page.','Your words were "apps first". Option 3 needs the swipe-left slot.'],
+ ['Swipe LEFT, RIGHT, long press, Home button','Per slot: <b>1 =</b> nothing &middot; <b>2 =</b> open the hub &middot; <b>3 =</b> a "Chronicle" panels page &middot; <b>4 =</b> Launcher settings &middot; <b>5 =</b> an app you name.','All except 3 are setting changes without code.'],
+ ['Swipe DOWN: how hard to switch off?','<b>1 =</b> the app ignores any saved value, and the row is hidden in Settings (recommended: it cannot come back by accident) &middot; <b>2 =</b> I only set the default to No action and you switch it off by hand once.','Option 1: one tiny upstream edit. Option 2: no code but depends on you remembering. Either way the Android shade from the top is unchanged.'],
+ ['Search bar on this page','<b>1 =</b> keep the existing Home command bar look (framed bar) as the filter &middot; <b>2 =</b> no bar, the Home command bar does all searching.','Wording of the placeholder ("Search your apps...") is yours to choose; I will not invent one.']
+];
+document.getElementById('choices').innerHTML=CH.map(function(c,i){return '<div class="choice"><b>'+(i+1)+'. '+c[0]+'</b><br>'+c[1]+'<br><span class="dim2">Cost / risk: '+c[2]+'</span></div>';}).join('')+
+ '<div class="pre"><b style="color:#f0a050">NOT verified:</b> everything on the phone (swipe feel, whether an existing saved swipe-down value is Search on your phone, Accessibility service state for Lock screen); how many of your installed apps a shipped category list would place; the exact Kvaesitso settings strings; UsageStats on One UI 5; the Tasks import. The mock-ups were not rendered by the app: they are HTML drawings.</div>';
+</script>
+<script>document.body.setAttribute("data-h",document.body.scrollHeight)</script>
+</body>
+</html>
