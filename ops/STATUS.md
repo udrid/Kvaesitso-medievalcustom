@@ -14,6 +14,7 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 | T9, T12, T15 | 1 | DONE | claude/T9-vibe, T12-orb-tune, T15-tweaks | Glass orb, engraved ring, subtle animations with battery gate and Animations setting |
 | T17-small | 1 | DONE (owner verified on phone 2026-10-27; merged into main) | claude/T17-small | New-day shimmer, weather line fit, pollers gated |
 | T2-treasury | 1 | deferred: owner wants it last | - | SimpleFIN Bridge (decisions.md); api-scout first; price to owner before sign-up |
+| S2-screens | 1 | active (Part 1 design preview) | claude/S2-screens | Launcher screens batch: results, settings, widget page, sheets, assistant; preview first, no code until owner picks |
 
 ## Open for the owner
 - Report what SUMMON did in the Claude app (opens? new chat? words in the box?).
