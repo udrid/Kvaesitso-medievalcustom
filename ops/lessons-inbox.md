@@ -33,3 +33,5 @@
 - T16: the weather column renders ~8-10 stage units lower than the fixed line heights say, so check layout from the owner's screenshot, not from arithmetic; a horizontal clearance is safer than a vertical one.
 - T17: older `produceState { while (true) { delay } }` pollers keep running when Home is stopped; use `produceWhileResumed` (MedievalParts) for any new ticker.
 - T17: Compose text can be fitted by measuring with `rememberTextMeasurer` (shrink, then shorten) instead of guessing widths.
+- S3: Kvaesitso icon packs need the EXACT package and activity per item (IconDao matches activityName only when equal or null, and appfilter cannot make a null); a pack cannot draw letters, only wrap the real icon via iconback and scale.
+- S3: a standalone iconpack/ Gradle build compiles with the repo wrapper (-p iconpack) but not with --offline (its Kotlin plugin is not cached); PowerShell script files are blocked here, so run their commands inline.

@@ -46,3 +46,6 @@ Code: `services/icons/.../loaders/AppFilterIconPackInstaller.kt`, `IconPackManag
 
 ## Not verified (to say in the final report)
 Good Lock availability and module versions on this phone; menu names on One UI 5.x; SwiftKey current menu and crop size; installed app list and component names; that the launcher picks the pack on the phone (code read only, no run).
+
+## Built 2026-10-27 (Part 2)
+What was built and the owner picks: tasks/S3-assets/picks.md and handoff.md. App mapping and plate fallback are UNVERIFIED on the phone.

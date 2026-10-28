@@ -13,7 +13,7 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 | T7-shields | 1 | DONE | claude/T7-shields | Gold emblems for shields, letter-shield fallback |
 | T9, T12, T15 | 1 | DONE | claude/T9-vibe, T12-orb-tune, T15-tweaks | Glass orb, engraved ring, subtle animations with battery gate and Animations setting |
 | T17-small | 1 | DONE (owner verified on phone 2026-10-27; merged into main) | claude/T17-small | New-day shimmer, weather line fit, pollers gated |
-| S3-assets | 1 | active (Part 1: design preview) | claude/S3-assets | Wallpaper/lock/AOD images, icon pack, SwiftKey theme, Good Lock steps; owner applies by hand |
+| S3-assets | 1 | READY TO PUSH (Part 2 built from owner picks 2026-10-27; nothing pushed) | claude/S3-assets | Orb wallpaper, 7 AOD days, SwiftKey picture, icon pack (3 plates, 43 emblems, 108 mapped apps) in iconpack/; owner steps in tasks/S3-assets/testlist.md; whole-phone colour-scheme switch requested as a separate task |
 | T2-treasury | 1 | deferred: owner wants it last | - | SimpleFIN Bridge (decisions.md); api-scout first; price to owner before sign-up |
 
 ## Open for the owner

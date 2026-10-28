@@ -1,0 +1,11 @@
+<!doctype html><html><head><meta charset="utf-8"><title>icon sheet</title>
+<style>html,body{margin:0;background:transparent}svg{display:block}#out{display:grid;grid-template-columns:repeat(8,192px);width:1536px}</style></head><body>
+<div id="out"></div>
+<script src="lib.js"></script><script src="emblems.js"></script>
+<script>
+/* usage: icons.html#heater | #seal | #bare | #fallback-heater | #fallback-seal ; 8 icons per row, order = EMBLEMS */
+var f=location.hash.slice(1),h='';
+if(f.indexOf('fallback-')===0){var fl=f.slice(9);h='<svg width="192" height="192" viewBox="0 0 192 192">'+(fl==='heater'?PLATE_HEATER:PLATE_SEAL)+'</svg>';}
+else EMBLEMS.forEach(function(n){h+=cellSvg(n,f)});
+document.getElementById('out').innerHTML=h;
+</script></body></html>

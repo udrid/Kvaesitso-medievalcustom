@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>S3 render</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+html,body{margin:0;background:#000;overflow:hidden}svg{display:block}
+</style></head><body>
+<svg width="0" height="0"><defs>
+<filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 .9  0 0 0 0 .8  0 0 0 0 .6  0 0 0 .5 -.12"/></filter>
+<filter id="blur30" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
+</defs></svg>
+<div id="out"></div>
+<script src="lib.js"></script>
+<script>
+/* usage: render.html#wall | #aod-sol ... #aod-saturn | #keyboard */
+function aod(day){
+  var d=DAYS.filter(function(x){return x[0]===day})[0], g='#a8884c';
+  var s='<rect width="1080" height="2400" fill="#000"/>';
+  s+='<g transform="translate(540 1180) scale(5.2)"><circle r="25" fill="none" stroke="'+GD+'" stroke-width="1"/><circle r="22.500" fill="none" stroke="#4a3a20" stroke-width=".6"/><g fill="none" stroke="'+g+'" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+SIGN[day]+'</g></g>';
+  s+='<text x="540" y="1560" text-anchor="middle" font-family="UnifrakturMaguntia" font-size="120" fill="'+GD+'">'+d[1]+'</text>';
+  s+='<text x="540" y="1630" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="30" letter-spacing="14" fill="#4a3a20">'+d[2].toUpperCase()+'</text>';
+  return s;
+}
+function keyboard(){
+  var cx=540,cy=500;
+  var s='<defs><radialGradient id="kb" cx=".5" cy=".4" r=".8"><stop offset="0" stop-color="#26211a"/><stop offset=".6" stop-color="#14110d"/><stop offset="1" stop-color="#0a0907"/></radialGradient></defs><rect width="1080" height="1000" fill="url(#kb)"/>';
+  s+='<g fill="none" stroke="'+G+'" opacity=".26"><circle cx="'+cx+'" cy="'+cy+'" r="300" stroke-width="3"/><circle cx="'+cx+'" cy="'+cy+'" r="330" stroke-width="2"/><circle cx="'+cx+'" cy="'+cy+'" r="420" stroke-width="1.5"/>';
+  for(var i=0;i<72;i++){var a=i*Math.PI/36,l=i%6?12:26;s+='<path d="M'+(cx+Math.cos(a)*300).toFixed(1)+' '+(cy+Math.sin(a)*300).toFixed(1)+'L'+(cx+Math.cos(a)*(300-l)).toFixed(1)+' '+(cy+Math.sin(a)*(300-l)).toFixed(1)+'" stroke-width="2"/>'}
+  s+='</g>'+ringText(cx,cy,372,30,.4,'rk');
+  return s+'<rect width="1080" height="1000" filter="url(#grain)" opacity=".4"/>';
+}
+var k=location.hash.slice(1),w=1080,h=2400,svg;
+if(k==='wall')svg=wpC();
+else if(k.indexOf('aod-')===0)svg=aod(k.slice(4));
+else if(k==='keyboard'){svg=keyboard();h=1000}
+document.getElementById('out').innerHTML='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'">'+svg+'</svg>';
+</script></body></html>
