@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>S3 assets: wallpaper, lock screen, AOD, icon pack, keyboard</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf");font-style:normal}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf");font-style:italic}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+@font-face{font-family:UnifrakturMaguntia;src:url("../../app/ui/src/main/res/font/unifrakturmaguntia_book.ttf")}
+body{margin:0;background:#050403;width:1500px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8;padding-bottom:30px}
+h1{font-family:UnifrakturCook,serif;font-size:34px;font-weight:700;color:#c9a55a;margin:0;padding:20px 28px 0}
+.sub{padding:2px 28px 6px;font-size:14px;font-style:italic;color:#a8987a;line-height:1.4;max-width:1180px}
+.sec{font-family:Cinzel,serif;font-size:12px;font-weight:700;letter-spacing:.22em;color:#c9a55a;text-transform:uppercase;padding:30px 28px 4px;border-top:1px solid #2a2216;margin-top:24px}
+.note{font-size:13.5px;font-style:italic;color:#a8987a;padding:0 28px 8px;line-height:1.4;max-width:1180px}
+.row{display:flex;gap:26px;padding:10px 28px;align-items:flex-start}
+.opt{flex:none}
+.opt .t{font-family:Cinzel,serif;font-size:11px;font-weight:700;letter-spacing:.16em;color:#e6d9b8;text-transform:uppercase;margin:0 0 6px}
+.opt .d{font-size:12.5px;line-height:1.35;color:#bfae86;width:420px;margin-top:8px}
+.opt .d b{font-family:Cinzel,serif;font-size:9px;letter-spacing:.14em;color:#c9a55a}
+.pair{display:flex;gap:8px}
+.ph{background:#000;border:1px solid #4a3a20;line-height:0}
+.cap{font-family:Cinzel,serif;font-size:9px;letter-spacing:.16em;color:#6b5a38;text-transform:uppercase;margin-top:3px}
+.tag{display:inline-block;font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.14em;padding:1px 6px;border:1px solid #8c6d3a;color:#c9a55a;margin-right:4px}
+.tag.m{background:#481510;color:#f0e2bd}
+.grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px 6px;padding:8px 28px;width:1100px}
+.cell{display:flex;flex-direction:column;align-items:center}
+.node{position:relative;width:62px;height:72px}
+.node svg.shield{position:absolute;inset:0}
+.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center}
+.lbl{margin-top:3px;text-align:center;font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#bfae86;width:110px}
+.sm{font-size:10px;font-style:italic;color:#7d6f52;text-align:center}
+.rule{margin:8px 28px;padding:12px 16px;border:1px solid #4a3a20;background:linear-gradient(178deg,#1d1a14,#12100c);font-size:13.5px;line-height:1.45;color:#d9ccaa;width:1100px}
+.rule b{font-family:Cinzel,serif;font-size:10px;letter-spacing:.16em;color:#c9a55a;text-transform:uppercase}
+table{border-collapse:collapse;margin:6px 28px;font-size:13px;width:1100px}
+td,th{border:1px solid #3a2f1a;padding:6px 10px;text-align:left;vertical-align:top}
+th{font-family:Cinzel,serif;font-size:10px;letter-spacing:.14em;color:#c9a55a;background:#16130d}
+.choices{margin:10px 28px;padding:14px 18px;border:1px solid #8c6d3a;background:#14110c;width:1100px}
+.choices h2{font-family:Cinzel,serif;font-size:12px;letter-spacing:.2em;color:#c9a55a;margin:0 0 8px}
+.choices ol{margin:0;padding-left:22px;font-size:14px;line-height:1.55;color:#e6d9b8}
+.choices li{margin-bottom:6px}
+.sw{display:inline-block;width:16px;height:16px;border:1px solid #6b5430;vertical-align:-3px;margin-right:6px}
+</style>
+</head>
+<body>
+<h1>S3: the design outside the launcher</h1>
+<div class="sub">Everything here lives OUTSIDE the launcher's own screens: Android and Samsung draw it, so the owner applies the images by hand. Pieces are the approved ones (palette, blackletter, medallions, shield emblems, orb ring text). Wallpapers are shown at one fifth of the real 1080 x 2400 size; the icons are at real size. [M] = could be sold (rows added to <i>ops/monetization.md</i>).</div>
+<div id="out"></div>
+<svg width="0" height="0"><defs>
+<filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 .9  0 0 0 0 .8  0 0 0 0 .6  0 0 0 .5 -.12"/></filter>
+<filter id="blur30" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
+<filter id="blur12" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="12"/></filter>
+</defs></svg>
+<script>
+var G='#c9a55a', GD='#8c6d3a', GL='#e3cf9c', RD='#a8352b';
+var NS='http://www.w3.org/2000/svg';
+
+/* alchemical signs, centred on 0,0, about 26 units tall */
+var SIGN={
+ sol:'<circle r="9.5"/><circle r="2" fill="'+G+'"/>',
+ luna:'<path d="M5 -12A12 12 0 1 0 5 12A9 9 0 1 1 5 -12Z" fill="'+G+'" fill-opacity=".85"/>',
+ mars:'<circle cx="-2.5" cy="3.5" r="7.5"/><path d="M3 -2L11 -10M4 -10H11V-3"/>',
+ mercury:'<circle cy="2" r="5.2"/><path d="M0 7.2V14M-3.4 10.8H3.4M-6.5 -11A6.5 6.5 0 0 0 6.5 -11"/>',
+ jupiter:'<path d="M-9 -6C-9 -13 -1 -13 -1 -6C-1 -1 -6 3 -11 4H10M4.5 -12V13"/>',
+ venus:'<circle cy="-4.5" r="6.5"/><path d="M0 2V13M-4.5 7.5H4.5"/>',
+ saturn:'<path d="M-6 -11H0M-3 -14V3M-3 -4C0 -7 6 -5 6 0C6 5 2 7 2 12"/>'
+};
+
+/* rings around the medallion, centre 44,35 in an 88x70 box; medallion radius 25 */
+function rays(n,r1,r2,r3,fill){var s='';for(var i=0;i<n;i++){var a=i*2*Math.PI/n,b=a+Math.PI/n*0.55,c=a-Math.PI/n*0.55,l=(i%2?r2:r3);
+ s+='<path d="M'+(r1*Math.cos(b)).toFixed(1)+' '+(r1*Math.sin(b)).toFixed(1)+'L'+(l*Math.cos(a)).toFixed(1)+' '+(l*Math.sin(a)).toFixed(1)+'L'+(r1*Math.cos(c)).toFixed(1)+' '+(r1*Math.sin(c)).toFixed(1)+'Z" fill="'+fill+'"/>';}return s}
+function star4(x,y,r){return '<path d="M'+x+' '+(y-r)+'Q'+x+' '+y+' '+(x+r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y+r)+'Q'+x+' '+y+' '+(x-r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y-r)+'Z" fill="'+G+'"/>'}
+function feathers(sd){var s='';for(var i=0;i<4;i++){var y=-6+i*5,x0=26,x1=40-i*2.2,y1=y-9+i*3.2;
+ s+='<path d="M'+(sd*x0)+' '+y+'Q'+(sd*(x0+8))+' '+(y-8)+' '+(sd*x1)+' '+y1+'Q'+(sd*(x1-2))+' '+(y1+8)+' '+(sd*x0)+' '+(y+3)+'Z" fill="#2a2216" stroke="'+G+'" stroke-width="1"/>';}return s}
+var RING={
+ sol:function(){return rays(32,26,31,35,GD)+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2" stroke-dasharray="2 2.4"/>'},
+ luna:function(){var s='<circle r="27" fill="none" stroke="'+GD+'" stroke-width="1" stroke-dasharray="1 3"/>';
+  [[-36,-20,3],[36,-18,3.6],[-34,18,2.4],[37,17,2.8],[0,-33,2.6],[0,33,2.6]].forEach(function(p){s+=star4(p[0],p[1],p[2])});
+  return s+'<path d="M-30 -5A5 5 0 1 0 -30 5A3.8 3.8 0 1 1 -30 -5Z" fill="'+G+'"/><path d="M30 -5A5 5 0 1 1 30 5A3.8 3.8 0 1 0 30 -5Z" fill="'+G+'"/>'},
+ mars:function(){var s='';for(var i=0;i<8;i++){var a=i*Math.PI/4;s+='<g transform="rotate('+(i*45)+')"><path d="M26 0L35 '+(i%2?0:0)+'" stroke="'+GD+'" stroke-width="1"/>'+(i%2?'<path d="M27 -3.5L36 0L27 3.5Z" fill="'+GD+'"/>':'<path d="M27 -4.5L40 0L27 4.5L30 0Z" fill="'+RD+'" stroke="'+G+'" stroke-width=".9"/>')+'</g>'}
+  return s+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2"/>'},
+ mercury:function(){return feathers(1)+feathers(-1)+'<circle r="26" fill="none" stroke="'+GD+'" stroke-width="1"/>'},
+ jupiter:function(){var s='';[45,135,225,315].forEach(function(d){s+='<g transform="rotate('+d+')"><path d="M24 -2L30 -5L29 -1L36 -3L28 4L29 0L24 2Z" fill="'+G+'"/></g>'});
+  [0,90,180,270].forEach(function(d){s+='<g transform="rotate('+d+')"><circle cx="30" r="1.8" fill="'+RD+'" stroke="'+G+'" stroke-width=".7"/></g>'});
+  return s+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2"/><circle r="28" fill="none" stroke="'+GD+'" stroke-width=".8" stroke-dasharray="1 2.6"/>'},
+ venus:function(){var s='';for(var i=0;i<10;i++){s+='<g transform="rotate('+(i*36)+')"><path d="M25 0C28 -6 34 -6 36 0C34 6 28 6 25 0Z" fill="'+(i%2?'#2a2216':'#5a1a14')+'" stroke="'+G+'" stroke-width=".9"/></g>'}
+  return s+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2"/>'},
+ saturn:function(){var s='<path d="M0 -34L10 -28L28 -22L34 0L28 22L10 28L0 34L-10 28L-28 22L-34 0L-28 -22L-10 -28Z" fill="none" stroke="'+GD+'" stroke-width="1"/>';
+  for(var i=0;i<12;i++){s+='<g transform="rotate('+(i*30)+')"><path d="M26 0H31" stroke="'+G+'" stroke-width="1.4"/></g>'}
+  [0,90,180,270].forEach(function(d){s+='<g transform="rotate('+d+' 0 0)"><path d="M31 -3L36 0L31 3L26 0Z" fill="'+RD+'" stroke="'+G+'" stroke-width=".8" transform="translate(4 0)"/></g>'});
+  return s+'<circle r="25" fill="none" stroke="'+G+'" stroke-width="1.2"/>'}
+};
+RD='#8a2a20';
+var SHIELD='<svg class="shield" viewBox="0 0 62 72" aria-hidden="true"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="#15120d"/><path d="M4 12L31 2L58 12V22H4Z" fill="#3a1612"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="#8c6d3a" stroke-width="2"/></svg>';
+function svg(inner){return '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="'+G+'" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">'+inner+'</svg>';}
+var E={
+ x:['X','raven',svg('<path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/><path d="M10 13c2 0 4 1 5 3"/><circle cx="14.2" cy="9.6" r=".7" fill="'+G+'" stroke="none"/>')],
+ discord:['Discord','goblet',svg('<path d="M6.5 4h11c0 5.5-1.5 8.5-5.5 9.5C8 12.5 6.5 9.5 6.5 4z"/><path d="M6.8 7.5h10.4"/><path d="M12 13.5V19"/><path d="M8 20.5h8"/>')],
+ youtube:['YouTube','scroll',svg('<rect x="6" y="6.5" width="12" height="11" rx=".5"/><rect x="3.6" y="4.8" width="2.8" height="14.4" rx="1.4"/><rect x="17.6" y="4.8" width="2.8" height="14.4" rx="1.4"/><path d="M10.6 9.6l4 2.4-4 2.4z" fill="'+G+'"/>')],
+ messages:['Messages','sealed letter',svg('<path d="M3.5 6h17v12h-17z"/><path d="M3.5 6.5l8.5 6.2 8.5-6.2"/><circle cx="12" cy="13" r="2.6" fill="'+RD+'"/>')],
+ maps:['Maps','compass',svg('<circle cx="12" cy="12" r="9"/><path d="M12 5.2l1.8 5 5 1.8-5 1.8-1.8 5-1.8-5-5-1.8 5-1.8z"/><path d="M12 1.6v2.2"/>')],
+ phone:['Phone','bell',svg('<path d="M12 4c-3 0-5 2.5-5 6v4l-2 3h14l-2-3v-4c0-3.5-2-6-5-6z"/><path d="M10 19a2 2 0 0 0 4 0"/><path d="M12 2.4V4"/>')],
+ camera:['Camera','watching eye',svg('<path d="M2.5 12C5 7.6 8.5 6 12 6s7 1.6 9.5 6c-2.5 4.4-6 6-9.5 6s-7-1.6-9.5-6z"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r=".9" fill="'+G+'" stroke="none"/>')],
+ browser:['Browser','orb and cross',svg('<circle cx="12" cy="14.5" r="7"/><path d="M5 14.5h14"/><ellipse cx="12" cy="14.5" rx="3.2" ry="7"/><path d="M12 1.8v4M10.2 3.6h3.6"/>')],
+ gallery:['Gallery','framed portrait',svg('<path d="M3.5 4.5h17v15h-17z"/><path d="M6 7h12v10H6z"/><path d="M6 17l4.2-5 3 3.4 2-2L18 17"/><circle cx="15.4" cy="9.8" r="1.1"/>')],
+ settings:['Settings','ship\'s wheel',svg('<circle cx="12" cy="12" r="6.8"/><circle cx="12" cy="12" r="2"/><path d="M12 1.8v8.2M12 14v8.2M1.8 12h8.2M14 12h8.2"/><path d="M13.4 10.6l5.8-5.8M10.6 10.6L4.8 4.8M13.4 13.4l5.8 5.8M10.6 13.4l-5.8 5.8"/>')],
+ clock:['Clock','hourglass',svg('<path d="M6.5 3h11M6.5 21h11"/><path d="M8 3v3.5l4 5.5-4 5.5V21M16 3v3.5l-4 5.5 4 5.5V21"/><path d="M9.8 19.2h4.4L12 16z" fill="'+G+'"/>')],
+ calendar:['Calendar','book of days',svg('<path d="M5 4.5a2 2 0 0 1 2-2h11.5v16.8H7a2 2 0 0 0-2 2z"/><path d="M5 19.3a2 2 0 0 1 2-2h11.5"/><path d="M14.5 2.5v6l1.6-1.3 1.6 1.3v-6" fill="'+RD+'"/>')],
+ spotify:['Spotify','lute',svg('<ellipse cx="8.6" cy="15.4" rx="5.2" ry="5.4" transform="rotate(-40 8.6 15.4)"/><circle cx="8.6" cy="15.4" r="1.5"/><path d="M12.3 11.7L19 5"/><path d="M17.6 3.6l2.8 2.8"/>')],
+ whatsapp:['WhatsApp','herald\'s trumpet',svg('<path d="M3 10.8h11.5M3 13.2h11.5"/><path d="M14.5 10.8L21 7.2v9.6l-6.5-3.6"/><path d="M3 10.2v3.6"/><path d="M7.5 13.2v6l2-1.3 2 1.3v-6" fill="'+RD+'"/>')],
+ gmail:['Gmail','quill',svg('<path d="M20 4C12 4.2 7 9 6.4 16.5L4.2 20l3.4-2.2C15 17.2 19.800 12.200 20 4z"/><path d="M7 17.2L15.200 8.800"/>')]
+};
+var DAYS=[['sol','Sunday','S','unday','Sol'],['luna','Monday','M','onday','Luna'],['mars','Tuesday','T','uesday','Mars'],['mercury','Wednesday','W','ednesday','Mercury'],['jupiter','Thursday','T','hursday','Jupiter'],['venus','Friday','F','riday','Venus'],['saturn','Saturday','S','aturday','Saturn']];
+
+RD='#a8352b';
+function medal(day,cx,cy,s,ring){
+  return '<g transform="translate('+cx+' '+cy+') scale('+s+')">'+(ring===false?'':RING[day]())+'<circle r="25" fill="#15120d" stroke="'+G+'" stroke-width="1.4"/><circle r="22" fill="none" stroke="'+GD+'" stroke-width=".6"/><g fill="none" stroke="'+G+'" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+SIGN[day]+'</g></g>';
+}
+function ground(){
+  return '<defs><radialGradient id="bg" cx=".5" cy=".38" r=".75"><stop offset="0" stop-color="#26211a"/><stop offset=".55" stop-color="#14110d"/><stop offset="1" stop-color="#0a0907"/></radialGradient><radialGradient id="vg" cx=".5" cy=".5" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".72"/></radialGradient></defs>'+
+  '<rect width="1080" height="2400" fill="url(#bg)"/>';
+}
+function finish(){
+  return '<rect width="1080" height="2400" filter="url(#grain)" opacity=".5"/><rect width="1080" height="2400" fill="url(#vg)"/>';
+}
+function ringText(cx,cy,r,size,op,id){
+  var txt='NOSCE TE IPSUM + SAPERE AUDE + LUX ET VERITAS + ';
+  return '<defs><path id="'+id+'" d="M'+(cx-r)+' '+cy+'A'+r+' '+r+' 0 1 1 '+(cx+r)+' '+cy+'A'+r+' '+r+' 0 1 1 '+(cx-r)+' '+cy+'"/></defs><text font-family="Cinzel" font-weight="700" font-size="'+size+'" fill="'+G+'" opacity="'+op+'"><textPath href="#'+id+'" textLength="'+(2*Math.PI*r-8).toFixed(0)+'" lengthAdjust="spacing">'+txt+'</textPath></text>';
+}
+function rnd(seed){return function(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646}}
+function wpA(){
+  var s=ground(),cx=540,cy=1780;
+  s+='<g fill="none" stroke="'+G+'" opacity=".3">';
+  [300,330,420,436].forEach(function(r,i){s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" stroke-width="'+(i==2?1.5:3)+'"/>'});
+  for(var i=0;i<72;i++){var a=i*Math.PI/36,l=i%6?12:26;s+='<path d="M'+(cx+Math.cos(a)*300).toFixed(1)+' '+(cy+Math.sin(a)*300).toFixed(1)+'L'+(cx+Math.cos(a)*(300-l)).toFixed(1)+' '+(cy+Math.sin(a)*(300-l)).toFixed(1)+'" stroke-width="2"/>'}
+  s+='<path d="M'+cx+' '+(cy-180)+'L'+(cx+40)+' '+cy+'L'+cx+' '+(cy+180)+'L'+(cx-40)+' '+cy+'Z M'+(cx-180)+' '+cy+'L'+cx+' '+(cy+40)+'L'+(cx+180)+' '+cy+'L'+cx+' '+(cy-40)+'Z" stroke-width="2.5"/></g>';
+  s+=ringText(cx,cy,372,30,.38,'ra');
+  return s+finish();
+}
+function wpB(day,nm,pl){
+  day=day||'sol';nm=nm||'Sunday';pl=pl||'SOL';
+  var s=ground();
+  s+=medal(day,540,1560,7);
+  s+='<text x="540" y="2000" text-anchor="middle" font-family="UnifrakturMaguntia" font-size="150" fill="#ecdfbf" opacity=".92">'+nm+'</text>';
+  s+='<text x="540" y="2078" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="34" letter-spacing="16" fill="'+GD+'">'+pl+'</text>';
+  s+='<path d="M300 2118H780" stroke="'+GD+'" stroke-width="2"/><path d="M540 2106l12 12-12 12-12-12z" fill="'+G+'"/>';
+  return s+finish();
+}
+function wpC(){
+  var s=ground(),cx=540,cy=1560,R=250,r=rnd(11);
+  s+='<defs><radialGradient id="ob" cx=".4" cy=".35"><stop offset="0" stop-color="#3a1a12"/><stop offset=".7" stop-color="#120807"/><stop offset="1" stop-color="#040202"/></radialGradient><clipPath id="oc"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'"/></clipPath></defs>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(R+60)+'" fill="#a8352b" opacity=".12" filter="url(#blur30)"/>';
+  s+='<g clip-path="url(#oc)"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="url(#ob)"/><g filter="url(#blur30)"><ellipse cx="'+(cx-50)+'" cy="'+(cy+30)+'" rx="170" ry="70" fill="#a8352b" opacity=".75" transform="rotate(-28 '+cx+' '+cy+')"/><ellipse cx="'+(cx+50)+'" cy="'+(cy-30)+'" rx="150" ry="55" fill="#e08a3a" opacity=".5" transform="rotate(24 '+cx+' '+cy+')"/><ellipse cx="'+cx+'" cy="'+(cy+120)+'" rx="120" ry="45" fill="#7a2a1c" opacity=".7"/></g>';
+  for(var i=0;i<150;i++){var a=r()*6.283,d=Math.sqrt(r())*R*.95,k=r();s+='<circle cx="'+(cx+Math.cos(a)*d).toFixed(1)+'" cy="'+(cy+Math.sin(a)*d).toFixed(1)+'" r="'+(1+k*3).toFixed(1)+'" fill="'+(k>.6?GL:G)+'" opacity="'+(.35+k*.55).toFixed(2)+'"/>'}
+  s+='<path d="M'+(cx-170)+' '+(cy-120)+'C'+(cx-130)+' '+(cy-200)+' '+(cx-40)+' '+(cy-235)+' '+(cx+30)+' '+(cy-232)+'C'+(cx-40)+' '+(cy-200)+' '+(cx-130)+' '+(cy-150)+' '+(cx-170)+' '+(cy-120)+'Z" fill="#fff" opacity=".2"/></g>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(R+14)+'" fill="none" stroke="'+GD+'" stroke-width="28"/><circle cx="'+cx+'" cy="'+cy+'" r="'+(R+26)+'" fill="none" stroke="'+G+'" stroke-width="3"/><circle cx="'+cx+'" cy="'+cy+'" r="'+(R+2)+'" fill="none" stroke="'+GL+'" stroke-width="2" opacity=".6"/>';
+  [[0,-1],[1,0],[0,1],[-1,0]].forEach(function(p){s+='<circle cx="'+(cx+p[0]*(R+14))+'" cy="'+(cy+p[1]*(R+14))+'" r="17" fill="'+RD+'" stroke="'+GL+'" stroke-width="3"/>'});
+  s+=ringText(cx,cy,R+112,44,.9,'rc');
+  return s+finish();
+}
+function overlay(){
+  var s='<g font-family="Cinzel" fill="#fff">';
+  s+='<circle cx="540" cy="64" r="28" fill="#000" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>';
+  s+='<text x="540" y="400" text-anchor="middle" font-size="250" font-weight="300" opacity=".6">10:24</text>';
+  s+='<text x="540" y="480" text-anchor="middle" font-size="46" opacity=".5">Sun, Oct 27</text>';
+  s+='<rect x="60" y="760" width="960" height="150" rx="40" fill="#fff" opacity=".12"/><rect x="60" y="930" width="960" height="150" rx="40" fill="#fff" opacity=".12"/>';
+  s+='<circle cx="140" cy="2230" r="56" fill="#fff" opacity=".14"/><circle cx="940" cy="2230" r="56" fill="#fff" opacity=".14"/>';
+  s+='<path d="M0 130H1080M0 2290H1080" stroke="#f08a6a" stroke-width="3" stroke-dasharray="14 12" opacity=".7"/></g>';
+  return s;
+}
+function phone(inner,w,withOv){
+  var h=w*2400/1080;
+  return '<div class="ph"><svg width="'+w+'" height="'+h+'" viewBox="0 0 1080 2400">'+inner+(withOv?overlay():'')+'</svg></div>';
+}
+function lockOpt(id,title,body,fn,cost,m){
+  return '<div class="opt"><div class="t">'+id+'. '+title+(m?' <span class="tag m">[M]</span>':'')+'</div><div class="pair"><div>'+phone(fn(),216,false)+'<div class="cap">wallpaper</div></div><div>'+phone(fn(),216,true)+'<div class="cap">with stock lock clock</div></div></div><div class="d">'+body+'<br><b>COST TO PRODUCE</b> '+cost+'</div></div>';
+}
+var h='';
+h+='<div class="sec">1. Wallpaper and lock screen (1080 x 2400)</div>';
+h+='<div class="note">Right image of each option: a mock of what Samsung puts on top (camera hole, clock, notifications, the two shortcut circles). Dashed lines are the 130 px top and 110 px bottom margins that stay empty. Art sits in the lower half so the clock and notifications stay readable.</div>';
+h+='<div class="row">'+
+ lockOpt('1A','Vellum and ring','Plain charcoal vellum with grain and vignette, and a faint gold ring watermark (the Home ring text, very quiet). Calm; the most readable under notifications.',wpA,'Lowest. One image, 10 minutes of work.',false)+
+ lockOpt('1B','Planetary day','One wallpaper per weekday: the day\'s medallion large, the day name in blackletter, the planet name below. Seven images; Sunday shown. Pairs with the Home header.',function(){return wpB()},'Highest of the three: seven images to render and check. Strong [M] pack material.',true)+
+ lockOpt('1C','The orb','The glass orb large, oxblood smoke, gold dust, rubies, with the engraved ring text around it. The showpiece; busiest.',wpC,'Medium. One image, but the art needs two or three tries.',true)+
+ '</div>';
+h+='<div class="note" style="padding-top:6px">Option 1B, the seven days (small):</div><div class="row" style="gap:10px;padding-top:0">';
+DAYS.forEach(function(d){h+='<div>'+phone(wpB(d[0],d[1],d[4].toUpperCase()),108,false)+'<div class="cap">'+d[4]+'</div></div>'});
+h+='</div>';
+h+='<div class="rule"><b>Home screen</b><br>The launcher draws its own charcoal ground with grain and vignette, so a wallpaper behind Home would only fight it. <b>Recommendation: Home keeps its own background</b> and the picked image is used for the LOCK screen only. If you want the image behind Home too, Samsung shows the same one unless you set them apart (UNVERIFIED on this phone).</div>';
+
+/* AOD */
+function aod(kind){
+  var s='<rect width="1080" height="2400" fill="#000"/>';
+  var g='#a8884c';
+  if(kind==='B'){s+='<g transform="translate(540 560)">'+'<g fill="none" stroke="'+GD+'" stroke-width="1.2" transform="scale(3.2)"><circle r="25"/><g stroke="'+g+'" stroke-width="1.6">'+SIGN.sol+'</g></g></g>';}
+  s+='<text x="540" y="'+(kind==='B'?1010:760)+'" text-anchor="middle" font-family="Cinzel" font-weight="400" font-size="250" fill="'+g+'">10:24</text>';
+  s+='<text x="540" y="'+(kind==='B'?1110:860)+'" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="40" letter-spacing="10" fill="'+GD+'">SUNDAY  27 OCT</text>';
+  s+='<path d="M380 '+(kind==='B'?1160:910)+'H700" stroke="'+GD+'" stroke-width="2"/>';
+  return s;
+}
+h+='<div class="sec">2. Always-on display</div>';
+h+='<div class="note">Pure black ground (an AMOLED screen switches those pixels off, so battery use stays tiny) with a dim gold clock. Samsung\'s AOD takes a clock style and an optional image; the stock clock cannot be restyled without Good Lock, so how closely this is matched depends on what you can install (see the notes). Shown with a dim clock to be safe for screen burn-in.</div>';
+h+='<div class="row">'+
+ '<div class="opt"><div class="t">2A. Minimal gold clock</div><div class="pair"><div class="ph"><svg width="216" height="480" viewBox="0 0 1080 2400">'+aod('A')+'</svg></div></div><div class="d">Time, day and date in dim gold on black. Lowest battery. <br><b>COST</b> Low. Needs Good Lock ClockFace/LockStar to look exactly like this (UNVERIFIED); without it the stock clock stays and only the AOD image is ours.</div></div>'+
+ '<div class="opt"><div class="t">2B. Gold clock and Sun sign <span class="tag m">[M]</span></div><div class="pair"><div class="ph"><svg width="216" height="480" viewBox="0 0 1080 2400">'+aod('B')+'</svg></div></div><div class="d">Same, plus the day\'s thin line-art medallion above (seven small images, one per day). Slightly more lit pixels than 2A, still very few. <br><b>COST</b> Medium: seven images to render.</div></div></div>';
+
+/* ICONS */
+function cell(inner,label,sub,shield){
+  return '<div class="cell"><div class="node">'+(shield||SHIELD)+'<span class="glyph">'+inner+'</span></div><div class="lbl">'+label+'</div><div class="sm">'+(sub||'')+'</div></div>';
+}
+RD='#8a2a20';
+var G2=G;
+var MORE={
+ contacts:['Contacts','herald\'s bust',svg('<circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20c0-4.5 3.4-7 7.5-7s7.5 2.5 7.5 7z"/>')],
+ files:['Files','strongbox',svg('<path d="M3.5 10h17v9.5h-17z"/><path d="M3.5 10c0-3.5 3.8-6 8.5-6s8.5 2.5 8.5 6"/><path d="M3.5 14h17"/><rect x="10.500" y="12" width="3" height="4" fill="'+G+'"/>')],
+ calc:['Calculator','abacus',svg('<rect x="3.5" y="4.5" width="17" height="15" rx=".5"/><path d="M6 8.500h12M6 12h12M6 15.500h12"/><circle cx="9" cy="8.5" r="1.3" fill="'+G+'" stroke="none"/><circle cx="14" cy="12" r="1.3" fill="'+G+'" stroke="none"/><circle cx="8" cy="15.5" r="1.3" fill="'+G+'" stroke="none"/>')],
+ notes:['Notes','wax tablet',svg('<rect x="4.500" y="3.500" width="12" height="17" rx=".5"/><path d="M7.500 8h6M7.500 11.500h6M7.500 15h4"/><path d="M19.500 5l-5 11-.9 3 3-1.200 4.200-10z"/>')],
+ weather:['Weather','sun and cloud',svg('<circle cx="9" cy="9" r="3.400"/><path d="M9 2.400V4M2.400 9H4M4.400 4.400l1.100 1.100M13.600 4.400l-1.100 1.100"/><path d="M8 20h10a3.500 3.500 0 0 0 .5-6.950A5 5 0 0 0 9 14.200 3 3 0 0 0 8 20z"/>')],
+ store:['Play Store','merchant\'s scales',svg('<path d="M12 3.500v16M7 20h10M4 7h16"/><path d="M4 7l-2.500 6a3 3 0 0 0 5 0zM20 7l-2.500 6a3 3 0 0 0 5 0z"/>')],
+ wallet:['Wallet','coin purse',svg('<path d="M8 5.500c1.500 1.500 6.500 1.500 8 0l-1.500-2.500h-5z"/><path d="M8 5.500C4 9 3 12 3 15c0 3.500 3.500 5.500 9 5.500s9-2 9-5.500c0-3-1-6-5-9.500"/><path d="M12 10v6M10.200 12h2.800a1.400 1.400 0 0 1 0 2.800h-2.800"/>')],
+ torch:['Torch','torch',svg('<path d="M9 3.500h6l1 5H8z"/><path d="M8 8.500l1.500 4v8h5v-8L16 8.500"/><path d="M12 12v3"/>')],
+ health:['Health','heart',svg('<path d="M12 20S4 15 4 9.500A4 4 0 0 1 12 8a4 4 0 0 1 8 1.500C20 15 12 20 12 20z" fill="'+RD+'"/>')]
+};
+function gen(letter,id){
+  return '<svg width="26" height="30" viewBox="0 0 26 30"><defs><linearGradient id="gg'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3cf9c"/><stop offset=".55" stop-color="#c9a55a"/><stop offset="1" stop-color="#8c6d3a"/></linearGradient></defs><path d="M13 1L24 5V14C24 21 19 26 13 28.5C7 26 2 21 2 14V5Z" fill="url(#gg'+id+')" stroke="#e3cf9c" stroke-linejoin="round"/><path d="M13 3.6L21.8 6.7V14C21.8 19.8 17.8 23.8 13 26C8.2 23.8 4.2 19.8 4.2 14V6.7Z" fill="none" stroke="#6b5430" stroke-width=".7"/><text x="13" y="20.2" text-anchor="middle" font-family="UnifrakturCook" font-weight="700" font-size="17" fill="#15120d">'+letter+'</text></svg>';
+}
+var SEAL='<svg class="shield" viewBox="0 0 62 72"><circle cx="31" cy="36" r="29" fill="#15120d" stroke="#8c6d3a" stroke-width="2.5"/><circle cx="31" cy="36" r="24.500" fill="none" stroke="#4a3a20" stroke-width="1"/><path d="M8 24A26 26 0 0 1 54 24Z" fill="#3a1612" opacity=".9" transform="translate(0 -3)"/></svg>';
+h+='<div class="sec">3. Icon pack (24 of about 120 shown, at real size)</div>';
+h+='<div class="note">Same gold line-art emblems on the same heater shield as the Home shields, so the app list and search results match Home. The pack is a normal Android icon pack (VERIFIED: Kvaesitso reads the standard format). Names under the shield are the launcher\'s own labels, not part of the icon.</div><div class="grid">';
+var all=[];for(var k in E)all.push([E[k][2],E[k][0],E[k][1]]);for(var k in MORE)all.push([MORE[k][2],MORE[k][0],MORE[k][1]]);
+all.forEach(function(a){h+=cell(a[0],a[1],a[2])});
+h+='</div>';
+h+='<div class="note" style="padding-top:14px"><span class="tag m">[M]</span>Option 4B: round seal plate instead of the heater shield (same emblems)</div><div class="grid" style="grid-template-columns:repeat(8,1fr)">';
+all.slice(0,8).forEach(function(a){h+=cell(a[0],a[1],'',SEAL.replace('class="shield"','class="shield"'))});
+h+='</div>';
+h+='<div class="note" style="padding-top:14px">What an app without its own emblem gets:</div><div class="row" style="padding-top:0"><div class="opt"><div class="t">Fallback X: a standard icon pack can only do this (3A, 3B)</div><div class="grid" style="grid-template-columns:repeat(5,1fr);width:560px;padding:6px 0">';
+['#6a7f9a','#9a6a6a','#6a9a78','#9a8a5a','#7a6a9a'].forEach(function(c,i){
+  h+=cell('<svg width="26" height="26" viewBox="0 0 26 26"><rect x="1" y="1" width="24" height="24" rx="6" fill="'+c+'"/><circle cx="13" cy="13" r="5" fill="#fff" opacity=".35"/></svg>','Other app','real icon, in the shield',SHIELD.replace('stroke="#8c6d3a"','stroke="#c9a55a"'));});
+h+='</div><div class="d" style="width:560px">The launcher puts the app\'s own coloured icon, scaled down, onto a gold-rimmed shield (stand-in squares shown). Needs no code. It is not a letter shield. Colours stay.</div></div>';
+h+='<div class="opt"><div class="t">Fallback Y: letter shield (3C, needs a small launcher change)</div><div class="grid" style="grid-template-columns:repeat(5,1fr);width:480px;padding:6px 0">';
+[['Fortnite','F'],['Notion','N'],['Reddit','R'],['Outlook','O'],['Zoom','Z']].forEach(function(a,i){h+=cell(gen(a[1],i),a[0],'first letter')});
+h+='</div><div class="d" style="width:480px">Exactly what Home does for unknown apps. Cannot be done inside a pack file (it maps apps, not letters), so the launcher itself would draw it for apps the pack lacks: a later launcher task.</div></div></div>';
+h+='<div class="rule"><b>The rule: which icon an app gets</b><br>1) Known app = its own emblem (messaging: sealed letter or herald\'s trumpet; video: scroll; music: lute; maps: compass; browser: orb and cross; camera: eye; tools: strongbox, abacus, tablet, torch; money: coin purse, scales; health: heart). 2) Several apps of one kind share one emblem family but never the same object twice on the first page. 3) No emblem = fallback X or Y (your pick). Oxblood and red wax are the only fills; apps\' own colours never show except in fallback X.</div>';
+h+='<table><tr><th>Coverage</th><th>What it means</th><th>Cost</th></tr><tr><td>3A. About 120 icons + fallback X</td><td>Samsung and Google stock apps, your installed apps, then the wrapped real icon for the rest. I need your installed app list (steps given later).</td><td>High: about 100 emblems to draw, my biggest piece</td></tr><tr><td>3B. These 24 + fallback X</td><td>Quick. Everything else is the wrapped real icon.</td><td>Low</td></tr><tr><td>3C. About 120 + fallback Y</td><td>Best match, adds a launcher task.</td><td>High + a small launcher task</td></tr></table>';
+
+/* KEYBOARD */
+function kb(){
+  var rows=['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'],o='<div style="width:380px;height:250px;position:relative;background:radial-gradient(90% 100% at 50% 40%,#26211a,#0d0c09);border:1px solid #4a3a20;overflow:hidden"><svg style="position:absolute;inset:0" width="380" height="250" viewBox="0 0 380 250"><g fill="none" stroke="#c9a55a" opacity=".16"><circle cx="190" cy="135" r="95"/><circle cx="190" cy="135" r="104" stroke-width="2"/></g></svg>';
+  var y=12;
+  rows.forEach(function(r,ri){var n=r.length,w=34,gap=3,x0=(380-(n*(w+gap)-gap))/2;
+    for(var i=0;i<n;i++){o+='<div style="position:absolute;left:'+(x0+i*(w+gap))+'px;top:'+y+'px;width:'+w+'px;height:42px;background:rgba(40,36,30,.78);border:1px solid #3a342a;color:#e6d9b8;font-family:Cinzel,serif;font-size:15px;display:flex;align-items:center;justify-content:center">'+r[i]+'</div>'}
+    y+=47});
+  o+='<div style="position:absolute;left:30px;top:'+y+'px;width:320px;height:42px;background:rgba(40,36,30,.78);border:1px solid #3a342a"></div>';
+  o+='<div style="position:absolute;left:114px;top:'+(12+47*2-46)+'px;width:40px;height:50px;background:#c9a55a;color:#15120d;font-family:Cinzel,serif;font-size:24px;font-weight:700;display:flex;align-items:center;justify-content:center;border-radius:4px">F</div>';
+  return o+'</div>';
+}
+h+='<div class="sec">4. Keyboard (Microsoft SwiftKey)</div>';
+h+='<div class="note">SwiftKey\'s theme designer takes ONE background picture, a brightness slider, a key shade (greys or transparent), key borders on/off and a pop-up colour from a short list. It has no custom fonts, no free colour picker and no key-shape editor, so this is the closest it allows. Menu names are from 2017-era pages: UNVERIFIED on your version.</div>';
+h+='<div class="row"><div class="opt"><div class="t">What we can match</div>'+kb()+'<div class="cap">mock: picture + dark grey keys + borders on + gold-ish pop-up (key F)</div></div><div class="opt" style="padding-top:22px"><div class="t">Colour card (what to tap)</div>'+
+ [['#0d0c09','Picture: charcoal vellum (we supply the PNG)'],['#28241e','Key shade: darkest grey offered, borders ON'],['#c9a55a','Pop-up colour: nearest gold or amber in the list'],['#e6d9b8','Letters: SwiftKey decides (white-ish); we cannot set gold']].map(function(a){return '<div style="font-size:13px;margin:7px 0;color:#d9ccaa"><span class="sw" style="background:'+a[0]+'"></span>'+a[1]+'</div>'}).join('')+
+ '<div class="d" style="width:430px"><b>NOT POSSIBLE</b> blackletter or Cinzel on the keys, gold letters, shield-shaped keys.<br><b>COST</b> Very low. Same ring watermark as 1A on a wide short image.</div></div></div>';
+
+/* SYSTEM */
+h+='<div class="sec">5. System look</div>';
+h+='<div class="note">Dark mode (Settings > Display) is a plain setting and needs nothing from us. Good Lock modules (Theme Park, LockStar, ClockFace, QuickStar, NavStar) are free Samsung add-ons: they could colour the quick panel, navigation bar and lock/AOD clock, but whether the Good Lock app is offered on a US S20 FE and which module versions run on One UI 5 is UNVERIFIED. The plan works without them.</div>';
+
+h+='<div class="choices"><h2>Choices for the owner (answer by number and letter)</h2><ol>'+
+ '<li><b>Lock screen image:</b> 1A vellum and ring (cheapest) / 1B seven planetary days [M] (dearest) / 1C the orb [M] / or A and C together (a different image per use).</li>'+
+ '<li><b>Home screen wallpaper:</b> H1 Home keeps its own charcoal ground (recommended) / H2 the same image behind Home too.</li>'+
+ '<li><b>Always-on display:</b> 2A minimal gold clock / 2B clock and the day\'s Sun sign [M] / 2C leave AOD alone.</li>'+
+ '<li><b>Icon pack size and fallback:</b> 3A about 120 icons + wrapped real icon / 3B these 24 + wrapped real icon / 3C about 120 + letter shields drawn by a small launcher task. (3A+3C can be taken in two steps.)</li>'+
+ '<li><b>Icon plate:</b> 4A heater shield like Home (recommended) / 4B round seal [M].</li>'+
+ '<li><b>Where the icon pack is built:</b> 5A a separate small module in this repo with its own licence folder (recommended; easiest to build) / 5B its own GitHub repository (cleaner for selling; one more thing to set up).</li>'+
+ '<li><b>Keyboard picture:</b> 6A charcoal vellum with the faint ring / 6B plain charcoal.</li>'+
+ '<li><b>Good Lock:</b> 7A I will check the Galaxy Store and tell you (then we decide) / 7B skip it, use only stock settings.</li></ol></div>';
+document.getElementById('out').innerHTML=h;
+</script>
+</body>
+</html>
