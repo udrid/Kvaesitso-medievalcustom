@@ -236,7 +236,10 @@ private fun AppCell(pkg: String, modifier: Modifier) {
 
 // ---- People and switches -------------------------------------------------------------------
 
-private class Person(val name: String, val lookupUri: Uri, val photo: Uri?, val lookupKey: String, val phoneDigits: Set<String>)
+/** Screenshot tests put fake contacts here (the test phone has no contacts provider). */
+internal var StarredForTests: (() -> List<Person>)? = null
+
+internal class Person(val name: String, val lookupUri: Uri, val photo: Uri?, val lookupKey: String, val phoneDigits: Set<String>)
 
 /** Digits of one contact's phone numbers, for matching notifications (never logged). */
 private fun loadPhoneDigits(context: Context, lookupKey: String): Set<String> {
@@ -297,7 +300,7 @@ private fun PeopleAndSwitches(tick: Int, onChanged: () -> Unit) {
     val vm: CommandLayerVM = viewModel()
     val hasContacts by vm.hasContacts.collectAsState(initial = null)
     val people by produceState(emptyList<Person>(), tick, hasContacts) {
-        value = withContext(Dispatchers.IO) { loadStarred(context) }
+        value = withContext(Dispatchers.IO) { StarredForTests?.invoke() ?: loadStarred(context) }
     }
     val all by vm.notifications.collectAsState()
     val alerts = remember(all, people) {

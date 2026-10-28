@@ -42,3 +42,5 @@
 - Colour switch: making Medieval.X getters over a Compose-state palette recoloured 110 uses with no edits; only top-level 'private val X = Color(...)' constants (frozen at load) needed converting to getters.
 - S3: Kvaesitso icon packs need the EXACT package and activity per item (IconDao matches activityName only when equal or null, and appfilter cannot make a null); a pack cannot draw letters, only wrap the real icon via iconback and scale.
 - S3: a standalone iconpack/ Gradle build compiles with the repo wrapper (-p iconpack) but not with --offline (its Kotlin plugin is not cached); PowerShell script files are blocked here, so run their commands inline.
+- T18: the typing layer sits outside `MedievalStage`, so `LocalMotion` was the default (Off) there; any new animation in the layer needs the provider (now added around `CommandOverlay`).
+- T18: `Notification` (data/notifications) did not keep `category`/`channelId`; use `dispatch` rows' extras for everything else. Robolectric shots can't show one-shot halos (gate closed).
