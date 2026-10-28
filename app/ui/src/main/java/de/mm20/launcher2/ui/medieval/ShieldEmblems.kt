@@ -154,7 +154,7 @@ internal fun EmblemIcon(parts: List<EmblemPart>, size: Float, modifier: Modifier
                     drawPath(p, Medieval.Gold, style = stroke)
                 }
                 EmblemPaint.WaxFill -> {
-                    drawPath(p, Color(0xFF8A2A20))
+                    drawPath(p, Medieval.Gem)
                     drawPath(p, Medieval.Gold, style = stroke)
                 }
                 EmblemPaint.Dot -> drawPath(p, Medieval.Gold)
@@ -185,11 +185,11 @@ internal fun LetterShield(label: String, modifier: Modifier = Modifier) {
             drawPath(
                 shield,
                 Brush.verticalGradient(
-                    0f to Color(0xFFE3CF9C), 0.55f to Medieval.Gold, 1f to Medieval.GoldDeep,
+                    0f to Medieval.GoldLight, 0.55f to Medieval.Gold, 1f to Medieval.GoldDeep,
                     startY = 0f, endY = size.height,
                 ),
             )
-            drawPath(shield, Color(0xFFE3CF9C), style = Stroke(k, join = StrokeJoin.Round))
+            drawPath(shield, Medieval.GoldLight, style = Stroke(k, join = StrokeJoin.Round))
             drawPath(inner, Medieval.GoldDark, style = Stroke(0.7f * k))
         }
         MText(

@@ -45,13 +45,13 @@ private fun RowScope.WaxSeal(icon: List<String>, name: String, label: String, in
                 m.scale(k, k)
                 wax.transform(m)
                 drawPath(wax, Medieval.Wax)
-                drawCircle(Color(0xFF2A0A08), radius = 19f * k, center = center, style = Stroke(2f * k))
+                drawCircle(Medieval.WaxEdge, radius = 19f * k, center = center, style = Stroke(2f * k))
                 drawCircle(
                     Color(0x2EFFBE96), radius = 19f * k, center = Offset(center.x - 0.6f * k, center.y - 0.6f * k),
                     style = Stroke(1f * k),
                 )
             }
-            SvgIcon(icon, 24f, Color(0xFFE3CF9C))
+            SvgIcon(icon, 24f, Medieval.GoldLight)
         }
         MText(label, 8.5f, Medieval.Cap, font = Medieval.Cinzel, bold = true, spacingEm = 0.2f)
     }

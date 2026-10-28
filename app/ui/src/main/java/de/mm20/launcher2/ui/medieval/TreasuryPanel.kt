@@ -36,17 +36,17 @@ internal fun TreasuryPanel() {
                 .clip(CircleShape)
                 .background(
                     Brush.radialGradient(
-                        listOf(Color(0xFFE0C070), Color(0xFF8A6A22)),
+                        listOf(Medieval.palette.coinA, Medieval.palette.coinB),
                         center = Offset(40f, 33f),
                         radius = 90f,
                     )
                 )
-                .border(2.dp, Color(0xFF5A4620), CircleShape),
+                .border(2.dp, Medieval.palette.coinRim, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
             Canvas(Modifier.size(34.dp)) {
                 val k = size.width / 34f
-                val ink = Color(0xFF3A2A0A)
+                val ink = Medieval.palette.coinInk
                 drawCircle(
                     ink, radius = 10f * k, center = center,
                     style = Stroke(
@@ -111,7 +111,7 @@ internal fun TreasuryPanel() {
                         .fillMaxHeight()
                         .fillMaxWidth(0f)
                         .background(
-                            Brush.horizontalGradient(listOf(Color(0xFF5A2209), Color(0xFFC9772C)))
+                            Brush.horizontalGradient(listOf(Medieval.palette.barA, Medieval.palette.barB))
                         )
                 )
             }

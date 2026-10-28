@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>S4 colour scheme: four palettes for Deliverance</title>
+<style>
+@font-face{font-family:Cinzel;src:url("../../app/ui/src/main/res/font/cinzel_variable.ttf");font-weight:400 900}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_regular.ttf");font-style:normal}
+@font-face{font-family:"IM Fell English";src:url("../../app/ui/src/main/res/font/imfellenglish_italic.ttf");font-style:italic}
+@font-face{font-family:UnifrakturCook;src:url("../../app/ui/src/main/res/font/unifrakturcook_bold.ttf");font-weight:700}
+body{margin:0;background:#050403;width:2130px;font-family:'IM Fell English',Georgia,serif;color:#e6d9b8}
+h1{font-family:UnifrakturCook,serif;font-size:34px;font-weight:700;margin:0;color:#ecdfbf}
+h2{font-family:Cinzel,serif;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:#c9a55a;margin:0 0 10px}
+.wrap{padding:24px 30px}
+.sub{font-size:15px;color:#a89a76;font-style:italic;margin:4px 0 18px}
+.cols{display:flex;gap:20px}
+.col{width:390px}
+.pname{font-family:Cinzel,serif;font-size:13px;font-weight:700;letter-spacing:.2em;color:#e6d9b8;text-transform:uppercase;margin:0 0 3px}
+.pnote{font-size:12px;font-style:italic;color:#a89a76;height:34px;margin-bottom:6px}
+.strip{display:flex;height:26px;margin-top:8px;border:1px solid #3a2e18}
+.strip i{flex:1}
+.strip-l{font-family:Cinzel,serif;font-size:8px;letter-spacing:.12em;color:#6b5a38;display:flex;margin-top:3px}
+.strip-l span{flex:1;text-align:center}
+.cr{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+.cr td,.cr th{border:1px solid #2e2619;padding:3px 5px;text-align:center}
+.cr th{font-family:Cinzel,serif;font-size:9px;letter-spacing:.1em;color:#a8884c;font-weight:700}
+.cr td:first-child,.cr th:first-child{text-align:left;color:#bfae86}
+.ok{color:#9fd09a}.warn{color:#e0b25c}.bad{color:#e07a6a}
+/* stage (390 x 844) painted only through variables */
+.stage{position:relative;width:390px;height:844px;overflow:hidden;box-sizing:border-box;background:radial-gradient(90% 55% at 50% 42%,var(--bg) 0%,var(--bg2) 82%),var(--ink);font-family:'IM Fell English',Georgia,serif;color:var(--text)}
+.abs{position:absolute}
+.panel{position:absolute;left:18px;right:18px;box-sizing:border-box;border:1px solid var(--golddark);background:linear-gradient(178deg,var(--pt),var(--pb));box-shadow:inset 0 0 26px rgba(0,0,0,.6),0 2px 0 #050403}
+.panel::before{content:"";position:absolute;inset:4px;border:1px solid var(--frame);pointer-events:none}
+.ribbon{position:absolute;top:-8px;left:12px;height:17px;padding:0 17px 0 11px;background:linear-gradient(var(--ox),var(--oxd));border-top:1px solid var(--gold);color:var(--parch);font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;display:flex;align-items:center;clip-path:polygon(0 0,100% 0,calc(100% - 7px) 50%,100% 100%,0 100%);z-index:2}
+.cap{font-family:Cinzel,serif;font-size:9.5px;font-weight:700;letter-spacing:.24em;color:var(--cap);text-transform:uppercase}
+.node{position:absolute;width:62px;height:72px;background:none;border:0;padding:0}
+.node svg.shield{position:absolute;inset:0}
+.node .glyph{position:absolute;left:0;right:0;top:22px;display:flex;justify-content:center;color:var(--text)}
+.badge{position:absolute;top:-5px;right:-3px;min-width:18px;height:18px;box-sizing:border-box;border-radius:9px;background:var(--ox);border:1.5px solid var(--gold);color:var(--parch);font-family:Cinzel,serif;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;z-index:2}
+.lbl{position:absolute;width:84px;text-align:center;font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--label)}
+.row{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--texts);line-height:1}
+.time{width:42px;font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--gold);flex:none}
+.rub{color:var(--rub);font-size:12px;line-height:1;flex:none}
+.pen{position:absolute;top:204px;width:58px;height:62px}
+.pen svg{position:absolute;inset:0}
+.pen .l{position:absolute;left:0;right:0;top:9px;text-align:center;font-family:Cinzel,serif;font-size:7px;font-weight:700;letter-spacing:.16em;color:var(--texts);text-shadow:0 1px 2px #000}
+.pen .v{position:absolute;left:0;right:0;top:22px;text-align:center;font-family:Cinzel,serif;font-size:13px;font-weight:700;color:var(--textb);text-shadow:0 1px 3px #000}
+.seal{position:relative;width:54px;height:54px}
+.seal svg.wax{position:absolute;inset:0}
+.seal .ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.dockcol{display:flex;flex-direction:column;align-items:center;gap:7px;font-family:Cinzel,serif;font-size:8.5px;font-weight:700;letter-spacing:.2em;color:var(--cap)}
+/* setting mock */
+.set{width:390px;background:#0d0c09;border:1px solid #3a2e18;position:relative;font-family:'IM Fell English',serif}
+.set .bar{padding:14px 16px;font-family:UnifrakturCook,serif;font-size:24px;color:#ecdfbf;border-bottom:1px solid #3a2e18}
+.set .it{padding:12px 16px;border-bottom:1px solid #1f1a12}
+.set .it b{display:block;font-weight:400;font-size:16px;color:#e6d9b8}
+.set .it small{font-size:12px;font-style:italic;color:#a89a76}
+.set .hl{background:#1a1610;border-left:3px solid #c9a55a}
+.dlg{width:330px;margin:14px auto;border:1px solid #6b5430;background:linear-gradient(178deg,#1d1a14,#12100c);padding:14px 14px 10px;position:relative;box-shadow:0 0 0 4px #0d0c09}
+.dlg h3{margin:0 0 8px;font-family:Cinzel,serif;font-size:11px;letter-spacing:.2em;color:#c9a55a}
+.opt{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:15px}
+.rad{width:14px;height:14px;border-radius:50%;border:1.5px solid #8c6d3a;flex:none;box-sizing:border-box}
+.rad.on{background:radial-gradient(#c9a55a 40%,transparent 45%)}
+.sw{display:flex;margin-left:auto}.sw i{width:14px;height:14px;display:block}
+table.t{border-collapse:collapse;font-size:13px;width:100%}
+table.t td,table.t th{border:1px solid #2e2619;padding:5px 8px;vertical-align:top;text-align:left}
+table.t th{font-family:Cinzel,serif;font-size:10px;letter-spacing:.12em;color:#a8884c}
+ol.ch{font-size:15px;line-height:1.45;padding-left:20px;margin:0}
+ol.ch li{margin-bottom:9px}
+.tag{font-family:Cinzel,serif;font-size:9px;letter-spacing:.14em;color:#e6d9b8;background:#6a1d16;padding:1px 6px;margin-left:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>One setting, five colour schemes</h1>
+<div class="sub">S4 colour scheme, preview only (no code written). Same Home on every palette; layout never changes. The orb is shown re-tinted the way the launcher would do it (see "How the orb follows").</div>
+<div class="cols" id="cols"></div>
+
+<div style="display:flex;gap:30px;margin-top:30px">
+  <div style="width:390px">
+    <h2>Where the setting lives</h2>
+    <div class="set">
+      <div class="bar">Settings</div>
+      <div class="it"><b>Appearance</b><small>Wallpaper, icons, grid</small></div>
+      <div class="it hl"><b>Colour scheme</b><small>Ember &middot; changes the whole launcher</small></div>
+      <div class="it"><b>Animations</b><small>Full: orb, reactions and the ring light</small></div>
+      <div class="it"><b>Shield apps</b><small>X, Discord, YouTube, Messages</small></div>
+      <div class="dlg">
+        <h3>COLOUR SCHEME</h3>
+        <div class="opt"><span class="rad"></span>Gold and Oxblood<span class="sw"><i style="background:#c9a55a"></i><i style="background:#6a1d16"></i><i style="background:#1d1a14"></i></span></div>
+        <div class="opt"><span class="rad on"></span>Ember<span class="sw"><i style="background:#e3a04f"></i><i style="background:#7a1e14"></i><i style="background:#1e1612"></i></span></div>
+        <div class="opt"><span class="rad"></span>Verdigris<span class="sw"><i style="background:#6fb5a0"></i><i style="background:#1f5a4c"></i><i style="background:#141a18"></i></span></div>
+        <div class="opt"><span class="rad"></span>Bone<span class="sw"><i style="background:#d8d2c4"></i><i style="background:#6a1d16"></i><i style="background:#1a1a19"></i></span></div>
+        <div class="opt"><span class="rad"></span>Royal Blue and Silver<span class="sw"><i style="background:#c4ccd8"></i><i style="background:#22408c"></i><i style="background:#161a24"></i></span></div>
+      </div>
+    </div>
+    <div style="font-size:12px;font-style:italic;color:#a89a76;margin-top:6px">Sits next to Animations in the existing Deliverance part of the launcher settings, same list-dialog style. Changes instantly, no restart. Saved with the other Home choices.</div>
+  </div>
+
+  <div style="flex:1">
+    <h2>Contrast of text on panels (WCAG, computed from the exact colours)</h2>
+    <div id="contrast"></div>
+    <div style="font-size:12px;font-style:italic;color:#a89a76;margin-top:6px">Ratio of text colour on the lighter panel colour (worst case; panels fade darker downwards). 4.5 or more reads well at body size, 3 or more is fine for large or decorative text. Honest note: today's Gold and Oxblood already has two weak spots (faint grey 4.1 for times and hints, red alert text 3.8). The new palettes lift these a little; choice 6 asks whether to lift them in the current palette too.</div>
+
+    <h2 style="margin-top:22px">What follows the setting, and what cannot</h2>
+    <table class="t">
+      <tr><th>Part</th><th>Follows?</th><th>How / cost</th></tr>
+      <tr><td>Panels, ribbons, text, shields, pennants, wax seals, emblems, weekday ornaments, pill, settings screens</td><td class="ok">Yes</td><td>Drawn in code from 110 colour uses of <code>Medieval.X</code> in 19 files plus about 55 hard-coded colours (Orb 7, Pennants 6, HeaderSection 7, others 1 to 5). Cost: no extra files, no battery cost.</td></tr>
+      <tr><td>Orb pictures (3 webp files, 77 KB total)</td><td class="warn">Yes, with a tint</td><td>See "How the orb follows" below.</td></tr>
+      <tr><td>Weather scene (24 hard-coded colours: sky, sun, hills)</td><td class="warn">Choice 3</td><td>Weather reads more naturally in fixed colours; the hills and leaves (near-black) can take the palette's Ink.</td></tr>
+      <tr><td>S2 screens branch (<code>DeliveranceTheme.kt</code> builds one fixed Material colour scheme)</td><td class="warn">Yes, after S2 is merged</td><td>That scheme becomes a function of the palette; settings, sheets, search results then follow too. S2 is not in main yet, so Part 2 order depends on when it merges.</td></tr>
+      <tr><td>Wallpaper, lock screen, AOD, keyboard picture, icon pack</td><td class="bad">No</td><td>These are image files outside the launcher. One file set per scheme; the owner applies the matching set by hand (Good Lock, SwiftKey, icon pack). The launcher cannot swap them when the setting changes.</td></tr>
+    </table>
+
+    <h2 style="margin-top:22px">How the orb follows (cheapest honest way)</h2>
+    <table class="t">
+      <tr><th>Way</th><th>Size</th><th>Battery</th><th>Look</th></tr>
+      <tr><td><b>A. Colour matrix tint</b> on the three pictures (a per-palette 4x5 matrix, not a plain hue spin, so Bone can go grey)</td><td>0 KB extra</td><td>Negligible: the orb already redraws at 5 fps; the filter runs on the graphics chip</td><td>Good for Ember (it is the current orb, brighter), Verdigris and Bone; the glass highlights stay white. Recommended first. The mock above uses this look. UNVERIFIED on the phone.</td></tr>
+      <tr><td><b>B. Separate pre-rendered set per palette</b></td><td>about 77 KB x 3 more = about 230 KB in the app</td><td>None extra (same pictures, same 5 fps)</td><td>Exactly as drawn, hand-tuned. Needs the orb re-rendered per palette: more work. These sets are what could be sold [M].</td></tr>
+    </table>
+    <div style="font-size:12px;font-style:italic;color:#a89a76;margin-top:6px">Also: the orb's heart, twinkle and glow colours are constants in <code>OrbGlass.kt</code>; they join the palette in either way.</div>
+  </div>
+
+  <div style="width:430px">
+    <h2>Owner picks (2026-10-28) and what was built</h2><div style="font-size:13px;color:#a89a76;margin-bottom:8px">1a five palettes (Royal Blue and Silver added); 2a default Gold and Oxblood; 3b weather takes the palette; 4b separate orb pictures per palette (colour-graded from the originals, see S4-orbs.png); 5a matching asset sets later via S3; 6a small text lifted (values below already include it); 7 monetisation gets its own section (ops/monetization.md).</div>
+    <ol class="ch">
+      <li><b>Which palettes?</b> (a) all four as shown (recommended); (b) drop one; (c) swap one for Royal Blue and Silver. Ember is the orb colours you liked.</li>
+      <li><b>What is the default after install?</b> (a) Gold and Oxblood (as now, recommended); (b) Ember.</li>
+      <li><b>Weather scene:</b> (a) keeps natural colours (recommended); (b) fully takes the palette.</li>
+      <li><b>Orb:</b> (a) tint (way A, recommended, 0 KB); (b) separate pictures per palette (way B, +230 KB, needs my time).</li>
+      <li><b>Assets:</b> after you pick, I make one wallpaper / lock screen / keyboard set per palette (S3 work), and write the steps to apply the matching set. (a) yes, later; (b) launcher only.</li>
+      <li><b>Small text:</b> (a) lift the faint grey and the red alert text a little in Gold and Oxblood too, so all four palettes pass 4.5 (recommended; barely visible change); (b) leave today's colours exactly as they are.</li>
+      <li><b>Selling:</b> palette packs [M] could be extra paid packs (new schemes, wallpaper sets per scheme). (a) all four free; (b) two free, more later as paid packs. Notes are in <code>ops/monetization.md</code>.</li>
+    </ol>
+    <div style="margin-top:14px;font-size:12px;font-style:italic;color:#a89a76">NOT verified: how the tint looks on the real orb pictures (the mock is a CSS stand-in), real phone screen colours (a phone display shifts dark colours), the code change (Part 2 compiles it; only your phone can show it), S2 interplay.</div>
+  </div>
+</div>
+</div>
+
+<template id="stage">
+  <div class="abs" style="inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(0,0,0,.72) 100%);z-index:5"></div>
+  <div class="abs" style="top:10px;left:50%;transform:translateX(-50%);width:214px;height:36px;box-sizing:border-box;border-radius:18px;background:#050505;border:1.5px solid var(--golddark);box-shadow:0 0 0 2px var(--ink);display:grid;grid-template-columns:1fr 18px 1fr;align-items:center;column-gap:8px;padding:0 14px;font-size:12px;z-index:3">
+    <span></span><span style="width:14px;height:14px;border-radius:50%;background:#0c0d10;border:2px solid #2a2418"></span>
+    <span style="display:flex;justify-content:flex-end;gap:6px;align-items:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"><path d="M3 9a14 14 0 0 1 18 0M6 13a9 9 0 0 1 12 0M9.5 17a4 4 0 0 1 5 0"/></svg><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linejoin="round"><path d="M7 7l10 10-5 5V2l5 5L7 17"/></svg></span>
+  </div>
+  <div class="abs" style="top:54px;left:22px;right:22px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end">
+      <div style="display:flex;align-items:flex-start;gap:7px">
+        <div style="font-family:UnifrakturCook,serif;font-size:46px;line-height:.82;color:var(--rub);text-shadow:0 0 1px #000,0 1px 0 #3a0e0a">W</div>
+        <div style="padding-top:1px"><div style="font-family:UnifrakturCook,serif;font-size:21px;line-height:1;color:var(--parch)">ednesday</div><div class="cap" style="margin-top:5px">28th of October</div></div>
+      </div>
+      <div style="text-align:right"><div style="font-size:40px;line-height:.9;color:var(--textb);text-shadow:0 0 14px var(--glow)">2:17</div><div style="margin-top:4px;font-size:12px;font-style:italic;color:var(--weather)">62&deg; &middot; Mostly clear</div></div>
+    </div>
+  </div>
+  <div class="abs" style="top:112px;left:22px;right:22px;border-top:1px solid var(--goldline)"></div>
+  <div class="panel" style="top:134px;height:56px">
+    <div class="ribbon">Treasury</div>
+    <div class="abs" style="left:14px;top:9px;width:38px;height:38px;border-radius:50%;box-sizing:border-box;border:2px solid var(--coinrim);background:radial-gradient(circle at 35% 30%,var(--coin1),var(--coin2));box-shadow:inset 0 0 6px rgba(0,0,0,.5)"></div>
+    <div class="abs" style="left:64px;top:16px;font-family:Cinzel,serif;font-size:17px;font-weight:700;color:var(--textb);line-height:1.5;letter-spacing:.02em">[YOUR TOTAL]</div>
+    <div class="abs" style="right:16px;top:13px;width:104px"><div class="cap" style="font-size:9px">Quest: [GOAL]</div><div style="margin-top:6px;height:10px;box-sizing:border-box;border:1px solid var(--golddark);background:#050505;padding:1.5px"><div style="width:40%;height:100%;background:linear-gradient(90deg,var(--bar1),var(--bar2))"></div></div><div style="margin-top:3px;font-size:10px;font-style:italic;color:var(--textf);text-align:right">[0%] of the way</div></div>
+  </div>
+  <div class="pen" style="left:22px;top:204px"><svg viewBox="0 0 58 62" fill="none"><defs><linearGradient id="pa__N" x1="0" y1="0" x2="0" y2="1"><stop offset=".16" style="stop-color:#1a1610"/><stop offset=".16" style="stop-color:var(--pen1)"/></linearGradient></defs><path d="M2 1H56V52L29 42L2 52Z" fill="url(#pa__N)" stroke="var(--golddeep)" stroke-width="1.5"/></svg><div class="l">VIGOR</div><div class="v">84</div></div>
+  <div class="pen" style="left:111px;top:204px"><svg viewBox="0 0 58 62" fill="none"><defs><linearGradient id="pb__N" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" style="stop-color:#1a1610"/><stop offset=".5" style="stop-color:var(--pen2)"/></linearGradient></defs><path d="M2 1H56V52L29 42L2 52Z" fill="url(#pb__N)" stroke="var(--golddeep)" stroke-width="1.5"/></svg><div class="l">STORES</div><div class="v">[ ]</div></div>
+  <div class="pen" style="left:200px;top:204px"><svg viewBox="0 0 58 62" fill="none"><defs><linearGradient id="pc__N" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" style="stop-color:#1a1610"/><stop offset=".6" style="stop-color:var(--pen2)"/></linearGradient></defs><path d="M2 1H56V52L29 42L2 52Z" fill="url(#pc__N)" stroke="var(--golddeep)" stroke-width="1.5"/></svg><div class="l">WITS</div><div class="v">[ ]</div></div>
+  <div class="pen" style="left:290px;top:204px"><svg viewBox="0 0 58 62" fill="none"><defs><linearGradient id="pd__N" x1="0" y1="0" x2="0" y2="1"><stop offset=".7" style="stop-color:#1a1610"/><stop offset=".7" style="stop-color:var(--pen3)"/></linearGradient></defs><path d="M2 1H56V52L29 42L2 52Z" fill="url(#pd__N)" stroke="var(--golddeep)" stroke-width="1.5"/></svg><div class="l">HEAT</div><div class="v">[ ]&deg;</div></div>
+
+  <svg class="abs" width="176" height="176" viewBox="0 0 176 176" style="top:258px;left:107px" fill="none">
+    <defs><path id="ring__N" d="M88 88m-71 0a71 71 0 1 1 142 0a71 71 0 1 1-142 0"/></defs>
+    <circle cx="88" cy="88" r="86" stroke="var(--golddark)" stroke-width="1.5"/><circle cx="88" cy="88" r="57" stroke="var(--goldline)"/>
+    <text font-family="Cinzel,serif" font-size="8.5" font-weight="700" letter-spacing="3.1" fill="var(--golddeep)"><textPath href="#ring__N">&#10016; NOSCE TE IPSUM &#10016; SAPERE AUDE &#10016; LUX ET VERITAS &#10016;</textPath></text>
+  </svg>
+  <div class="abs" style="top:284px;left:133px;width:124px;height:124px;border-radius:50%;box-sizing:border-box;border:2px solid var(--golddeep);background:radial-gradient(circle at 50% 38%,var(--orbA),var(--orbB) 72%);box-shadow:0 0 0 3px var(--ink),0 0 34px var(--glow),inset 0 0 30px rgba(0,0,0,.85)">
+    <div class="abs" style="inset:0;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--heart) 0,transparent 42%);opacity:.9"></div>
+    <div class="abs" style="left:14px;top:12px;width:60px;height:34px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,.22),transparent 70%);transform:rotate(-24deg)"></div>
+    <svg class="abs" style="left:35px;top:35px" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="var(--heart2)" stroke-width="1.4" stroke-linejoin="round"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg>
+  </div>
+  <div class="abs" style="top:436px;left:95px;width:200px;text-align:center;font-family:UnifrakturCook,serif;font-size:19px;color:var(--text)">The Oracle</div>
+
+  <!--SHIELDS-->
+
+  <div class="panel" style="top:476px;height:68px"><div class="ribbon">Today's Ledger</div>
+    <div class="abs" style="left:16px;right:16px;top:25px;display:flex;flex-direction:column;gap:9px">
+      <div class="row"><span class="rub">&#10016;</span><span class="time">[TIME]</span><span>[Next event]</span></div>
+      <div class="row"><span class="rub" style="color:var(--golddark)">&#10016;</span><span class="time" style="color:var(--textf)">[TIME]</span><span style="color:var(--textd)">[Then this]</span></div>
+    </div></div>
+  <div class="panel" style="top:554px;height:44px">
+    <svg class="abs" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" style="left:16px;top:12px"><path d="M20 4c-9 0-14 5-14 12l-2 4 4-2c7 0 12-5 12-14z"/><path d="M8 16c3-4 6-7 9-9"/></svg>
+    <span class="abs" style="left:46px;top:11px;font-size:16px;font-style:italic;color:var(--textf)">Command the Oracle&hellip;</span>
+    <span class="abs" style="right:8px;top:7px;height:30px;padding:0 13px;border:1px solid var(--golddark);background:linear-gradient(var(--sht),var(--summ));color:var(--text);font-family:Cinzel,serif;font-size:10px;font-weight:700;letter-spacing:.18em;display:flex;align-items:center">SUMMON</span>
+  </div>
+  <div class="panel" style="top:612px;height:90px"><div class="ribbon">Dispatches</div>
+    <div class="abs cap" style="right:16px;top:8px;color:var(--rubs);font-size:8.5px">3 unheeded</div>
+    <div class="abs" style="left:16px;right:16px;top:27px;display:flex;flex-direction:column;gap:9px">
+      <div class="row"><span style="width:14px;color:var(--rubs)">&#9993;</span><span style="flex:1">New voicemail</span><span style="font-size:11px;color:var(--textf);font-style:italic">2:13 AM</span></div>
+      <div class="row"><span style="width:14px;color:var(--gold)">&#9993;</span><span style="flex:1;color:var(--textd)">[Sender] &middot; [message preview]</span><span style="font-size:11px;color:var(--textf);font-style:italic">[time]</span></div>
+      <div class="row"><span style="width:14px;color:var(--gold)">&#9993;</span><span style="flex:1;color:var(--textd)">[Discord] &middot; [mention]</span><span style="font-size:11px;color:var(--textf);font-style:italic">[time]</span></div>
+    </div></div>
+  <svg class="abs" width="354" height="10" viewBox="0 0 354 10" style="left:18px;top:710px" fill="none"><path d="M0 5H158M196 5H354" stroke="var(--goldline)"/><path d="M177 0v10M172 4h10" stroke="var(--golddeep)" stroke-width="1.6"/></svg>
+  <div class="abs" style="left:18px;right:18px;top:730px;display:flex;justify-content:space-around">
+    <!--SEALS-->
+  </div>
+</template>
+
+<script>
+const P = [
+ {name:'Gold and Oxblood',note:'Today\'s look. Aged gold, oxblood ribbons, warm charcoal.',
+  v:{gold:'#C9A55A',golddeep:'#8C6D3A',golddark:'#6B5430',goldline:'#4A3A20',frame:'rgba(140,109,58,.26)',cap:'#A8884C',text:'#E6D9B8',textb:'#F2E6C6',texts:'#D9CCAA',textd:'#A89A76',textf:'#9A8760',label:'#BFAE86',ox:'#6A1D16',oxd:'#481510',rub:'#A8352B',rubs:'#D0645A',pt:'#1D1A14',pb:'#12100C',ink:'#0A0907',shf:'#15120D',sht:'#3A1612',summ:'#1C0A08',wax:'#4E1511',waxl:'#2A0A08',ember:'#F0A050',parch:'#F0E2BD',weather:'#A8987A',bg:'#26211A',bg2:'#0D0C09',glow:'rgba(229,138,60,.26)',orbA:'#4A2D14',orbB:'#0F0904',heart:'rgba(240,160,80,.55)',heart2:'#F0A050',coin1:'#E0C070',coin2:'#8A6A22',coinrim:'#5A4620',bar1:'#5A2209',bar2:'#C9772C',pen1:'#7A5E2C',pen2:'#5E4A24',pen3:'#6E2A1E',seal:'#E3CF9C'}},
+ {name:'Ember',note:'The orb\'s colours: amber glow, deep oxblood, gold on near-black. Warmer and a little brighter.',
+  v:{gold:'#E3A04F',golddeep:'#A8692A',golddark:'#774A1E',goldline:'#4A2C14',frame:'rgba(168,105,42,.3)',cap:'#C0843E',text:'#EBD8B8',textb:'#F7E6C4',texts:'#DDC7A0',textd:'#B09A78',textf:'#A08760',label:'#CDB488',ox:'#7A1E14',oxd:'#4E120C',rub:'#C0382A',rubs:'#D86A58',pt:'#1E1612',pb:'#120D0A',ink:'#080605',shf:'#150F0B',sht:'#421812',summ:'#240B08',wax:'#5A1810',waxl:'#2E0A06',ember:'#FFB060',parch:'#F7E6C4',weather:'#B49C78',bg:'#2A1D14',bg2:'#0C0907',glow:'rgba(240,160,80,.45)',orbA:'#7A2A10',orbB:'#180804',heart:'rgba(255,176,96,.75)',heart2:'#FFC070',coin1:'#F0B860',coin2:'#A8692A',coinrim:'#6A4220',bar1:'#6A2A0C',bar2:'#F0A050',pen1:'#A8692A',pen2:'#774A1E',pen3:'#7A1E14',seal:'#F3D9A0'}},
+ {name:'Verdigris',note:'Aged copper green with deep teal ribbons and a copper accent. Cool and calm.',
+  v:{gold:'#6FB5A0',golddeep:'#3F7E6E',golddark:'#2D5A4E',goldline:'#1E3B33',frame:'rgba(63,126,110,.3)',cap:'#6FA896',text:'#D6E4D8',textb:'#EAF3E4',texts:'#BCD0C2',textd:'#94AC9F',textf:'#819B8F',label:'#A5BFB2',ox:'#1F5A4C',oxd:'#123A31',rub:'#D0825A',rubs:'#DE9A74',pt:'#141A18',pb:'#0E1311',ink:'#070A09',shf:'#0F1513',sht:'#123029',summ:'#0B2620',wax:'#17463B',waxl:'#082019',ember:'#9FE0C8',parch:'#E4EEDD',weather:'#8FA89B',bg:'#17211E',bg2:'#090D0C',glow:'rgba(111,181,160,.38)',orbA:'#1D5A4A',orbB:'#04100C',heart:'rgba(159,224,200,.6)',heart2:'#9FE0C8',coin1:'#8DD0BA',coin2:'#2F6E5E',coinrim:'#1E4A40',bar1:'#12483C',bar2:'#6FB5A0',pen1:'#3F7E6E',pen2:'#2D5A4E',pen3:'#8A4A2A',seal:'#CFE8DA'}},
+ {name:'Bone',note:'Pale bone and ash silver on soot, with the oxblood kept for ribbons. Stark and severe.',
+  v:{gold:'#D8D2C4',golddeep:'#9A9486',golddark:'#6E695E',goldline:'#3C3A35',frame:'rgba(154,148,134,.26)',cap:'#B0AA9A',text:'#E8E4D8',textb:'#F6F3EA',texts:'#D0CCBF',textd:'#A6A296',textf:'#8E8A7E',label:'#C0BBAC',ox:'#6A1D16',oxd:'#481510',rub:'#B23A30',rubs:'#D2645A',pt:'#1A1A19',pb:'#111110',ink:'#080808',shf:'#121211',sht:'#3A1612',summ:'#1C0A08',wax:'#4E1511',waxl:'#2A0A08',ember:'#E8DCC0',parch:'#F0EADA',weather:'#A8A498',bg:'#242422',bg2:'#0C0C0B',glow:'rgba(232,220,192,.22)',orbA:'#3A3A3C',orbB:'#0A0A0B',heart:'rgba(240,232,208,.55)',heart2:'#E8DCC0',coin1:'#E4DED0',coin2:'#8A8576',coinrim:'#55524A',bar1:'#5A1A14',bar2:'#C8C2B4',pen1:'#8A8576',pen2:'#5E5A50',pen3:'#6A1D16',seal:'#E8E2D4'}}
+,
+ {name:'Royal Blue and Silver',note:'Silver on blue-black with royal blue ribbons. Cold, regal.',
+  v:{gold:'#C4CCD8',golddeep:'#7F8AA0',golddark:'#55607A',goldline:'#2E3750',frame:'rgba(127,138,160,.3)',cap:'#9AA6BE',text:'#DCE2EE',textb:'#EEF2FA',texts:'#C2CADA',textd:'#98A2B8',textf:'#8793AB',label:'#B3BDD0',ox:'#22408C',oxd:'#142A64',rub:'#5B86E8',rubs:'#86A8F2',pt:'#161A24',pb:'#0E1119',ink:'#07090D',shf:'#0F131C',sht:'#142457',summ:'#0B1740',wax:'#1B3A86',waxl:'#0A1840',ember:'#B4C8FF',parch:'#E6ECF8',weather:'#9AA6BC',bg:'#1B2130',bg2:'#090B10',glow:'rgba(120,150,255,.38)',orbA:'#24408F',orbB:'#050A1C',heart:'rgba(184,204,255,.6)',heart2:'#B8CCFF',coin1:'#DCE2EE',coin2:'#7F8AA0',coinrim:'#4A5470',bar1:'#18327A',bar2:'#8FB0FF',pen1:'#7F8AA0',pen2:'#55607A',pen3:'#22408C',seal:'#DCE4F4'}}
+];
+const shield=(t,g)=>`<button class="node" style="${t}"><svg class="shield" viewBox="0 0 62 72"><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="var(--shf)"/><path d="M4 12L31 2L58 12V22H4Z" fill="var(--sht)"/><path d="M31 2L58 12V38C58 55 44 66 31 70C18 66 4 55 4 38V12Z" fill="none" stroke="var(--golddeep)" stroke-width="2"/></svg><span class="glyph"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">${g}</svg></span></button>`;
+const shields=[
+ ['top:276px;left:24px','<path d="M3 14c3-1 5-3 6-6 2 1 4 1 6 0l5 3-4 1c0 4-3 7-8 7H6l2-3-5-2z"/>','Twitter',352,13,''],
+ ['top:276px;left:304px','<path d="M6 7h9v10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V7z"/><path d="M15 9h2a2 2 0 0 1 0 5h-2"/>','Discord',352,293,'3'],
+ ['top:372px;left:24px','<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/>','Videos',448,13,''],
+ ['top:372px;left:304px','<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>','Messages',448,293,'2']];
+const shHtml=shields.map(s=>(s[5]?`<div class="abs" style="${s[0]};width:62px;height:72px;z-index:3"><span class="badge">${s[5]}</span></div>`:'')+shield(s[0],s[1])+`<div class="lbl" style="top:${s[3]}px;left:${s[4]}px">${s[2]}</div>`).join('');
+const seal=(g,l)=>`<div class="dockcol"><div class="seal"><svg class="wax" viewBox="0 0 54 54"><path d="M27 2c5 0 7 3 11 4s8 4 9 9 4 6 4 12-3 8-4 12-5 8-10 9-8 3-14 3-9-3-12-8-5-8-5-13 2-8 4-12 5-9 10-10 6-6 10-6z" fill="var(--wax)"/><circle cx="27" cy="27" r="19" fill="none" stroke="var(--waxl)" stroke-width="2"/><circle cx="27" cy="27" r="19" fill="none" stroke="rgba(255,190,150,.18)" stroke-width="1" transform="translate(-.6 -.6)"/></svg><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--seal)" stroke-width="1.6" stroke-linejoin="round">${g}</svg></span></div>${l}</div>`;
+const sealHtml=seal('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 4 5a1 1 0 0 1 1-1z"/>','HERALD')+seal('<path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.5"/>','PORTRAIT')+seal('<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>','ROAD')+seal('<path d="M12 3v18M7 8h10M9 21h6"/>','SMITHY');
+const tpl=document.getElementById('stage').innerHTML.replace('<!--SHIELDS-->',shHtml).replace('<!--SEALS-->',sealHtml);
+// contrast
+const lin=c=>{c/=255;return c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4)};
+const L=h=>{const n=parseInt(h.slice(1),16);return .2126*lin(n>>16)+.7152*lin(n>>8&255)+.0722*lin(n&255)};
+const cr=(a,b)=>{const x=L(a),y=L(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const pairs=[['Body text on panel','text','pt'],['Soft text (ledger, rows)','texts','pt'],['Dim text (second rows)','textd','pt'],['Faint (times, hint)','textf','pt'],['Small caps (cap)','cap','pt'],['Labels under shields (on Ink)','label','ink'],['Gold line text (times)','gold','pt'],['Red alert text','rubs','pt'],['Ribbon text on ribbon','parch','ox'],['Header number on page','textb','bg']];
+const cols=document.getElementById('cols');
+P.forEach((p,i)=>{
+  const c=document.createElement('div');c.className='col';
+  c.innerHTML=`<div class="pname">${i+1}. ${p.name}</div><div class="pnote">${p.note}</div><div class="stage"></div>
+  <div class="strip">${['gold','golddeep','golddark','ox','rub','pt','ink','ember','text'].map(k=>`<i style="background:${p.v[k]}"></i>`).join('')}</div>
+  <div class="strip-l">${['GOLD','DEEP','DARK','OX','RUB','PANEL','INK','EMBER','TEXT'].map(k=>`<span>${k}</span>`).join('')}</div>`;
+  cols.appendChild(c);
+  const st=c.querySelector('.stage');
+  Object.entries(p.v).forEach(([k,v])=>st.style.setProperty('--'+k,v));
+  st.innerHTML=tpl.replaceAll('__N',i);
+});
+let h='<table class="cr"><tr><th>Text on its ground</th>'+P.map(p=>`<th>${p.name}</th>`).join('')+'</tr>';
+pairs.forEach(([n,a,b])=>{h+=`<tr><td>${n}</td>`+P.map(p=>{const r=cr(p.v[a],p.v[b]);return `<td class="${r>=4.5?'ok':r>=3?'warn':'bad'}">${r.toFixed(1)}</td>`}).join('')+'</tr>'});
+document.getElementById('contrast').innerHTML=h+'</table>';
+</script>
+</body>
+</html>

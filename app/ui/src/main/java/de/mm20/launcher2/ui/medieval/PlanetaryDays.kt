@@ -24,12 +24,12 @@ internal fun planetOf(day: DayOfWeek): Planet = when (day) {
     DayOfWeek.SATURDAY -> Planet.Saturn
 }
 
-private val G = Medieval.Gold
-private val GD = Medieval.GoldDeep
-private val GL = Color(0xFFE3CF9C)
-private val RD = Medieval.Rubric
-private val Feather = Color(0xFF2A2216)
-private val PetalRed = Color(0xFF5A1A14)
+private val G get() = Medieval.Gold
+private val GD get() = Medieval.GoldDeep
+private val GL get() = Medieval.GoldLight
+private val RD get() = Medieval.Rubric
+private val Feather get() = Medieval.palette.feather
+private val PetalRed get() = Medieval.Oxblood
 
 private fun f(v: Float) = "%.2f".format(java.util.Locale.ROOT, v)
 
@@ -119,7 +119,7 @@ internal fun medallion(p: Planet): List<Part> {
     val disc = prim(
         circlePath(0f, 0f, 21f),
         brush = Brush.radialGradient(
-            listOf(Color(0xFF3A2A14), Color(0xFF0F0904)), center = Offset(0f, -4.2f), radius = 29.4f,
+            listOf(Medieval.palette.coinInk, Medieval.Ink), center = Offset(0f, -4.2f), radius = 29.4f,
         ),
     )
     val discEdge = prim(circlePath(0f, 0f, 21f), stroke = GD, width = 1.4f)

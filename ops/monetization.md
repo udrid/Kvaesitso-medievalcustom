@@ -11,6 +11,7 @@ Not legal advice. Everything marked CHECK must be verified with a lawyer or the 
 | Wallpaper, lock screen and AOD set (planned) | not built | Own art | Paid pack, tiers per theme (weekday, planetary) | Good Lock steps for users to apply |
 | Deliverance launcher look (S2 built) | Fixed in code (`medieval/DeliveranceTheme.kt`), not a `.kvaesitso` file | GPL code; art stays separate | A sellable `.kvaesitso` theme pack needs the theme pickers restored; the code look ships inside the GPL app | CHECK before selling: theme file format licence |
 | SwiftKey keyboard theme (planned) | not built | Own | Free promo only | none |
+| Colour palette packs [M] (S4, planned) | `docs/design/S4-colour-scheme.html`; later a `Palette` object in `medieval/` | Own colour choices; the code that switches them is GPL | Extra palettes as paid packs (the free set stays small); matching wallpaper, lock-screen and keyboard sets per palette sold as separate files | Palettes shipped inside the GPL app are GPL; sell the matching image sets separately with an author line. Do not sell a palette that copies the game's colours or logos |
 | Fonts | UnifrakturCook, UnifrakturMaguntia, Cinzel, IM Fell English | SIL OFL 1.1, licences kept in `docs/licenses/fonts` | May ship inside paid products | The fonts cannot be sold alone; keep the licence files |
 | The phone-stylist agent and the workflow (`.claude/agents`, CLAUDE.md rules, thread templates) | repo | Own | Sell as a guide, template or course: how to build a themed launcher with Claude Code | Remove personal data (email) before sharing |
 | Treasury panel (placeholders now; SimpleFIN later) | `TreasuryPanel.kt` | GPL code | A paid add-on feature | Financial data: SimpleFIN terms, privacy, security and possibly regulation; never store bank logins; ask for the price before using it |
@@ -21,3 +22,19 @@ Not legal advice. Everything marked CHECK must be verified with a lawyer or the 
 - When a task creates something sellable, add one row here (what, where, licence, idea, risk). Mark parts [M] in `docs/design/DESIGN-SYSTEM.md`.
 - Keep sellable art as separate files with a clear author line, never mixed into upstream files.
 - Never add paid-service keys, ads or trackers without the owner's explicit decision.
+
+## Monetisation track (own section of the development; owner 2026-10-28: "we will go over it all")
+Every monetisation task lives here, not scattered in other threads. Status: all OPEN, none started; the owner reviews the whole list together before any is begun. Not legal advice; CHECK items need a lawyer or the licence text.
+| # | Task | Depends on | Status |
+|---|---|---|---|
+| M1 | Rename applicationId, replace the upstream app icon (credit EliotAku), CHECK the name "Deliverance" against the game's trademarks | owner decision on the final name | OPEN |
+| M2 | Decide the model: paid APK, Play Store listing, supporter build, donations; GPL source publishing plan | M1 | OPEN |
+| M3 | Colour palette packs [M] (S4): which palettes are free (all five for now), which become paid later; matching wallpaper, lock-screen and keyboard sets per palette as separate files | S3 assets, S4 built | OPEN |
+| M4 | Icon pack app (separate, own licence) | emblem set, hundreds of icons | OPEN |
+| M5 | Wallpaper / lock screen / AOD packs per weekday and per palette | S3 assets | OPEN |
+| M6 | Launcher theme files (Kvaesitso import format) and its licence CHECK | none | OPEN |
+| M7 | Treasury as a paid add-on (SimpleFIN terms, privacy, regulation) | T2 treasury | OPEN |
+| M8 | Weather provider commercial terms (Bright Sky / DWD attribution) | none | OPEN |
+| M9 | Guide, template or course for the phone-stylist workflow (remove personal data first) | none | OPEN |
+| M10 | Payments, licences per pack, store accounts, taxes: set-up and CHECK with a professional | M2 | OPEN |
+Rule: a thread that makes something sellable adds a row above and a line in the table at the top of this file.

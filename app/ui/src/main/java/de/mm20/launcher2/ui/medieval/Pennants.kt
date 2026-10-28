@@ -108,7 +108,7 @@ private fun Pennant(x: Float, label: String, value: String, fraction: Float, fil
             drawPath(path, Medieval.GoldDeep, style = Stroke(1.5f * k))
         }
         MText(
-            label, 7f, Color(0xFFD9C48C),
+            label, 7f, Medieval.TextSoft,
             Modifier.fillMaxWidth().padding(top = 9.dp),
             font = Medieval.Cinzel, bold = true, spacingEm = 0.16f, align = TextAlign.Center,
         )
@@ -134,10 +134,10 @@ internal fun Pennants() {
     val land = LocalLandscape.current
     val xs = if (land) LandscapePennantX else PennantX
     Box(if (land) Modifier.overflowTopStart().requiredSize(247.dp, 126.dp).graphicsLayer { scaleX = PennantsLandscapeScale; scaleY = PennantsLandscapeScale; transformOrigin = TransformOrigin(0f, 0f) } else Modifier) {
-        Pennant(xs[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Color(0xFF7A5E2C))
-        Pennant(xs[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-        Pennant(xs[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Color(0xFF5E4A24))
-        Pennant(xs[3], "HEAT", heatText, heatFraction, Color(0xFF6E2A1E))
+        Pennant(xs[0], "VIGOR", v.batteryPercent?.toString() ?: "-", (v.batteryPercent ?: 0) / 100f, Medieval.palette.pennantA)
+        Pennant(xs[1], "STORES", v.storageFreePercent?.toString() ?: "-", (v.storageFreePercent ?: 0) / 100f, Medieval.palette.pennantB)
+        Pennant(xs[2], "WITS", v.memoryFreePercent?.toString() ?: "-", (v.memoryFreePercent ?: 0) / 100f, Medieval.palette.pennantB)
+        Pennant(xs[3], "HEAT", heatText, heatFraction, Medieval.palette.pennantC)
     }
 }
 

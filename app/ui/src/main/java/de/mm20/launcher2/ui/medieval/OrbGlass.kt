@@ -38,12 +38,12 @@ private const val SmokeDegPerSec = 0.8f
 private const val OrbFps = 5
 private const val KindleMs = 1100L
 private const val ChargePulseSec = 4.5f
-private val Heart = Color(0xFFFFA060)
+private val Heart get() = Medieval.Heart
 /** T15/T16: few grains (7), lit about 21 % of the time (only the top of each sine counts), gentle peak 0.4, period about 7 s. */
 private const val TwinkleRate = 0.9f
 private const val TwinkleFloor = 0.6f
 private const val TwinkleGain = 0.4f
-private val Twinkle = Color(0xFFFFF0C0)
+private val Twinkle get() = Medieval.Twinkle
 
 /** A gold dust grain that twinkles: position in orb radii (turns with the smoke) and its own phase. */
 private class Grain(val x: Float, val y: Float, val phase: Float, val size: Float)
@@ -51,9 +51,9 @@ private class Grain(val x: Float, val y: Float, val phase: Float, val size: Floa
 @Composable
 internal fun OrbGlass(modifier: Modifier = Modifier) {
     val motion = LocalMotion.current
-    val smoke = ImageBitmap.imageResource(R.drawable.medieval_orb_smoke)
-    val glass = ImageBitmap.imageResource(R.drawable.medieval_orb_glass)
-    val setting = ImageBitmap.imageResource(R.drawable.medieval_orb_setting)
+    val smoke = ImageBitmap.imageResource(Medieval.palette.orbSmoke)
+    val glass = ImageBitmap.imageResource(Medieval.palette.orbGlass)
+    val setting = ImageBitmap.imageResource(Medieval.palette.orbSetting)
     val grains = remember {
         val r = Random(77)
         List(7) {

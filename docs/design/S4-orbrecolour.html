@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>S4 orb recolour maker</title></head>
+<body style="background:#111;color:#ccc;font:12px sans-serif">
+<!-- Makes the per-palette orb pictures (smoke, glass, setting) for OrbGlass.kt by colour-grading the three original
+     pictures (T9, owner pick 2a-3): luminance goes through a per-palette colour ramp, alpha is kept; the rubies of the
+     gold setting are kept, turned into emeralds or sapphires, or recoloured, per palette.
+     Run in headless Edge with --dump-dom --allow-file-access-from-files --disable-web-security; data URLs land in the textareas. -->
+<div id="out"></div><div id="show"></div>
+<script>
+var RES='../../app/ui/src/main/res/drawable-nodpi/medieval_orb_';
+function hex(h){return [h>>16&255,h>>8&255,h&255]}
+function ramp(stops,t){t=Math.max(0,Math.min(1,t));for(var i=1;i<stops.length;i++){if(t<=stops[i][0]){var a=stops[i-1],b=stops[i],k=(t-a[0])/(b[0]-a[0]||1),x=hex(a[1]),y=hex(b[1]);return [x[0]+(y[0]-x[0])*k,x[1]+(y[1]-x[1])*k,x[2]+(y[2]-x[2])*k]}}return hex(stops[stops.length-1][1])}
+var P={
+ ember:{smoke:[[0,0x000000],[.22,0x4A1208],[.55,0xE07A28],[1,0xFFD890]],glass:[[0,0],[1,0xFFE8CC]],metal:[[0,0x5A3410],[.5,0xE3A04F],[1,0xFFE4B0]],gem:null},
+ verdigris:{smoke:[[0,0x000000],[.22,0x06231C],[.55,0x2FA088],[1,0xD8FFF0]],glass:[[0,0],[1,0xE4FFF6]],metal:[[0,0x143A32],[.5,0x6FB5A0],[1,0xE0FFF4]],gem:[[0,0x0A2A20],[.5,0x1C8A62],[1,0x7FF0C0]]},
+ bone:{smoke:[[0,0x000000],[.22,0x1A1A1C],[.55,0x8A8A90],[1,0xF4EEDC]],glass:[[0,0],[1,0xFFFFFF]],metal:[[0,0x3A3832],[.5,0xB8B2A4],[1,0xF6F2E8]],gem:null},
+ royal:{smoke:[[0,0x000000],[.22,0x0A1440],[.55,0x3A62D8],[1,0xDCE8FF]],glass:[[0,0],[1,0xE6EEFF]],metal:[[0,0x38405A],[.5,0xC4CCD8],[1,0xF4F8FF]],gem:[[0,0x0A1650],[.5,0x2A52C8],[1,0x8AB0FF]]}
+};
+function load(u){return new Promise(function(ok,bad){var im=new Image();im.onload=function(){ok(im)};im.onerror=function(){bad(u)};im.src=u})}
+function grade(im,fn){var c=document.createElement('canvas');c.width=im.width;c.height=im.height;var x=c.getContext('2d');x.drawImage(im,0,0);var d=x.getImageData(0,0,c.width,c.height),p=d.data;
+ for(var i=0;i<p.length;i+=4){var r=p[i],g=p[i+1],b=p[i+2],L=(.2126*r+.7152*g+.0722*b)/255,o=fn(r,g,b,L);p[i]=o[0];p[i+1]=o[1];p[i+2]=o[2]}
+ x.putImageData(d,0,0);return c}
+(async function(){
+ var src={};for(var n of ['smoke','glass','setting'])src[n]=await load(RES+n+'.webp');
+ var q={smoke:.86,glass:.9,setting:.92};
+ for(var k in P){var pal=P[k];
+  var cs={smoke:grade(src.smoke,function(r,g,b,L){return ramp(pal.smoke,Math.pow(L,.8)*1.15)}),
+          glass:grade(src.glass,function(r,g,b,L){return ramp(pal.glass,L)}),
+          setting:grade(src.setting,function(r,g,b,L){
+            var ruby=r>g*1.6&&r>b*1.6&&(Math.max(r,g,b)-Math.min(r,g,b))/Math.max(r,g,b,1)>.5;
+            if(ruby)return pal.gem?ramp(pal.gem,L*2.2):[r,g,b];
+            return ramp(pal.metal,L*1.15)})};
+  for(var n in cs){var ta=document.createElement('textarea');ta.id=n+'_'+k;ta.textContent=cs[n].toDataURL('image/webp',q[n]);document.getElementById('out').appendChild(ta)}
+  var row=document.createElement('div');row.style.cssText='display:flex;background:#000;width:1260px';
+  ['smoke','glass','setting'].forEach(function(n){var cv=cs[n];cv.style.cssText='width:400px;background:#000';row.appendChild(cv)});
+  document.getElementById('show').appendChild(row)}
+ document.body.setAttribute('data-done','1');
+})().catch(function(e){document.body.setAttribute('data-err',String(e))});
+</script>
+</body>
+</html>

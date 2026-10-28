@@ -40,30 +40,30 @@ internal fun moonPhase(epochMs: Long): Float {
     return (a - floor(a)).toFloat()
 }
 
-private val G = Medieval.Gold
-private val GD = Medieval.GoldDeep
-private val GDD = Medieval.GoldLine
-private val GL = Color(0xFFE3CF9C)
-private val RD = Medieval.Rubric
-private val RDD = Color(0xFF6E1A14)
-private val INK = Color(0xFF0C0A07)
+private val G get() = Medieval.Gold
+private val GD get() = Medieval.GoldDeep
+private val GDD get() = Medieval.GoldLine
+private val GL get() = Medieval.GoldLight
+private val RD get() = Medieval.Rubric
+private val RDD get() = Medieval.Badge
+private val INK get() = Medieval.Ink
 
 // palette A2 "soft"
-private val Hill1 = Color(0xFF17140E)
-private val Hill2 = Color(0xFF0F0D09)
-private val Leaf = Color(0xFF1D1A14)
-private val SunFill = Color(0xFFD4A04A)
-private val SunRays = Color(0xFFD8B060)
-private val RainBlue = Color(0xFF8AA4C4)
-private val SnowWhite = Color(0xFFECE6D6)
-private val BoltOchre = Color(0xFFE2C060)
-private val BoltEdge = Color(0xFFF4E4B0)
-private val WindowGlow = Color(0xFFE0963C)
-private val FogGrey = Color(0xFFA8A490)
+private val Hill1 get() = Medieval.palette.hill1
+private val Hill2 get() = Medieval.palette.hill2
+private val Leaf get() = Medieval.palette.leaf
+private val SunFill get() = Medieval.palette.sunFill
+private val SunRays get() = Medieval.palette.sunRays
+private val RainBlue get() = Medieval.palette.rain
+private val SnowWhite get() = Medieval.palette.snow
+private val BoltOchre get() = Medieval.palette.bolt
+private val BoltEdge get() = Medieval.palette.boltEdge
+private val WindowGlow get() = Medieval.palette.windowGlow
+private val FogGrey get() = Medieval.palette.fog
 
 private fun hills(snow: Boolean): List<Prim> {
     val e = if (snow) GL else GD
-    val e2 = if (snow) Color(0xFFBFB08A) else GDD
+    val e2 = if (snow) Medieval.Label else GDD
     return listOf(
         prim("M0 39C18 30 38 32 58 35S98 29 128 33V52H0Z", fill = Hill1, stroke = e2, width = 0.8f),
         prim("M34 35l3-1.4M40 35.4l3-1.2M46 35.8l3-1M64 34.6l3-1.2M70 33.8l3-1.2", stroke = GDD, width = 0.6f),
@@ -96,7 +96,7 @@ private fun castle(win: Color, snow: Boolean): List<Prim> {
         prim("M89.2 21.5L91.5 17M111.2 19.5L113.5 15", stroke = RD, width = 0.6f),
         prim(
             "M95 37V19H96.6V17H98.6V19H100.4V17H102.4V19H104.2V17H106.2V19H108V17H110V37Z",
-            fill = Color(0xFF221D15), stroke = G, width = 0.9f,
+            fill = Medieval.palette.leaf, stroke = G, width = 0.9f,
         ),
         prim("M96 25H109M96 31H109", stroke = GDD, width = 0.5f),
         prim("M100 37V32A2.5 2.5 0 0 1 105 32V37Z", fill = INK, stroke = GD, width = 0.7f),
@@ -146,10 +146,10 @@ private fun sun(x: Float, y: Float): List<Part> {
     }
     val disc = listOf(
         prim(circlePath(0f, 0f, 7.6f), fill = SunFill, stroke = GL, width = 1f, dx = x, dy = y),
-        prim(circlePath(0f, 0f, 6.1f), stroke = Color(0xFF8A6A22), width = 0.5f, dx = x, dy = y),
+        prim(circlePath(0f, 0f, 6.1f), stroke = Medieval.palette.coinB, width = 0.5f, dx = x, dy = y),
         prim(
             "M-3.6 -1.4q1.1-1.1 2.2 0M1.4 -1.4q1.1-1.1 2.2 0M0 -.8V1.6H-.9M-2.4 3.1Q0 4.9 2.4 3.1",
-            stroke = Color(0xFF4A2E0C), width = 0.7f, dx = x, dy = y,
+            stroke = Medieval.palette.coinInk, width = 0.7f, dx = x, dy = y,
         ),
         prim(circlePath(-3.6f, 2f, 0.9f), fill = RD, alpha = 0.55f, dx = x, dy = y),
         prim(circlePath(3.6f, 2f, 0.9f), fill = RD, alpha = 0.55f, dx = x, dy = y),
@@ -170,7 +170,7 @@ internal fun moonPrims(x: Float, y: Float, p: Float): List<Prim> {
     val rx = abs(cos(2 * PI * p)).toFloat() * r
     val wax = p < 0.5f
     val q = if (wax) p else 1f - p
-    val out = mutableListOf(prim(circlePath(x, y, r), fill = Color(0xFF16130E), stroke = GD, width = 0.6f, alpha = 0.9f))
+    val out = mutableListOf(prim(circlePath(x, y, r), fill = Medieval.palette.hill1, stroke = GD, width = 0.6f, alpha = 0.9f))
     if (q > 0.02f) out += prim(
         "M0 -${r}A$r $r 0 0 1 0 ${r}A${"%.2f".format(java.util.Locale.ROOT, rx)} $r 0 0 ${if (q < 0.25f) 0 else 1} 0 -${r}Z",
         fill = GL, stroke = G, width = 0.7f, scale = 1f, scaleX = if (wax) 1f else -1f, dx = x, dy = y,
@@ -274,13 +274,13 @@ internal fun weatherParts(sky: Sky, phase: Float): List<Part> = when (sky) {
         anim(1200L, listOf(listOf(prim(rectPath(101.8f, 21.5f, 1.4f, 3f), fill = Color(0xFFFFC070))), emptyList()))
     Sky.Partly -> sun(30f, 14f) + drifting(2400L, 4f) { o -> cloud(34f + o, 10f, 0.9f, Leaf) } + land()
     Sky.Cloudy -> listOf(
-        drifting(2800L, 4f) { o -> cloud(6f + o, 3f, 1f, Color(0xFF221D15)) },
+        drifting(2800L, 4f) { o -> cloud(6f + o, 3f, 1f, Medieval.palette.leaf) },
         drifting(2800L, -4f) { o -> cloud(46f + o, 11f, 0.85f, Leaf) },
     ) + land()
-    Sky.Rain -> listOf(still(cloud(20f, 2f, 1.25f, Color(0xFF14110C))), rain(9, -1.6f, 22, 44)) + land() + ripples()
+    Sky.Rain -> listOf(still(cloud(20f, 2f, 1.25f, Medieval.palette.hill1)), rain(9, -1.6f, 22, 44)) + land() + ripples()
     Sky.Storm -> listOf(
         anim(2400L, listOf(emptyList(), emptyList(), listOf(prim(rectPath(0f, 0f, 128f, 40f), fill = GL, alpha = 0.09f)), emptyList(), emptyList(), emptyList())),
-        still(cloud(18f, 0f, 1.35f, Color(0xFF0D0B08)) + cloud(54f, 5f, 0.8f, Color(0xFF14110C))),
+        still(cloud(18f, 0f, 1.35f, Medieval.palette.hill2) + cloud(54f, 5f, 0.8f, Medieval.palette.hill1)),
         rain(12, -2.4f, 22, 44),
         anim(2400L, listOf(emptyList(), emptyList(), listOf(bolt()), emptyList(), listOf(bolt()), emptyList())),
     ) + land(flagMs = 450L)
@@ -294,6 +294,6 @@ internal fun WeatherScene(forecast: Forecast?, nowMs: Long, modifier: Modifier =
     val sky = skyOf(forecast) ?: return
     // phase in 1/100 steps so the drawing is rebuilt a few times a day, not every tick
     val phaseKey = (moonPhase(nowMs) * 100).toInt()
-    val parts = remember(sky, phaseKey) { weatherParts(sky, phaseKey / 100f) }
+    val parts = remember(sky, phaseKey, Medieval.palette) { weatherParts(sky, phaseKey / 100f) }
     VectorCanvas(parts, 128f, modifier.size(74.dp, 30.dp), animated = true)
 }

@@ -222,7 +222,7 @@ private fun AppCell(pkg: String, modifier: Modifier) {
             ShieldEmblem(pkg, label)
         }
         MText(
-            label.uppercase(), 8.5f, Color(0xFFBFAE86), Modifier.padding(horizontal = 2.dp),
+            label.uppercase(), 8.5f, Medieval.Label, Modifier.padding(horizontal = 2.dp),
             font = Medieval.Cinzel, bold = true, spacingEm = 0.12f, align = TextAlign.Center,
         )
     }
@@ -340,7 +340,7 @@ private fun PersonCell(p: Person) {
             Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .background(Brush.radialGradient(listOf(Color(0xFF2E2619), Color(0xFF14110B))))
+                .background(Brush.radialGradient(listOf(Medieval.palette.avatarA, Medieval.palette.avatarB)))
                 .border(1.5.dp, Medieval.GoldDeep, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
@@ -592,7 +592,7 @@ private fun LayerRibbon(text: String) {
         contentAlignment = Alignment.CenterStart,
     ) {
         MText(
-            text.uppercase(), 8.5f, Color(0xFFF0E2BD),
+            text.uppercase(), 8.5f, Medieval.RibbonText,
             font = Medieval.Cinzel, bold = true, spacingEm = 0.24f,
         )
     }

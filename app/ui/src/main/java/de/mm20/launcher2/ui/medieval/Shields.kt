@@ -141,13 +141,13 @@ private fun Badge(count: Int, swell: State<Float>, modifier: Modifier = Modifier
             .defaultMinSize(minWidth = 18.dp)
             .height(18.dp)
             .zIndex(2f)
-            .background(Color(0xFF6E1A14), CircleShape)
+            .background(Medieval.Badge, CircleShape)
             .border(1.5.dp, Medieval.Gold, CircleShape)
             .padding(horizontal = 4.dp),
         contentAlignment = Alignment.Center,
     ) {
         MText(
-            count.toString(), 10f, Color(0xFFF2E6C8),
+            count.toString(), 10f, Medieval.RibbonText,
             font = Medieval.Cinzel, bold = true,
         )
     }
@@ -195,7 +195,7 @@ private fun Shield(slot: ShieldSlot, refresh: Int, notifications: List<Notificat
         }
     }
     MText(
-        label.uppercase(), 10f, Color(0xFFBFAE86),
+        label.uppercase(), 10f, Medieval.Label,
         Modifier.at(slot.labelX, slot.labelY).width(84.dp),
         font = Medieval.Cinzel, bold = true, spacingEm = 0.18f, align = TextAlign.Center,
     )

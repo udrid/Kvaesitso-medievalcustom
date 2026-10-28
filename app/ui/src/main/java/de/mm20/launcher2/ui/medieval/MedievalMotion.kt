@@ -334,7 +334,7 @@ internal fun Modifier.tapReaction(r: TapReaction, press: Boolean = false): Modif
         val k = r.amount.value.coerceIn(0f, 1f)
         if (k > 0f) {
             if (press) drawRect(Color.Black.copy(alpha = 0.22f * k), blendMode = BlendMode.SrcAtop)
-            else drawRect(Color(0xFFF0C86E).copy(alpha = 0.35f * k), blendMode = BlendMode.SrcAtop)
+            else drawRect(Medieval.palette.press.copy(alpha = 0.35f * k), blendMode = BlendMode.SrcAtop)
         }
     }
 

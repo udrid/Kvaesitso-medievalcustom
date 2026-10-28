@@ -71,7 +71,7 @@ internal fun SummonButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Box(
         modifier
             .height(30.dp)
-            .background(Brush.verticalGradient(listOf(Color(0xFF3A1612), Color(0xFF1C0A08))), shape)
+            .background(Brush.verticalGradient(listOf(Medieval.ShieldTop, Medieval.SummonDark)), shape)
             .border(1.dp, Medieval.GoldDark, shape)
             .clickable(onClick = onClick)
             .padding(horizontal = 13.dp),

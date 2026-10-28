@@ -126,13 +126,13 @@ private fun WeatherLine(f: Forecast, width: androidx.compose.ui.unit.Dp, modifie
     MText(fit.first, fit.second, Medieval.WeatherGrey, modifier.width(width), italic = true, align = TextAlign.End, lineHeight = 14f)
 }
 
-private val CapShadow = Color(0xFF1C0605)
-private val CapGlow = Color(0x29A8352B)
-private val CapFill = Brush.verticalGradient(
-    0f to Color(0xFFD9574A),
-    0.38f to Color(0xFFB03A2E),
-    0.66f to Color(0xFF6E1710),
-    1f to Color(0xFF9A2F25),
+private val CapShadow get() = Medieval.palette.capShadow
+private val CapGlow get() = Medieval.Rubric.copy(alpha = 0.16f)
+private val CapFill get() = Brush.verticalGradient(
+    0f to Medieval.palette.capA,
+    0.38f to Medieval.palette.capB,
+    0.66f to Medieval.palette.capC,
+    1f to Medieval.palette.capD,
 )
 
 /**
@@ -156,7 +156,7 @@ private fun DropCap(letter: String, shimmer: Float = 0f) {
             val w = with(LocalDensity.current) { 68.sp.toPx() }
             val c = w * (-0.4f + 1.8f * shimmer)
             val band = w * 0.28f
-            val peak = Color(0xFFF3D27A).copy(alpha = 0.85f * bump(shimmer, 0f, 1f))
+            val peak = Medieval.palette.shimmer.copy(alpha = 0.85f * bump(shimmer, 0f, 1f))
             Text(
                 letter,
                 style = base.copy(

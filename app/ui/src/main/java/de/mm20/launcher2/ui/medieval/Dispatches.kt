@@ -75,7 +75,7 @@ private fun appIcon(context: Context, packageName: String): ImageBitmap? = try {
     null
 }
 
-private val GlowGold = Color(0xFFE5B25A)
+private val GlowGold get() = Medieval.Glow
 
 /** Swipe distance (stage px) after which a dispatch is dismissed. */
 private const val DismissDistance = 90f
