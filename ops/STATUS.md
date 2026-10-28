@@ -27,3 +27,4 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 
 ## Monetisation track (owner 2026-10-28)
 Own section of the development; list of tasks M1 to M10 in `ops/monetization.md`. All open; the owner goes over the whole list together before any starts.
+| T18-contact-alerts | 1 | active | claude/T18-contact-alerts | Starred contacts light up (gold halo + red count badge) on message / missed call; cut from claude/integrate-4 |
