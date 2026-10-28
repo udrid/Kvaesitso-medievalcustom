@@ -19,6 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.produceState
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -207,12 +210,25 @@ internal fun launchSafely(context: Context, intent: Intent, what: String) {
     }
 }
 
-/** Current time, refreshed every few seconds. */
+/**
+ * Like produceState, but [block] runs only while Home is resumed (T17): it is cancelled when Home pauses
+ * or the screen goes off and starts again, reading first thing, when Home comes back.
+ */
 @Composable
-internal fun rememberNow(periodMs: Long = 5_000L): State<ZonedDateTime> =
-    produceState(ZonedDateTime.now()) {
+internal fun <T> produceWhileResumed(initial: T, block: suspend androidx.compose.runtime.ProduceStateScope<T>.() -> Unit): State<T> {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    return produceState(initial, lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) { block() }
+    }
+}
+
+/** Current time, refreshed at the start of every minute while Home is resumed (and at once when it resumes). */
+@Composable
+internal fun rememberNow(): State<ZonedDateTime> =
+    produceWhileResumed(ZonedDateTime.now()) {
         while (true) {
-            value = ZonedDateTime.now()
-            delay(periodMs)
+            val now = ZonedDateTime.now()
+            value = now
+            delay(60_000L - System.currentTimeMillis() % 60_000L + 50L)
         }
     }

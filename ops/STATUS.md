@@ -1,6 +1,6 @@
 # STATUS (coordinator updates this before stopping)
 
-Updated 2026-10-27. `main` = the owner-verified build (branch `claude/T16-polish`, GitHub Actions run 40515672489, all owner steps checked on the phone).
+Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Actions runs 40515672489 and 40630571690, all owner steps checked on the phone).
 
 | Task id | Stage | State | Branch | Notes |
 |---|---|---|---|---|
@@ -12,7 +12,7 @@ Updated 2026-10-27. `main` = the owner-verified build (branch `claude/T16-polish
 | T6, T11, T13, T14 | 1 | DONE (SUMMON text result with the Claude app NOT yet reported by owner) | claude/T6-summon, T11-command, T13-command-field, T14-layer-content | SUMMON, typing layer, most used apps, starred contacts, 7 chips |
 | T7-shields | 1 | DONE | claude/T7-shields | Gold emblems for shields, letter-shield fallback |
 | T9, T12, T15 | 1 | DONE | claude/T9-vibe, T12-orb-tune, T15-tweaks | Glass orb, engraved ring, subtle animations with battery gate and Animations setting |
-| T17-small | 1 | READY TO PUSH on claude/T17-small (compiled locally; new-day shimmer, weather text fit, poller gating); needs owner OK to push and phone test | claude/T17-small | Not in main yet |
+| T17-small | 1 | DONE (owner verified on phone 2026-10-27; merged into main) | claude/T17-small | Not in main yet |
 | T2-treasury | 1 | deferred: owner wants it last | - | SimpleFIN Bridge (decisions.md); api-scout first; price to owner before sign-up |
 
 ## Open for the owner

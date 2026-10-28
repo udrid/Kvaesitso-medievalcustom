@@ -31,3 +31,5 @@
 - Home press while on top = onNewIntent with ACTION_MAIN+CATEGORY_HOME; HomePressed.kt now turns it into a signal for pop-ups.
 - T14: Android 13 apps can flip only torch and ringer (Normal/Vibrate) without special access; Wi-Fi/Bluetooth/location/saver are page-open only. Home taps bypass Kvaesitso's launchCount, hence own UsageCounter.
 - T16: the weather column renders ~8-10 stage units lower than the fixed line heights say, so check layout from the owner's screenshot, not from arithmetic; a horizontal clearance is safer than a vertical one.
+- T17: older `produceState { while (true) { delay } }` pollers keep running when Home is stopped; use `produceWhileResumed` (MedievalParts) for any new ticker.
+- T17: Compose text can be fitted by measuring with `rememberTextMeasurer` (shrink, then shorten) instead of guessing widths.

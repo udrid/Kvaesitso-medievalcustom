@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -73,7 +72,7 @@ internal fun readVitals(context: Context): Vitals {
 @Composable
 internal fun rememberVitals(): State<Vitals> {
     val context = LocalContext.current
-    return produceState(readVitals(context)) {
+    return produceWhileResumed(readVitals(context)) {
         while (true) {
             value = readVitals(context)
             delay(5_000L)
