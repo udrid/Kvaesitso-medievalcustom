@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><style>
+body{margin:0;background:#111;display:flex;gap:24px;padding:24px;width:1500px;font-family:sans-serif}
+.p{position:relative;width:432px;height:960px;background:url(../../assets/wallpaper/deliverance-orb-lock-1080x2400.png) 0 0/100% 100%;overflow:hidden;color:#fff;border:2px solid #444}
+.p *{position:absolute}
+.t{left:0;right:0;text-align:center}
+.clock{top:27%;font-size:64px;font-weight:200;text-shadow:0 0 6px #0008}
+.date{top:35%;font-size:15px}
+.ic{top:39%;left:50%;margin-left:-100px;width:200px;height:34px}
+.ic i{position:static;display:inline-block;width:30px;height:30px;border-radius:50%;background:#fff3;margin:0 5px}
+.card{left:10px;right:10px;background:#cfcfcfd8;border-radius:16px;color:#222;font-size:13px;padding:10px 12px;box-sizing:border-box}
+.media{top:42%;height:130px}
+.n{height:62px}
+.sc{bottom:30px;width:40px;height:40px;border-radius:50%;background:#fff4}
+.h{top:2.6%;font-size:11px}
+.cap{position:static;color:#ccc;font-size:16px;margin-top:6px}
+</style>
+<script>
+var ns=[0,2,4],o='';
+ns.forEach(function(n){var c='<div><div class="p"><div class="t h">&#128274;<br>Mode name</div><div class="t clock">10:21</div><div class="t date">Wed, October 28</div><div class="ic"><i></i><i></i><i></i><i></i></div><div class="card media">Media card (only when music is playing)</div>';
+for(var i=0;i<n;i++)c+='<div class="card n" style="top:'+(42+13.5+i*7.2)+'%">Notification '+(i+1)+'</div>';
+c+='<div class="sc" style="left:24px"></div><div class="sc" style="right:24px"></div></div><div class="cap">'+(n==0?'Music on, no notifications':'Music on + '+n+' cards')+'</div></div>';o+=c});
+document.write(o);
+</script>

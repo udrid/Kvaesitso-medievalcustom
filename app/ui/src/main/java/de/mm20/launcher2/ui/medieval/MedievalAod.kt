@@ -140,8 +140,8 @@ internal fun openAodSettings(context: Context): String {
 @Composable
 fun MedievalAodPreference(onClick: () -> Unit) {
     Preference(
-        title = "Always-on display pictures",
-        summary = "Save the pictures for the lock-screen frame",
+        title = "Lock screen and always-on display",
+        summary = "Set the orb as your lock screen, save the always-on pictures",
         onClick = onClick,
     )
 }
@@ -150,6 +150,8 @@ fun MedievalAodPreference(onClick: () -> Unit) {
 fun AodSettingsScreen() {
     val context = LocalContext.current
     var status by remember { mutableStateOf<String?>(null) }
+    var lockStatus by remember { mutableStateOf<String?>(null) }
+    var canRestore by remember { mutableStateOf(hasLockBackup(context)) }
     val today = remember { todayName() }
     AodSettingsContent(
         today = today,
@@ -157,6 +159,16 @@ fun AodSettingsScreen() {
         onSaveToday = { status = saveAodPictures(context, listOf(today)).message(1) },
         onSaveAll = { status = saveAodPictures(context, AodNames).message(AodNames.size) },
         onOpenSettings = { openAodSettings(context) },
+        lockStatus = lockStatus,
+        canRestore = canRestore,
+        onSetLock = {
+            lockStatus = setOrbAsLockWallpaper(context).message
+            canRestore = hasLockBackup(context)
+        },
+        onRestoreLock = {
+            lockStatus = restoreLockWallpaper(context).message
+            canRestore = hasLockBackup(context)
+        },
     )
 }
 
@@ -167,10 +179,32 @@ internal fun AodSettingsContent(
     onSaveToday: () -> Unit,
     onSaveAll: () -> Unit,
     onOpenSettings: () -> Unit,
+    lockStatus: String? = null,
+    canRestore: Boolean = false,
+    onSetLock: () -> Unit = {},
+    onRestoreLock: () -> Unit = {},
 ) {
-    PreferenceScreen(title = "Always-on display pictures") {
+    PreferenceScreen(title = "Lock screen and always-on display") {
         item {
             Column(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                AodCard {
+                    Text("The lock screen picture", style = MaterialTheme.typography.titleSmall, color = Medieval.Gold)
+                    Text(
+                        "Puts the orb on your lock screen only. Your home screen is not touched. The orb sits low, so the clock stays clear.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Medieval.Text,
+                    )
+                    LockPreview()
+                    Button(onClick = onSetLock, modifier = Modifier.fillMaxWidth()) { Text("Set the orb as my lock screen") }
+                    if (canRestore) {
+                        OutlinedButton(onClick = onRestoreLock, modifier = Modifier.fillMaxWidth()) { Text("Put my old wallpaper back") }
+                    }
+                    Text(
+                        lockStatus ?: "Nothing has been changed yet.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (lockStatus != null) Medieval.Gold else Medieval.TextDim,
+                    )
+                }
                 AodCard {
                     Text(
                         "Today is ${today.replaceFirstChar { it.uppercase() }}'s day. This is today's picture:",
@@ -201,7 +235,7 @@ internal fun AodSettingsContent(
                 }
                 AodCard {
                     Text(
-                        "Samsung does not let apps change this setting, so you pick the picture yourself, once. " +
+                        "This page was called Always-on display pictures before. Samsung does not let apps change the always-on picture, so you pick the picture yourself, once. " +
                             "It does not change by itself each day: to follow the weekday, pick the new day's picture by hand. " +
                             "Or never change it: the plain ring picture looks right on every day. " +
                             "This page runs nothing in the background and uses no battery.",
@@ -252,6 +286,35 @@ private fun AodPreview(name: String) {
     ) {
         if (bitmap != null) {
             Image(bitmap, contentDescription = "Today's always-on display picture", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxWidth())
+        } else {
+            Text("Picture missing", color = Medieval.TextDim, modifier = Modifier.padding(8.dp))
+        }
+    }
+}
+
+/** Small preview of the lock screen picture (9:20 like the phone), in a gold frame. */
+@Composable
+private fun LockPreview() {
+    val context = LocalContext.current
+    val bitmap = remember {
+        try {
+            context.assets.open(LockAsset).use { BitmapFactory.decodeStream(it) }?.asImageBitmap()
+        } catch (e: Exception) {
+            Log.e(Tag, "Lock preview: cannot read $LockAsset", e)
+            null
+        }
+    }
+    Column(
+        Modifier
+            .fillMaxWidth(0.35f)
+            .background(Medieval.Ink)
+            .border(2.dp, Medieval.Gold)
+            .padding(3.dp)
+            .border(1.dp, Medieval.GoldDark)
+            .aspectRatio(9f / 20f),
+    ) {
+        if (bitmap != null) {
+            Image(bitmap, contentDescription = "Lock screen picture", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxWidth())
         } else {
             Text("Picture missing", color = Medieval.TextDim, modifier = Modifier.padding(8.dp))
         }

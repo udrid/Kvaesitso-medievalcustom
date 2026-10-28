@@ -47,6 +47,7 @@ function imageclock(day){
 }
 var k=location.hash.slice(1),w=1080,h=2400,svg;
 if(k==='wall')svg=wpC();
+else if(k==='wall-lock')svg=wpC(.68,1690);
 else if(k.indexOf('aod-')===0)svg=aod(k.slice(4));
 else if(k==='keyboard'){svg=keyboard();h=1000}
 else if(k.indexOf('ic-')===0){svg=imageclock(k.slice(3));w=1200;h=900}

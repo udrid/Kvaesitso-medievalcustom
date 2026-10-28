@@ -27,7 +27,7 @@ import java.io.File
 
 /*
  * T21 Always-on display pictures: the settings row and the page, in Gold and Ember, Sharp and Round.
- * Pictures go to docs/design/shots/T21/. Run: ./gradlew :app:ui:testDebugUnitTest --tests "*T21Shots*"
+ * Pictures go to docs/design/shots/T22/. Run: ./gradlew :app:ui:testDebugUnitTest --tests "*T21Shots*"
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
@@ -68,10 +68,10 @@ class T21Shots {
         Corners.style = CornerStyle.Sharp
         rule.mainClock.autoAdvance = false
         rule.setContent {
-            Themed { AodSettingsContent("mars", status, {}, {}, {}) }
+            Themed { AodSettingsContent("mars", status, {}, {}, {}, lockStatus = if (tag == "ember") "Done. Lock the phone to see it." else null, canRestore = tag == "ember") }
         }
         rule.mainClock.advanceTimeBy(1500)
-        save("page-$tag", shot())
+        save("t22-page-$tag", shot())
     }
 
     @Composable
@@ -93,7 +93,7 @@ class T21Shots {
     private fun shot() = rule.onRoot().captureToImage().asAndroidBitmap().copy(Bitmap.Config.ARGB_8888, true)
 
     private fun save(name: String, bmp: Bitmap) {
-        val dir = File(System.getProperty("medieval.shots") ?: "../../docs/design/shots/T21").apply { mkdirs() }
+        val dir = File(System.getProperty("medieval.shots") ?: "../../docs/design/shots/T22").apply { mkdirs() }
         val out = File(dir, "$name.png")
         out.outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
         println("medieval shot: ${out.canonicalPath} ${bmp.width}x${bmp.height}")

@@ -92,8 +92,9 @@ function wpB(day,nm,pl){
   s+='<path d="M300 2118H780" stroke="'+GD+'" stroke-width="2"/><path d="M540 2106l12 12-12 12-12-12z" fill="'+G+'"/>';
   return s+finish();
 }
-function wpC(){
+function wpC(sc,cyy){
   var s=ground(),cx=540,cy=1560,R=250,r=rnd(11);
+  if(sc)s+="<g transform=\"translate(540 "+cyy+") scale("+sc+") translate(-540 -1560)\">";
   s+='<defs><radialGradient id="ob" cx=".4" cy=".35"><stop offset="0" stop-color="#3a1a12"/><stop offset=".7" stop-color="#120807"/><stop offset="1" stop-color="#040202"/></radialGradient><clipPath id="oc"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'"/></clipPath></defs>';
   s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(R+60)+'" fill="#a8352b" opacity=".12" filter="url(#blur30)"/>';
   s+='<g clip-path="url(#oc)"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="url(#ob)"/><g filter="url(#blur30)"><ellipse cx="'+(cx-50)+'" cy="'+(cy+30)+'" rx="170" ry="70" fill="#a8352b" opacity=".75" transform="rotate(-28 '+cx+' '+cy+')"/><ellipse cx="'+(cx+50)+'" cy="'+(cy-30)+'" rx="150" ry="55" fill="#e08a3a" opacity=".5" transform="rotate(24 '+cx+' '+cy+')"/><ellipse cx="'+cx+'" cy="'+(cy+120)+'" rx="120" ry="45" fill="#7a2a1c" opacity=".7"/></g>';
@@ -102,5 +103,6 @@ function wpC(){
   s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(R+14)+'" fill="none" stroke="'+GD+'" stroke-width="28"/><circle cx="'+cx+'" cy="'+cy+'" r="'+(R+26)+'" fill="none" stroke="'+G+'" stroke-width="3"/><circle cx="'+cx+'" cy="'+cy+'" r="'+(R+2)+'" fill="none" stroke="'+GL+'" stroke-width="2" opacity=".6"/>';
   [[0,-1],[1,0],[0,1],[-1,0]].forEach(function(p){s+='<circle cx="'+(cx+p[0]*(R+14))+'" cy="'+(cy+p[1]*(R+14))+'" r="17" fill="'+RD+'" stroke="'+GL+'" stroke-width="3"/>'});
   s+=ringText(cx,cy,R+112,44,.9,'rc');
+  if(sc)s+="</g>";
   return s+finish();
 }
