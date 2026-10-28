@@ -12,6 +12,6 @@ VERIFIED on the phone:
 - AF-7 Home button: ACTION_MAIN/CATEGORY_HOME arrives through `SharedLauncherActivity.onNewIntent` while the launcher is on top; Samsung delivers it (picker and typing layer close, T15).
 - AF-8 Quick-setting chips: `CameraManager.setTorchMode` toggles the torch with no permission; `AudioManager.setRingerMode` switches Normal and Vibrate; `Settings.System.ACCELEROMETER_ROTATION` toggles after the owner grants "Modify system settings" (WRITE_SETTINGS); Wi-Fi opens through `Settings.Panel.ACTION_INTERNET_CONNECTIVITY` (T14).
 - AF-9 The 120 ms launch delay on taps lets the press reaction show; the reaction must be reset on ON_RESUME and when the motion gate closes or it can stick (T12).
-UNVERIFIED on the phone:
-- AF-10 Sharing text to the Claude app: `ACTION_SEND text/plain` with `setPackage("com.anthropic.claude")` (only an outside report; owner has not yet reported the result of the SUMMON test). The text is also copied to the clipboard as a backup (T6).
+UNVERIFIED on the phone (AF-10 below is now VERIFIED):
+- AF-10 Sharing text to the Claude app: VERIFIED on the S20 FE (owner, 2026-10-28): `ACTION_SEND text/plain` with `setPackage("com.anthropic.claude")` opens the Claude app and lets the owner CHOOSE where the text goes (new chat, a project, etc.); it does not send by itself. The text is also copied to the clipboard (T6).
 - AF-11 `AlarmManager.getNextAlarmClock`, AGSL RuntimeShader on API 33: not used; not tested.
