@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import de.mm20.launcher2.preferences.ui.UiSettings
 import de.mm20.launcher2.themes.ThemeRepository
 import de.mm20.launcher2.ui.locals.LocalDarkTheme
+import de.mm20.launcher2.ui.medieval.Deliverance
 import de.mm20.launcher2.ui.theme.colorscheme.darkColorSchemeOf
 import de.mm20.launcher2.ui.theme.colorscheme.lightColorSchemeOf
 import de.mm20.launcher2.ui.theme.shapes.shapesOf
@@ -62,20 +63,16 @@ fun LauncherTheme(
         return
     }
 
-    val colorScheme = if (darkTheme) {
-        darkColorSchemeOf(themeColors!!)
-    } else {
-        lightColorSchemeOf(themeColors!!)
-    }
-
-    val shapes = shapesOf(themeShapes!!)
-    val typography = typographyOf(themeTypography!!)
+    // Deliverance (S2-screens): colours, sharp shapes and fonts are fixed and always dark.
+    val colorScheme = Deliverance.colorScheme
+    val shapes = Deliverance.shapes
+    val typography = Deliverance.typography
 
     val transparencyScheme = transparencySchemeOf(themeTransparencies!!)
 
 
     CompositionLocalProvider(
-        LocalDarkTheme provides darkTheme,
+        LocalDarkTheme provides true,
         LocalTransparencyScheme provides transparencyScheme,
     ) {
         MaterialExpressiveTheme(
