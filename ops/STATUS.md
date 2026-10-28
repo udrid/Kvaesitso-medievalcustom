@@ -27,3 +27,4 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 
 ## Monetisation track (owner 2026-10-28)
 Own section of the development; list of tasks M1 to M10 in `ops/monetization.md`. All open; the owner goes over the whole list together before any starts.
+| S5-gestures-apps | 1 | active (Part 1: survey and design preview; no code) | claude/s5-gestures-apps-47305e | Swipe-down search off; swipe-up page becomes an apps hub with categories |
