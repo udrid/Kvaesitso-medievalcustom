@@ -21,6 +21,8 @@ private const val ExtraMessages = "android.messages"
 private const val ExtraTemplate = "android.template"
 private const val MessageSender = "sender"
 private const val MessageSenderPerson = "sender_person"
+private const val ExtraIsGroup = "android.isGroupConversation"
+private const val ExtraConversationTitle = "android.conversationTitle"
 
 /** A message or a missed call (category, MessagingStyle, or a channel the dialer names "missed"). */
 internal fun Notification.isMessageOrMissedCall(): Boolean =
@@ -33,9 +35,30 @@ internal fun Notification.isMessageOrMissedCall(): Boolean =
 /** How a notification names a person: a uri (contact lookup, tel:) and/or a name. */
 private class Sender(val uri: String?, val name: String?)
 
+/** A group chat: Android's flag, or (apps built before it) a conversation title, as NotificationCompat reads it. */
+private fun Notification.isGroupConversation(): Boolean =
+    if (extras.containsKey(ExtraIsGroup)) extras.getBoolean(ExtraIsGroup)
+    else extras.getCharSequence(ExtraConversationTitle) != null
+
+private fun Bundle.messageSender(): Sender {
+    val person = BundleCompat.getParcelable(this, MessageSenderPerson, android.app.Person::class.java)
+    return Sender(person?.uri, person?.name?.toString() ?: getCharSequence(MessageSender)?.toString())
+}
+
 @Suppress("DEPRECATION")
 private fun Notification.senders(): List<Sender> {
     val out = ArrayList<Sender>()
+    if (isGroupConversation()) {
+        // F2: in a group the people list holds every member and the history older writers; only the
+        // writer of the newest message counts, and the title is the group's name
+        try {
+            val last = BundleCompat.getParcelableArray(extras, ExtraMessages, Parcelable::class.java)?.lastOrNull() as? Bundle
+            if (last != null) out += last.messageSender()
+        } catch (e: Exception) {
+            android.util.Log.e("medieval", "Contact alerts: could not read the sender of a group notification", e)
+        }
+        return out
+    }
     try {
         BundleCompat.getParcelableArrayList(extras, ExtraPeopleList, android.app.Person::class.java)
             ?.forEach { out += Sender(it.uri, it.name?.toString()) }
@@ -45,9 +68,7 @@ private fun Notification.senders(): List<Sender> {
             is Collection<*> -> legacy.filterIsInstance<String>().forEach { out += Sender(it, null) }
         }
         BundleCompat.getParcelableArray(extras, ExtraMessages, Parcelable::class.java)?.forEach { m ->
-            val b = m as? Bundle ?: return@forEach
-            val person = BundleCompat.getParcelable(b, MessageSenderPerson, android.app.Person::class.java)
-            out += Sender(person?.uri, person?.name?.toString() ?: b.getCharSequence(MessageSender)?.toString())
+            (m as? Bundle)?.let { out += it.messageSender() }
         }
     } catch (e: Exception) {
         // a malformed extras bundle of some app: this notification just does not match
