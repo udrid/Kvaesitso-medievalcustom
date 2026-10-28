@@ -237,27 +237,41 @@ private fun PortraitSections(vm: MedievalHomeVM, glide: RotateGlide, header: @Co
 }
 
 /**
- * Landscape layout A (S1): left column header, Treasury, pennants; middle orb with shields and the dock
- * under it; right column Ledger, command bar, Dispatches. Sections keep their portrait internals; each is
- * moved so its portrait body y lands on its landscape rectangle, with the column width in [LocalColumnWidth].
+ * Landscape layout D (S6, on S1's three columns): left column header, Treasury, pennants; middle orb with
+ * shields, the Forecast strip and the dock; right column Ledger (4 events), command bar, Dispatches (5 rows).
+ * Sections keep their portrait internals; each is moved so its portrait body y lands on its landscape rectangle,
+ * with the column width in [LocalColumnWidth]. The side columns are 232 wide: sections are laid out 222 wide
+ * (Treasury 205) and drawn at 232 / that width.
  */
 @Composable
 private fun LandscapeSections(vm: MedievalHomeVM, glide: RotateGlide, header: @Composable () -> Unit, onCommandOpen: () -> Unit) {
     @Composable
-    fun Place(sec: Sec, bodyY: Float, content: @Composable () -> Unit) {
+    fun Place(sec: Sec, bodyY: Float, layoutW: Float = SideLayoutWidth, content: @Composable () -> Unit) {
         val r = LandscapeRects.getValue(sec)
+        val k = r.w / layoutW
         glide.Section(sec) {
             // R1: these boxes are taller than the 374 high stage (the dock box is 646); a requiredSize larger
             // than the parent is CENTRED by Compose, which pulled the dock, command bar and Dispatches up.
-            // Overflow from the top-left corner instead.
-            Box(Modifier.at(r.x, r.y - bodyY).overflowTopStart().requiredSize(r.w.dp, (r.h + bodyY).dp)) {
-                CompositionLocalProvider(LocalColumnWidth provides r.w) { content() }
+            // Overflow from the top-left corner instead. S6: drawn at k so a 222 wide layout fills 232.
+            Box(
+                Modifier
+                    .at(r.x, r.y - bodyY * k)
+                    .overflowTopStart()
+                    .requiredSize(layoutW.dp, (r.h / k + bodyY).dp)
+                    .graphicsLayer {
+                        scaleX = k
+                        scaleY = k
+                        transformOrigin = TransformOrigin(0f, 0f)
+                    }
+            ) {
+                CompositionLocalProvider(LocalColumnWidth provides layoutW) { content() }
             }
         }
     }
-    Place(Sec.Header, 0f, header)
-    Place(Sec.Treasury, 0f) { TreasuryPanel() }
-    Place(Sec.Pennants, 64f * PennantsLandscapeScale) { Pennants() }
+    Place(Sec.Header, 0f, content = header)
+    Place(Sec.Treasury, 0f, TreasuryLayoutWidth) { TreasuryPanel() }
+    // the row is laid out 247 wide and drawn at PennantsLandscapeScale; its flags are taller than in portrait
+    Place(Sec.Pennants, 64f * PennantsLandscapeScale, 232f) { Pennants() }
     // the orb zone (ring, orb, four shields) is drawn at 0.9 so its 325 wide span fits the 296 wide middle column
     val o = LandscapeRects.getValue(Sec.Oracle)
     glide.Section(Sec.Oracle) {
@@ -273,11 +287,16 @@ private fun LandscapeSections(vm: MedievalHomeVM, glide: RotateGlide, header: @C
                 }
         ) { OracleOrb(); Shields(vm) }
     }
+    Place(Sec.Forecast, 0f, LandscapeRects.getValue(Sec.Forecast).w) { ForecastStrip(vm) }
     Place(Sec.Ledger, 330f) { Ledger(vm) }
     Place(Sec.Dispatches, 454f) { Dispatches(vm) }
     Place(Sec.Command, 404f) { CommandBar(onCommandOpen) }
-    Place(Sec.Dock, 551f + BodyLift / BodyScaleF) { Dock() }
+    Place(Sec.Dock, 551f + BodyLift / BodyScaleF, 296f) { Dock() }
 }
+
+/** The side-column sections are laid out this wide and drawn at 232 / this; Treasury needs a narrower layout. */
+private const val SideLayoutWidth = 222f
+internal const val TreasuryLayoutWidth = 205f
 
 /** Lets a requiredSize box that is larger than its parent start at the parent's top-left corner (no centring). */
 internal fun Modifier.overflowTopStart(): Modifier = wrapContentSize(Alignment.TopStart, unbounded = true)

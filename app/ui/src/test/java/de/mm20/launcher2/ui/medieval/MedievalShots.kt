@@ -169,6 +169,9 @@ class MedievalShots {
     }
 }
 
+/** S6: true = a busy day (4 events, 6 forecast hours, 5 dispatches); false = the quiet default (2 events, nothing else). */
+internal var fakeHomeFull = false
+
 internal fun fakeHome(): MedievalHomeVM = mockk<MedievalHomeVM>(relaxed = true).also { vm ->
     val year = Calendar.getInstance().get(Calendar.YEAR) + 1
     fun day(m: Int, d: Int) = Calendar.getInstance().apply { set(year, m, d, 0, 0, 0) }.timeInMillis
@@ -179,10 +182,13 @@ internal fun fakeHome(): MedievalHomeVM = mockk<MedievalHomeVM>(relaxed = true).
         every { it.endTime } returns start + 86_400_000L
         every { it.allDay } returns true
     }
-    every { vm.events } returns listOf(
+    every { vm.events } returns (listOf(
         event("e1", "Halloween", day(Calendar.OCTOBER, 31)),
         event("e2", "Daylight Saving Time ends", day(Calendar.NOVEMBER, 1)),
-    )
+    ) + if (!fakeHomeFull) emptyList() else listOf(
+        event("e3", "Election Day", day(Calendar.NOVEMBER, 3)),
+        event("e4", "Dentist, a very long appointment title", day(Calendar.NOVEMBER, 5)),
+    ))
     every { vm.forecast } returns Forecast(
         timestamp = System.currentTimeMillis(),
         temperature = 290.4,
@@ -195,5 +201,30 @@ internal fun fakeHome(): MedievalHomeVM = mockk<MedievalHomeVM>(relaxed = true).
     every { vm.weatherStatus } returns WeatherStatus.Ready
     every { vm.hasCalendarPermission } returns MutableStateFlow(true)
     every { vm.hasNotificationAccess } returns MutableStateFlow(true)
-    every { vm.notifications } returns MutableStateFlow(emptyList())
+    every { vm.notifications } returns MutableStateFlow(if (fakeHomeFull) fakeNotifications() else emptyList())
+    val h = 3_600_000L
+    val t0 = System.currentTimeMillis() / h * h
+    every { vm.hourly } returns if (!fakeHomeFull) emptyList() else listOf(
+        Forecast.CLEAR to 290.4, Forecast.PARTLY_CLOUDY to 289.2, Forecast.OVERCAST to 288.0,
+        Forecast.RAIN to 286.5, Forecast.THUNDERSTORM to 285.5, Forecast.SNOW to 270.0,
+    ).mapIndexed { i, (icon, k) ->
+        Forecast(timestamp = t0 + (i + 1) * h, temperature = k, icon = icon, condition = "Test", location = "Test", provider = "Test", updateTime = t0, night = i >= 3)
+    }
+}
+
+private fun fakeNotifications(): List<de.mm20.launcher2.notifications.Notification> {
+    val now = System.currentTimeMillis()
+    fun n(i: Int, title: String, text: String) = de.mm20.launcher2.notifications.Notification(
+        id = i, key = "n$i", packageName = "test.app$i", postTime = now - i * 60_000L, isClearable = true,
+        canShowBadge = true, number = 0, color = 0, smallIcon = null,
+        extras = android.os.Bundle().apply {
+            putCharSequence(android.app.Notification.EXTRA_TITLE, title)
+            putCharSequence(android.app.Notification.EXTRA_TEXT, text)
+        },
+        contentIntent = null,
+    )
+    return listOf(
+        n(1, "New voicemail", "0:12"), n(2, "[Sender]", "[message]"), n(3, "[Discord]", "[mention] with a long line of text"),
+        n(4, "[Sender]", "[message]"), n(5, "[X]", "[reply]"), n(6, "[Extra]", "[hidden: sixth row]"),
+    )
 }

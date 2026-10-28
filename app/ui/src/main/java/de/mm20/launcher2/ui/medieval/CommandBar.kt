@@ -26,8 +26,8 @@ internal fun CommandBar(onOpen: () -> Unit) {
         }
         SvgIcon(MedievalIcons.Quill, if (land) 17f else 20f, Medieval.Gold, Modifier.at(if (land) 11f else 16f, if (land) 13f else 12f))
         MText(
-            "Command the Oracle…", if (land) 13f else 16f, Medieval.TextFaint,
-            Modifier.at(if (land) 34f else 46f, if (land) 14f else 11f).let { if (land) it.width(104.dp) else it }, italic = true,
+            "Command the Oracle…", if (land) 11.5f else 16f, Medieval.TextFaint,
+            Modifier.at(if (land) 34f else 46f, if (land) 15f else 11f).let { if (land) it.width(98.dp) else it }, italic = true,
         )
     }
 }

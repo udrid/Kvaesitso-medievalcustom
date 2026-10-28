@@ -44,6 +44,10 @@ class MedievalHomeVM : ViewModel(), KoinComponent {
     var forecast by mutableStateOf<Forecast?>(null)
         private set
 
+    /** S6: hourly forecasts from an hour ago on, oldest first (what the Forecast strip shows); empty when none. */
+    var hourly by mutableStateOf<List<Forecast>>(emptyList())
+        private set
+
     /** Upcoming events from now on, soonest first. */
     var events by mutableStateOf<List<CalendarEvent>>(emptyList())
         private set
@@ -83,6 +87,11 @@ class MedievalHomeVM : ViewModel(), KoinComponent {
         viewModelScope.launch {
             weatherRepository.getDailyForecasts().collectLatest { days ->
                 val now = System.currentTimeMillis()
+                hourly = days.flatMap { it.hourlyForecasts }
+                    .filter { it.timestamp >= now - 60 * 60_000L }
+                    .sortedBy { it.timestamp }
+                    .distinctBy { it.timestamp }
+                    .take(48)
                 val day = days.lastOrNull { it.timestamp < now } ?: days.firstOrNull()
                 forecast = day?.hourlyForecasts?.lastOrNull { it.timestamp < now }
                     ?: day?.hourlyForecasts?.firstOrNull()
