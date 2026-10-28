@@ -28,11 +28,11 @@ Cannot (stock Samsung One UI 5, locked bootloader): the Android quick panel, loc
 | Screen | Status |
 |---|---|
 | Home portrait | DONE, owner verified |
-| Typing layer and search results | layer DONE; result cards still stock look |
-| Launcher settings | stock look (only the Animations entry is ours) |
-| Widget/feed page | not styled |
-| Sheets, dialogs, item cards | not styled |
-| Home landscape | BUILT (S1, layout A), awaiting phone test |
+| Typing layer and search results | layer DONE; result groups framed with ribbons (S2, list mode; apps grid not yet), awaiting phone test |
+| Launcher settings | S2 built (frames, ribbons, wax-seal switches), awaiting phone test |
+| Widget/feed page | cards framed via LauncherCard (S2); no ribbons yet |
+| Home landscape | BUILT (S1 layout A, fixed by R1), awaiting phone test |
+| Sheets, dialogs, item cards | S2 built (framed dialog, pennant sheets), awaiting phone test |
 | Wallpaper, lock screen, AOD | not made |
 | Icon pack | not made |
 | Keyboard (SwiftKey) theme | not made |

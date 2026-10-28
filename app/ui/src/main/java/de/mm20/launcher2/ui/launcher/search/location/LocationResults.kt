@@ -29,6 +29,7 @@ fun LazyListScope.LocationResults(
     onShowAll: () -> Unit,
 ) {
     ListResults(
+        title = "Places",
         items = locations.subList(0, if (truncate) min(5, locations.size) else locations.size),
         key = "location",
         reverse = reverse,

@@ -29,6 +29,7 @@ fun LazyListScope.ShortcutResults(
     onShowAll: () -> Unit,
 ) {
     ListResults(
+        title = "Shortcuts",
         items = shortcuts.subList(0, if (truncate) min(5, shortcuts.size) else shortcuts.size),
         key = "shortcut",
         reverse = reverse,

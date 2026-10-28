@@ -16,6 +16,7 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 | S1-landscape | 1 | READY TO PUSH on claude/S1-landscape (compiled locally; landscape Home layout A, standing pill, glide on rotate, typing layer two panes; needs owner OK to push and phone test; header and pill most at risk) | claude/S1-landscape | Not in main yet |
 | R1-review | 1 | READY TO PUSH on claude/R1-landscape-fix (landscape bugs 1-5 fixed and seen in PC screenshots; emulator impossible here, Robolectric screenshot tests instead, ops/emulator.md; S2 final check FIX FIRST in tasks/R1-review/review-s2.md, shots docs/design/shots/S2) | claude/R1-landscape-fix | Not in main; replaces S1 landscape layout code |
 | T2-treasury | 1 | deferred: owner wants it last | - | SimpleFIN Bridge (decisions.md); api-scout first; price to owner before sign-up |
+| S2-screens | 1 | READY FOR PHONE TEST (Part 2 built, compiled, local commits only) | claude/S2-screens | Deliverance look on results, settings, dialogs, sheets; owner picks: variant B, wax-seal switch, sharp corners. Not pushed; waits for owner approval |
 
 ## Open for the owner
 - Report what SUMMON did in the Claude app (opens? new chat? words in the box?).

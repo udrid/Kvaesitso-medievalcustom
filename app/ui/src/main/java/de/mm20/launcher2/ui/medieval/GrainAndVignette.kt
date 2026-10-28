@@ -28,7 +28,7 @@ private fun noiseBitmap(): Bitmap {
 
 /** Film grain and dark vignette over the whole screen. Does not take touches. */
 @Composable
-internal fun GrainAndVignette(modifier: Modifier = Modifier) {
+internal fun GrainAndVignette(modifier: Modifier = Modifier, rim: Float = 0.72f) {
     val grain = remember { ShaderBrush(ImageShader(noiseBitmap().asImageBitmap(), TileMode.Repeated, TileMode.Repeated)) }
     Canvas(modifier.fillMaxSize()) {
         drawRect(brush = grain, alpha = 0.45f)
@@ -36,7 +36,7 @@ internal fun GrainAndVignette(modifier: Modifier = Modifier) {
         drawRect(
             brush = Brush.radialGradient(
                 0.55f to Color.Transparent,
-                1f to Color.Black.copy(alpha = 0.72f),
+                1f to Color.Black.copy(alpha = rim),
                 center = Offset(size.width / 2f, size.height / 2f),
                 radius = radius,
             )
