@@ -28,5 +28,6 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 
 ## Monetisation track (owner 2026-10-28)
 Own section of the development; list of tasks M1 to M10 in `ops/monetization.md`. All open; the owner goes over the whole list together before any starts.
+| S5-gestures-apps | 1 | READY TO PUSH after the Opus check (Part 2 built, compiles, PC pictures looked at; not tested on phone) | claude/s5-gestures-apps-47305e | Swipe-down search off; swipe-up page becomes an apps hub with categories |
 | T18-contact-alerts | 1 | READY FOR FINAL CHECK (built, compiles, PC pictures looked at; not tested on phone) | claude/T18-contact-alerts | Starred contacts light up (gold halo + red count badge) on message / missed call; cut from claude/integrate-4 |
 | T20-corner-setting | 1 | READY TO PUSH (compiles, pictures looked at; not tested on phone) | claude/t20-corner-setting-ad1cdf | Corner style setting (Sharp/Round) for buttons and chips; hide dead Appearance entries |

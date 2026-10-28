@@ -15,3 +15,4 @@ VERIFIED on the phone:
 UNVERIFIED on the phone:
 - AF-10 Sharing text to the Claude app: `ACTION_SEND text/plain` with `setPackage("com.anthropic.claude")` (only an outside report; owner has not yet reported the result of the SUMMON test). The text is also copied to the clipboard as a backup (T6).
 - AF-11 `AlarmManager.getNextAlarmClock`, AGSL RuntimeShader on API 33: not used; not tested.
+- AF-12 (S5, UNVERIFIED on the phone) Apps hub: `PackageManager.queryIntentActivities(ACTION_MAIN + CATEGORY_LAUNCHER)` lists launchable apps without extra permission (QUERY_ALL_PACKAGES is already declared); `ApplicationInfo.category` is -1 for many apps. `swipeDown = null` in the scaffold config removes the pull-down gesture.

@@ -151,11 +151,11 @@ data class LauncherSettingsData internal constructor(
     val widgetsEditButton: Boolean = true,
     val widgetScreenCount: Int = 1,
 
-    val gesturesSwipeDown: GestureAction = GestureAction.Search,
+    val gesturesSwipeDown: GestureAction = GestureAction.NoAction,
     val gesturesSwipeLeft: GestureAction = GestureAction.NoAction,
     val gesturesSwipeRight: GestureAction = GestureAction.NoAction,
     val gesturesSwipeUp: GestureAction = GestureAction.Widgets(),
-    val gesturesDoubleTap: GestureAction = GestureAction.ScreenLock,
+    val gesturesDoubleTap: GestureAction = GestureAction.NoAction,
     val gesturesLongPress: GestureAction = GestureAction.NoAction,
     val gesturesHomeButton: GestureAction = GestureAction.NoAction,
 

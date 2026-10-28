@@ -25,6 +25,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -198,14 +199,17 @@ private fun MostUsedApps(tick: Int) {
 }
 
 @Composable
-private fun AppCell(pkg: String, modifier: Modifier) {
+internal fun AppCell(pkg: String, modifier: Modifier, name: String? = null, onLongClick: (() -> Unit)? = null) {
     val context = LocalContext.current
-    val label = remember(pkg) { appLabel(context, pkg) ?: "?" }
+    val label = remember(pkg, name) { name ?: appLabel(context, pkg) ?: "?" }
     Column(
-        modifier.clickable {
-            val intent = context.packageManager.getLaunchIntentForPackage(pkg)
-            if (intent != null) launchSafely(context, intent, label)
-        },
+        modifier.combinedClickable(
+            onLongClick = onLongClick,
+            onClick = {
+                val intent = context.packageManager.getLaunchIntentForPackage(pkg)
+                if (intent != null) launchSafely(context, intent, label)
+            },
+        ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {

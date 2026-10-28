@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
-private fun timeLabel(context: android.content.Context, event: CalendarEvent): String {
+internal fun timeLabel(context: android.content.Context, event: CalendarEvent): String {
     val start = event.startTime ?: return ""
     val zoned = Instant.ofEpochMilli(start).atZone(ZoneId.systemDefault())
     if (event.allDay) {

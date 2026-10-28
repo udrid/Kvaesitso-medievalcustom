@@ -64,7 +64,7 @@ private fun ordinal(day: Int): String {
     return "$day$suffix"
 }
 
-private fun weatherTemp(f: Forecast): String {
+internal fun weatherTemp(f: Forecast): String {
     val kelvin = f.temperature
     val useFahrenheit = Locale.getDefault().country == "US"
     val deg = if (useFahrenheit) (kelvin - 273.15) * 9 / 5 + 32 else kelvin - 273.15

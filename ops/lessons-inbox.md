@@ -46,3 +46,4 @@
 - T18: `Notification` (data/notifications) did not keep `category`/`channelId`; use `dispatch` rows' extras for everything else. Robolectric shots can't show one-shot halos (gate closed).
 - Header medallion and divider were cached per weekday without the palette (T19): keys of remember(...) that hold built colours must include Medieval.palette.
 - Compose tests: a state change from runOnUiThread needs Snapshot.sendApplyNotifications() or the screen never redraws (looked like the setting not working).
+- S5 (2026-10-28): a Dropdown menu in a Robolectric test needs the Deliverance MaterialTheme around it or it draws light lavender; the real app has the theme. Popup menu items are hard to click in tests.
