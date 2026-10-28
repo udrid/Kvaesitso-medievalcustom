@@ -1,0 +1,10 @@
+# Handoff: S2-screens stage 2 (build)
+
+What changed (owner picks 2026-10-27: variant B full frames, red wax-seal switch, sharp corners):
+- NEW `medieval/DeliveranceTheme.kt`: colour scheme, sharp shapes, typography (Blackletter for headings, Cinzel caps for labels, IM Fell for body), `medievalFrame` (double gold hairline, optional top/bottom for stacked list items), `medievalPanelBackground`, `Ribbon`, `PennantHandle`.
+- NEW `WaxSwitch.kt` (a `Switch` with Material's call shape), `DeliveranceDialog.kt` (an `AlertDialog` with the frame and a ribbon "Deliverance").
+- Upstream edits, one commit each: `LauncherTheme.kt` (fixed Deliverance colours/shapes/fonts, always dark, so the Appearance theme pickers no longer change the look); `LauncherCard.kt` (frame); `PreferenceCategory.kt` (frame + ribbon title); `PreferenceScreen.kt` (grain and vignette); 5 files import our `Switch`; 15 files import our `AlertDialog`; `ListResults.kt` (frame across list items, ribbon on the group's top item, `title` param) and 7 `*Results.kt` pass a title; `BottomSheet.kt` and `DismissableBottomSheet.kt` (square, framed, pennant).
+- Preview `docs/design/S2-screens.html` fixed: ribbons now sit above the inner gold line.
+How it was checked: `./gradlew :app:ui:compileDebugKotlin --offline` passes. Nothing run on a phone.
+NOT verified: any on-screen look (frame alignment across list items, ribbon overlap with first row, 12 dp group gap), font rendering of Cinzel/Fell at the new sizes, scroll smoothness with grain over settings, sheets' content width, dark text on dark anywhere (screens that hard-code Material colours), the apps GRID (default) has no ribbon or frame yet, snackbar and drop-down menus only follow the theme colours, widget page cards get the frame but no ribbons, add-widget button is still a Material FAB, shape/colour/typography theme editors are now cosmetic.
+Next stage needs: owner photos of results, settings, a dialog, a sheet; then fix list from them. Open owner choices: ribbon wording for non-previewed groups (Files, Places, Shortcuts, Wikipedia) and the dialog ribbon "Deliverance"; letter shields for result icons (pending icon pack).
