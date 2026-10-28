@@ -10,7 +10,9 @@ import androidx.compose.runtime.remember
 import de.mm20.launcher2.preferences.ui.UiSettings
 import de.mm20.launcher2.themes.ThemeRepository
 import de.mm20.launcher2.ui.locals.LocalDarkTheme
+import androidx.compose.ui.platform.LocalContext
 import de.mm20.launcher2.ui.medieval.Deliverance
+import de.mm20.launcher2.ui.medieval.loadPaletteOnce
 import de.mm20.launcher2.ui.theme.colorscheme.darkColorSchemeOf
 import de.mm20.launcher2.ui.theme.colorscheme.lightColorSchemeOf
 import de.mm20.launcher2.ui.theme.shapes.shapesOf
@@ -64,6 +66,9 @@ fun LauncherTheme(
     }
 
     // Deliverance (S2-screens): colours, sharp shapes and fonts are fixed and always dark.
+    // The colours follow the chosen palette (S4); load it here too for screens opened without Home.
+    val context = LocalContext.current
+    remember { loadPaletteOnce(context.applicationContext) }
     val colorScheme = Deliverance.colorScheme
     val shapes = Deliverance.shapes
     val typography = Deliverance.typography
