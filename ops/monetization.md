@@ -49,3 +49,8 @@ Rule: a thread that makes something sellable adds a row above and a line in the 
 |---|---|---|---|
 | Shipped app-to-category list ("Armoury") [M] | planned, `medieval/` data file | Maintained list as part of a paid pack or update service | Package names must be verified; the list is data inside the GPL app |
 | Hub panels: Ledger, weather scene, Oracle question sets, Chronicle (usage time), tasks [M] | S5 docs/design | Paid panel styles or question packs, per palette | Usage access permission and privacy text; question wording is the owner's |
+
+## A1 AOD image-clock set (2026-10-28)
+| Part | Where | Ways to monetise | Risks / CHECK |
+|---|---|---|---|
+| Seven weekday always-on pictures plus plain ring (1200x900) [M] | `assets/aod/imageclock/` | Sell as part of the art pack (with wallpaper and icons), one set per palette | Art is separate from GPL code; fonts are OFL; no game logos |
