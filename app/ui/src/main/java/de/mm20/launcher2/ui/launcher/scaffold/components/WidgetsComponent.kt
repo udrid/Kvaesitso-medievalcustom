@@ -119,6 +119,7 @@ internal class WidgetsComponent(
                 .padding(insets),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            if (target == WidgetScreenTarget.Default) de.mm20.launcher2.ui.medieval.AppsHubHost() // Deliverance S5: the apps hub sits above the widgets
             WidgetColumn(
                 modifier = Modifier.widthIn(max = 900.dp).fillMaxHeight(),
                 editMode = editMode,
