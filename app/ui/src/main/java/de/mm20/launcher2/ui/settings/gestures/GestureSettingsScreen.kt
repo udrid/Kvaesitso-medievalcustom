@@ -79,23 +79,7 @@ fun GestureSettingsScreen() {
     PreferenceScreen(title = stringResource(R.string.preference_screen_gestures)) {
         item {
             PreferenceCategory {
-                val swipeDown by viewModel.swipeDown.collectAsStateWithLifecycle(null)
-                GuardedPreference(
-                    locked = hasPermission == false && requiresAccessibilityService(swipeDown),
-                    description = stringResource(R.string.missing_permission_accessibility_gesture_settings),
-                    onUnlock = { viewModel.requestPermission(context as AppCompatActivity) },
-                ) {
-                    GesturePreference(
-                        title = stringResource(R.string.preference_gesture_swipe_down),
-                        icon = R.drawable.swipe_down_alt_24px,
-                        value = swipeDown,
-                        onValueChanged = viewModel::setSwipeDown,
-                        options = options,
-                        shortcutOptions = shortcutOptions,
-                        widgetOptions = widgetOptions,
-                    )
-                }
-
+                // Deliverance S5: no Swipe down row, the gesture is off for good
                 val swipeLeft by viewModel.swipeLeft.collectAsStateWithLifecycle(null)
                 GuardedPreference(
                     locked = hasPermission == false && requiresAccessibilityService(swipeLeft),
