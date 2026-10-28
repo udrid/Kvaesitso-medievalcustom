@@ -18,6 +18,7 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 | S3-assets | 1 | READY TO PUSH (Part 2 built from owner picks 2026-10-27; nothing pushed) | claude/S3-assets | Orb wallpaper, 7 AOD days, SwiftKey picture, icon pack (3 plates, 43 emblems, 108 mapped apps) in iconpack/; owner steps in tasks/S3-assets/testlist.md; whole-phone colour-scheme switch requested as a separate task |
 | T2-treasury | 1 | deferred: owner wants it last | - | SimpleFIN Bridge (decisions.md); api-scout first; price to owner before sign-up |
 | S2-screens | 1 | READY FOR PHONE TEST (Part 2 built, compiled, local commits only) | claude/S2-screens | Deliverance look on results, settings, dialogs, sheets; owner picks: variant B, wax-seal switch, sharp corners. Not pushed; waits for owner approval |
+| T19-live-palette | 1 | READY TO PUSH (header recolours live; Robolectric proof; local commits only; needs Opus final check) | claude/t19-live-palette-3e3fb0 | 2-line fix in HeaderSection.kt + T19Shots test |
 
 ## Open for the owner
 - Report what SUMMON did in the Claude app (opens? new chat? words in the box?).
@@ -28,3 +29,5 @@ Updated 2026-10-27. `main` = the owner-verified build including T17 (GitHub Acti
 ## Monetisation track (owner 2026-10-28)
 Own section of the development; list of tasks M1 to M10 in `ops/monetization.md`. All open; the owner goes over the whole list together before any starts.
 | S5-gestures-apps | 1 | active (Part 1: survey and design preview; no code) | claude/s5-gestures-apps-47305e | Swipe-down search off; swipe-up page becomes an apps hub with categories |
+| T18-contact-alerts | 1 | READY FOR FINAL CHECK (built, compiles, PC pictures looked at; not tested on phone) | claude/T18-contact-alerts | Starred contacts light up (gold halo + red count badge) on message / missed call; cut from claude/integrate-4 |
+| T20-corner-setting | 1 | READY TO PUSH (compiles, pictures looked at; not tested on phone) | claude/t20-corner-setting-ad1cdf | Corner style setting (Sharp/Round) for buttons and chips; hide dead Appearance entries |

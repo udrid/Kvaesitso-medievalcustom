@@ -71,6 +71,7 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
     ) {
         val paletteContext = LocalContext.current
         remember(paletteContext) { Medieval.palette = readPalette(paletteContext) }
+        remember(paletteContext) { Corners.style = readCornerStyle(paletteContext) }
         var commandOpen by remember { mutableStateOf(false) }
         BoxWithConstraints(
             modifier = modifier
@@ -164,7 +165,7 @@ internal object MedievalHomeComponent : ScaffoldComponent() {
                 }
             }
             AnimatedVisibility(commandOpen, enter = fadeIn(tween(120)), exit = fadeOut(tween(100))) {
-                CommandOverlay { commandOpen = false }
+                CompositionLocalProvider(LocalMotion provides motion) { CommandOverlay { commandOpen = false } }
             }
             val vm: MedievalHomeVM = viewModel()
             val notifications by vm.notifications.collectAsState()

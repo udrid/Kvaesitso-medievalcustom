@@ -81,7 +81,7 @@ private val GlowGold get() = Medieval.Glow
 private const val DismissDistance = 90f
 
 /** Opens what the notification opens; falls back to the app itself. Never logs notification text. */
-private fun openDispatch(context: Context, n: Notification) {
+internal fun openDispatch(context: Context, n: Notification) {
     val intent = n.contentIntent
     if (intent != null) {
         try {

@@ -21,6 +21,8 @@ data class Notification(
     val extras: Bundle,
     val flags: Int = 0,
     val contentIntent: PendingIntent?,
+    val category: String? = null,
+    val channelId: String? = null,
 ) {
     constructor(
         sbn: StatusBarNotification,
@@ -38,6 +40,8 @@ data class Notification(
         extras = sbn.notification.extras,
         flags = sbn.notification.flags,
         contentIntent = sbn.notification.contentIntent,
+        category = sbn.notification.category,
+        channelId = sbn.notification.channelId,
     )
 
     constructor(
@@ -55,7 +59,9 @@ data class Notification(
         smallIcon = notification.smallIcon,
         extras = notification.extras,
         flags = notification.flags,
-        contentIntent = notification.contentIntent
+        contentIntent = notification.contentIntent,
+        category = notification.category,
+        channelId = notification.channelId,
     )
 
     val mediaSessionToken: MediaSession.Token?
