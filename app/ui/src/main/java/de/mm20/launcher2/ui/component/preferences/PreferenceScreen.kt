@@ -4,6 +4,8 @@ import androidx.activity.compose.LocalActivity
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import de.mm20.launcher2.ui.medieval.GrainAndVignette
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -87,20 +89,24 @@ fun PreferenceScreen(
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainer
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            state = lazyColumnState,
-            content = content,
-            verticalArrangement = verticalArrangement,
-            contentPadding = PaddingValues(
-                top = it.calculateTopPadding() + 12.dp,
-                bottom = it.calculateBottomPadding() + 12.dp,
-                start = 12.dp,
-                end = 12.dp
+        Box {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+                state = lazyColumnState,
+                content = content,
+                verticalArrangement = verticalArrangement,
+                contentPadding = PaddingValues(
+                    top = it.calculateTopPadding() + 12.dp,
+                    bottom = it.calculateBottomPadding() + 12.dp,
+                    start = 12.dp,
+                    end = 12.dp
+                )
             )
-        )
+            // Deliverance: film grain and vignette over every settings screen (static, drawn once).
+            GrainAndVignette(Modifier.fillMaxSize())
+        }
     }
 }
 
