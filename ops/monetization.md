@@ -19,6 +19,7 @@ Not legal advice. Everything marked CHECK must be verified with a lawyer or the 
 | Fonts | UnifrakturCook, UnifrakturMaguntia, Cinzel, IM Fell English | SIL OFL 1.1, licences kept in `docs/licenses/fonts` | May ship inside paid products | The fonts cannot be sold alone; keep the licence files |
 | The phone-stylist agent and the workflow (`.claude/agents`, CLAUDE.md rules, thread templates) | repo | Own | Sell as a guide, template or course: how to build a themed launcher with Claude Code | Remove personal data (email) before sharing |
 | Treasury panel (placeholders now; SimpleFIN later) | `TreasuryPanel.kt` | GPL code | A paid add-on feature | Financial data: SimpleFIN terms, privacy, security and possibly regulation; never store bank logins; ask for the price before using it |
+| Forecast panel look [M] (S6, landscape option C/D, preview only) | `docs/design/S6-landscape-fill.html`; later `medieval/` | Own art; data is the same weather provider | Extra weather-scene styles as a paid pack, with the palette packs | Same provider terms as the Weather row |
 | Weather | Bright Sky (DWD open data), later optional providers | Third party | none | CHECK each provider's terms for commercial use (attribution; some require a licence or a contact string) |
 | Claude link (SUMMON, orb opens the Claude app) | `Summon.kt` | Uses the public Claude app only | none | No API key is used; a paid feature that calls the Claude API would need Anthropic's commercial terms and per-user keys |
 
