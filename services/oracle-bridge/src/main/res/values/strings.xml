@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="oracle_agent_label">Oracle bridge</string>
+    <string name="oracle_agent_description">Lets your paired laptop (Claude, over Tailscale only) read the screen, tap, type and take screenshots on this phone. Turn off here to stop it.</string>
+    <string name="oracle_watches">The Oracle watches</string>
+    <string name="oracle_watches_detail">Your laptop can control this phone over Tailscale</string>
+    <string name="oracle_channel">Oracle bridge</string>
+</resources>

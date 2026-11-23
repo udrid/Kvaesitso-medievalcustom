@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Oracle bridge (T24): lets the owner's laptop (Claude, over Tailscale only) see and control the phone. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Turns ADB wireless debugging back on at home. Granted once over ADB: pm grant <app> android.permission.WRITE_SECURE_SETTINGS -->
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application>
+        <service
+            android:name=".OracleAgentService"
+            android:exported="true"
+            android:label="@string/oracle_agent_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/oracle_agent" />
+        </service>
+
+        <!-- Pairing from the laptop over ADB. Only senders holding WRITE_SECURE_SETTINGS (the ADB shell) can reach it. -->
+        <receiver
+            android:name=".OraclePairReceiver"
+            android:exported="true"
+            android:permission="android.permission.WRITE_SECURE_SETTINGS">
+            <intent-filter>
+                <action android:name="de.mm20.launcher2.oraclebridge.PAIR" />
+                <action android:name="de.mm20.launcher2.oraclebridge.UNPAIR" />
+                <action android:name="de.mm20.launcher2.oraclebridge.STATUS" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

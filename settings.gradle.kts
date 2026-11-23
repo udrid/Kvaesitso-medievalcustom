@@ -59,6 +59,7 @@ include(":libs:owncloud")
 include(":libs:webdav")
 include(":libs:address-formatter")
 include(":services:global-actions")
+include(":services:oracle-bridge")
 include(":services:widgets")
 include(":services:favorites")
 

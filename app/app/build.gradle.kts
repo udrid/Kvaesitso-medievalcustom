@@ -158,6 +158,7 @@ dependencies {
     implementation(project(":data:database"))
     implementation(project(":data:search-actions"))
     implementation(project(":services:global-actions"))
+    implementation(project(":services:oracle-bridge"))
     implementation(project(":services:widgets"))
     implementation(project(":services:favorites"))
     implementation(project(":data:locations"))

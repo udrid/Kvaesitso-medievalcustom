@@ -12,6 +12,7 @@ import de.mm20.launcher2.ui.medieval.AodSettingsRoute
 import de.mm20.launcher2.ui.medieval.MedievalAodPreference
 import de.mm20.launcher2.ui.medieval.MedievalAnimationsPreference
 import de.mm20.launcher2.ui.medieval.MedievalWelcomePreference
+import de.mm20.launcher2.ui.medieval.OracleBridgePreference
 import de.mm20.launcher2.ui.medieval.MedievalPalettePreference
 import de.mm20.launcher2.ui.settings.about.AboutSettingsRoute
 import de.mm20.launcher2.ui.settings.appearance.AppearanceSettingsRoute
@@ -41,6 +42,7 @@ fun MainSettingsScreen() {
                 MedievalAnimationsPreference()
                 MedievalWelcomePreference()
                 MedievalAodPreference { backStack.add(AodSettingsRoute) }
+                OracleBridgePreference()
             }
         }
         item {
