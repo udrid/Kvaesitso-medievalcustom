@@ -68,6 +68,7 @@ class AgentActions(private val agent: OracleAgentService) : KoinComponent {
         "/open" -> open(p.getString("url"))
         "/notifs" -> ok("notifications" to notifs())
         "/adb" -> ok("adb" to OracleAgentService.ensureAdbWifi(agent))
+        "/scroll" -> scroll(method, p)
         else -> AgentResult.Json(BridgeServer.json("error" to "unknown path $path"), 404)
     }
 
@@ -251,6 +252,21 @@ class AgentActions(private val agent: OracleAgentService) : KoinComponent {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         agent.startActivity(intent)
         return ok("opened" to url)
+    }
+
+    /** Claude's Scroll (T25). GET lists entries; POST {text} adds one; POST {clear:true} empties it. */
+    private fun scroll(method: String, p: JSONObject): AgentResult {
+        ScrollStore.load(agent)
+        if (method == "POST") {
+            when {
+                p.optBoolean("clear", false) -> ScrollStore.clear(agent)
+                p.has("text") -> ScrollStore.add(agent, p.getString("text"))
+                else -> return fail("send {text} or {clear:true}")
+            }
+        }
+        val arr = JSONArray()
+        ScrollStore.entries.value.forEach { arr.put(JSONObject().put("text", it.text).put("time", it.time)) }
+        return ok("entries" to arr)
     }
 
     private fun notifs(): JSONArray {

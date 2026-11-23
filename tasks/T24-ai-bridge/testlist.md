@@ -12,3 +12,11 @@ Checked by Claude on 2026-11-23 with the side-by-side test copy (de.mm20.launche
 - Typing into a text field: NOT yet confirmed (first try refused; fixed to look for any editable field; needs one more test).
 - Notifications list: empty in the test copy because it has no notification access; the real launcher has it.
 - ADB keep-alive: permission granted, adb_wifi_enabled = 1.
+
+## Added in the same push: Claude's Scroll (T25) and Treasury (T2)
+5. **Scroll.** Claude writes a test message from the laptop. Look at Dispatches on Home: the first line should be that message in gold italics with a small gold orb. Tap it: a framed "The Oracle's scroll" window lists the messages. Swipe the line sideways: it goes away.
+6. **Treasury before connecting.** Home still shows "[YOUR TOTAL]" and "Quest: [GOAL]" (nothing invented).
+7. **Treasury after connecting** (only after you sign up on SimpleFIN): settings → "Treasury: connect SimpleFIN", paste the Setup Token, tap Connect. On Home the total shows "••••". Tap the coin: your net worth appears, then hides again after 10 seconds. The bar says "Quest: pay off debt" with a %.
+8. Should NOT happen: the total must never show without tapping the coin.
+
+Checked by Claude on 2026-11-23 (test copy): Scroll message written over Tailscale and shown as the first Dispatches line (landscape Home). Typing into the Oracle bar: the field accepted the text (no error). Treasury: compiled only; NOT tested with a real SimpleFIN account (needs the owner's sign-up). UNVERIFIED: whether credit card and loan balances come back negative (debt = negative balances).

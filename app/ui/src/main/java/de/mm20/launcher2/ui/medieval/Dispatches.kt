@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import de.mm20.launcher2.notifications.Notification
+import de.mm20.launcher2.oraclebridge.ScrollStore
 import de.mm20.launcher2.permissions.PermissionGroup
 import java.time.Instant
 import java.time.LocalDate
@@ -144,6 +145,8 @@ internal fun Dispatches(vm: MedievalHomeVM) {
     val hasAccess by vm.hasNotificationAccess.collectAsState()
     val all by vm.notifications.collectAsState()
     val dispatches = remember(all) { all.asDispatches() }
+    remember { ScrollStore.load(context) }
+    val scroll by ScrollStore.entries.collectAsState()
     // T9: a new dispatch makes the panel glow once (1.8 s), only while Home is on screen
     val glow = rememberOneShot(
         rememberRises(dispatches.maxOfOrNull { it.postTime } ?: 0L), 1_800L, LocalMotion.current.ambient,
@@ -175,6 +178,8 @@ internal fun Dispatches(vm: MedievalHomeVM) {
             Modifier.at(if (LocalLandscape.current) 12f else 16f, 27f),
             verticalArrangement = Arrangement.spacedBy(7.dp),
         ) {
+            // T25: Claude's newest Scroll message is always the first line
+            scroll.lastOrNull()?.let { OracleScrollRow(it, scroll) }
             when {
                 hasAccess == false -> MText(
                     "Tap to grant notification access", 13f, Medieval.TextSoft,
@@ -185,13 +190,17 @@ internal fun Dispatches(vm: MedievalHomeVM) {
                     },
                 )
 
-                dispatches.isEmpty() -> MText("No dispatches", 13f, Medieval.TextDim)
-                else -> dispatches.take(if (LocalLandscape.current) 5 else 3).forEachIndexed { i, n ->
-                    DispatchRow(
-                        n, first = i == 0,
-                        onOpen = { openDispatch(context, n) },
-                        onDismiss = { vm.dismissNotification(n) },
-                    )
+                dispatches.isEmpty() && scroll.isEmpty() -> MText("No dispatches", 13f, Medieval.TextDim)
+                dispatches.isEmpty() -> {}
+                else -> {
+                    val rows = (if (LocalLandscape.current) 5 else 3) - (if (scroll.isEmpty()) 0 else 1)
+                    dispatches.take(rows).forEachIndexed { i, n ->
+                        DispatchRow(
+                            n, first = i == 0 && scroll.isEmpty(),
+                            onOpen = { openDispatch(context, n) },
+                            onDismiss = { vm.dismissNotification(n) },
+                        )
+                    }
                 }
             }
         }

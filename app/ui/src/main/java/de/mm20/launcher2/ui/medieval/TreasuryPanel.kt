@@ -11,7 +11,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
+import java.text.NumberFormat
+import java.util.Locale
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,16 +34,42 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
-/** Treasury: placeholders only, no invented numbers. Real data comes in T2 (SimpleFIN). */
+/**
+ * Treasury (T2): net worth and the "pay off debt" quest from SimpleFIN (owner, 2026-11-23). Without a
+ * connection it shows the placeholders. Numbers stay hidden ("••••") until the coin is tapped, then
+ * hide again after 10 seconds (owner pick); the quest bar and its % are always shown.
+ */
 @Composable
 internal fun TreasuryPanel() {
     val land = LocalLandscape.current
+    val context = androidx.compose.ui.platform.LocalContext.current
+    remember { TreasuryData.load(context) }
+    val t by TreasuryData.state.collectAsState()
+    var revealed by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { TreasuryData.refresh(context) }
+    LaunchedEffect(revealed) {
+        if (revealed) {
+            delay(10_000)
+            revealed = false
+        }
+    }
+    val money = remember { NumberFormat.getCurrencyInstance(Locale.US).apply { maximumFractionDigits = 0 } }
+    val totalText = when {
+        !t.connected -> "[YOUR TOTAL]"
+        t.netWorth == null -> if (t.error != null) "Unavailable" else "Counting…"
+        !revealed -> "••••"
+        else -> money.format(t.netWorth)
+    }
+    val questText = if (t.connected) "Quest: pay off debt" else "Quest: [GOAL]"
+    val progress = t.progress ?: 0f
+    val percentText = t.progress?.let { "${(it * 100).toInt()}% of the way" } ?: "[0%] of the way"
     Panel(top = 0f, height = if (land) 66f else 56f, ribbon = "Treasury") {
         Box(
             Modifier
                 .at(if (land) 12f else 14f, if (land) 14f else 9f)
                 .size(38.dp)
                 .clip(CircleShape)
+                .clickable(enabled = t.connected) { revealed = !revealed }
                 .background(
                     Brush.radialGradient(
                         listOf(Medieval.palette.coinA, Medieval.palette.coinB),
@@ -63,13 +99,13 @@ internal fun TreasuryPanel() {
         if (land) {
             // landscape column (222 wide): total on top, quest line, bar and percentage under it
             MText(
-                "[YOUR TOTAL]", 15f, Medieval.TextBright, Modifier.at(54f, 13f).width((LocalColumnWidth.current - 66f).dp),
+                totalText, 15f, Medieval.TextBright, Modifier.at(54f, 13f).width((LocalColumnWidth.current - 66f).dp),
                 font = Medieval.Cinzel, bold = true, spacingEm = 0.04f,
             )
             Box(Modifier.at(54f, 36f).width((LocalColumnWidth.current - 66f).dp)) {
-                Cap("Quest: [GOAL]", size = 8.5f, spacingEm = 0.12f)
+                Cap(questText, size = 8.5f, spacingEm = 0.12f)
                 MText(
-                    "[0%] of the way", 9.5f, Medieval.TextFaint,
+                    percentText, 9.5f, Medieval.TextFaint,
                     Modifier.fillMaxWidth(), italic = true, align = TextAlign.End,
                 )
                 Box(
@@ -84,7 +120,7 @@ internal fun TreasuryPanel() {
                     Box(
                         Modifier
                             .fillMaxHeight()
-                            .fillMaxWidth(0f)
+                            .fillMaxWidth(progress)
                             .background(Brush.horizontalGradient(listOf(Medieval.palette.barA, Medieval.palette.barB)))
                     )
                 }
@@ -92,11 +128,11 @@ internal fun TreasuryPanel() {
             return@Panel
         }
         MText(
-            "[YOUR TOTAL]", 16f, Medieval.TextBright, Modifier.at(62f, 18f).width(130.dp),
+            totalText, 16f, Medieval.TextBright, Modifier.at(62f, 18f).width(130.dp),
             font = Medieval.Cinzel, bold = true, spacingEm = 0.04f,
         )
         Box(Modifier.at(197f, 9f).width(118.dp)) {
-            Cap("Quest: [GOAL]", size = 11f, spacingEm = 0.14f)
+            Cap(questText, size = 11f, spacingEm = 0.14f)
             Box(
                 Modifier
                     .padding(top = 19.dp)
@@ -109,14 +145,14 @@ internal fun TreasuryPanel() {
                 Box(
                     Modifier
                         .fillMaxHeight()
-                        .fillMaxWidth(0f)
+                        .fillMaxWidth(progress)
                         .background(
                             Brush.horizontalGradient(listOf(Medieval.palette.barA, Medieval.palette.barB))
                         )
                 )
             }
             MText(
-                "[0%] of the way", 10f, Medieval.TextFaint,
+                percentText, 10f, Medieval.TextFaint,
                 Modifier.padding(top = 31.dp).fillMaxWidth(), italic = true, align = TextAlign.End,
             )
         }
